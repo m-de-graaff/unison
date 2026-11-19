@@ -13,8 +13,6 @@ import {
   View,
 } from "react-native";
 
-LogBox.ignoreAllLogs();
-
 // The emulator reaches the host at 10.0.2.2; the iOS simulator shares the host's localhost.
 const COLLECTOR = Platform.OS === "android" ? "http://10.0.2.2:4545" : "http://localhost:4545";
 
@@ -30,6 +28,12 @@ export default function ParityCase() {
   useEffect(() => {
     Appearance.setColorScheme(target);
   }, [target]);
+
+  // Keep dev overlays out of parity screenshots, only while a parity screen is mounted.
+  useEffect(() => {
+    LogBox.ignoreAllLogs(true);
+    return () => LogBox.ignoreAllLogs(false);
+  }, []);
 
   const active = useColorScheme() === "dark" ? "dark" : "light";
   const stage = useRef<HostInstance>(null);
