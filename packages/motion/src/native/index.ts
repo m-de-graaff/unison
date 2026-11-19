@@ -8,10 +8,16 @@ export function useReducedMotion(): boolean {
   const [reduced, setReduced] = useState(false);
   useEffect(() => {
     let active = true;
-    AccessibilityInfo.isReduceMotionEnabled().then((value) => {
-      if (active) setReduced(value);
+    // A change event is newer than the initial query, so once one arrives the query's
+    // (possibly stale) answer is ignored.
+    let changed = false;
+    const subscription = AccessibilityInfo.addEventListener("reduceMotionChanged", (value) => {
+      changed = true;
+      setReduced(value);
     });
-    const subscription = AccessibilityInfo.addEventListener("reduceMotionChanged", setReduced);
+    AccessibilityInfo.isReduceMotionEnabled().then((value) => {
+      if (active && !changed) setReduced(value);
+    });
     return () => {
       active = false;
       subscription.remove();
