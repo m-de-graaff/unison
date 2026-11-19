@@ -46,6 +46,7 @@ export function ${pascal}({ testID, children }: ${pascal}Props) {
     <div
       data-testid={testID}
       style={{
+        boxSizing: "border-box",
         width: cssVar(${camel}Styles.size),
         height: cssVar(${camel}Styles.size),
         borderRadius: cssVar(${camel}Styles.radius),
