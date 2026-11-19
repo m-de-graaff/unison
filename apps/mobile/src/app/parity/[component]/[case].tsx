@@ -1,4 +1,4 @@
-import { fixtures, registry } from "@unison-ui/parity/registry";
+import { getParityCase } from "@unison-ui/parity/registry";
 import { themes } from "@unison-ui/tokens/native";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -36,9 +36,7 @@ export default function ParityCase() {
   const subject = useRef<HostInstance>(null);
   const [ready, setReady] = useState(false);
 
-  const fixture = fixtures.find((f) => f.component === component);
-  const props = fixture?.cases[caseName as keyof typeof fixture.cases];
-  const Subject = registry[component as keyof typeof registry];
+  const parityCase = getParityCase(component, caseName);
 
   function onLayout() {
     if (active !== target || !stage.current || !subject.current) return;
@@ -61,7 +59,7 @@ export default function ParityCase() {
     });
   }
 
-  if (!Subject || !props) return <Text>unknown parity case</Text>;
+  if (!parityCase) return <Text>unknown parity case</Text>;
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -78,7 +76,7 @@ export default function ParityCase() {
       >
         {/* A native view to measure: Box does not forward refs. Same frame as the Box. */}
         <View ref={subject} collapsable={false}>
-          <Subject {...props} testID="subject" />
+          <parityCase.Subject {...parityCase.props} testID="subject" />
         </View>
       </View>
       {ready && <Text testID="parity-ready">ready</Text>}
