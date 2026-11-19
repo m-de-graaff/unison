@@ -1,5 +1,5 @@
 // Entry for `pnpm test:parity`: collector → platforms → compare → report.
-import { execSync, spawnSync } from "node:child_process";
+import { execSync, spawn, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
@@ -55,6 +55,18 @@ function runWeb(): void {
 
 const caseFlow = readFileSync(resolve("maestro/case.yaml"), "utf8");
 
+/**
+ * Runs a command without blocking the event loop. The collector lives in this process, so a
+ * spawnSync while the app POSTs its metrics would leave the request unanswered.
+ */
+function runAsync(cmd: string, args: string[]): Promise<number | null> {
+  return new Promise((done, fail) => {
+    const child = spawn(cmd, args, { stdio: "inherit" });
+    child.once("error", fail);
+    child.once("close", done);
+  });
+}
+
 /** Prints the texts and test ids on screen, so a failed run can be diagnosed from the CI log. */
 function printScreen(platform: "ios" | "android"): void {
   const hierarchy = spawnSync("maestro", ["hierarchy"], { encoding: "utf8" }).stdout ?? "";
@@ -97,8 +109,8 @@ async function runNative(platform: "ios" | "android"): Promise<void> {
           .replaceAll("${OUT}", full),
       );
       console.log(`parity: ${platform} ${r.id}`);
-      const result = spawnSync("maestro", ["test", flow], { stdio: "inherit" });
-      if (result.status !== 0) {
+      const status = await runAsync("maestro", ["test", flow]);
+      if (status !== 0) {
         printScreen(platform);
         throw new Error(`maestro failed for ${platform} ${r.id}`);
       }
