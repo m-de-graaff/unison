@@ -1,7 +1,7 @@
 import { getParityCase } from "@unison-ui/parity/registry";
 import { themes } from "@unison-ui/tokens/native";
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Appearance,
   type HostInstance,
@@ -13,8 +13,10 @@ import {
   View,
 } from "react-native";
 
-// The emulator reaches the host at 10.0.2.2; the iOS simulator shares the host's localhost.
-const COLLECTOR = Platform.OS === "android" ? "http://10.0.2.2:4545" : "http://localhost:4545";
+// The iOS simulator shares the host's localhost; on Android, run.ts maps the emulator's
+// localhost:4545 to the host with `adb reverse`.
+const COLLECTOR = "http://localhost:4545";
+const POST_TIMEOUT_MS = 5000;
 
 // Route: unison-demo://parity/<component>/<case>?scheme=light|dark. Follows the stage contract in
 // packages/parity: a 390-wide stage with 16 padding, the subject top-left, metrics POSTed to the
@@ -38,36 +40,70 @@ export default function ParityCase() {
   const active = useColorScheme() === "dark" ? "dark" : "light";
   const stage = useRef<HostInstance>(null);
   const subject = useRef<HostInstance>(null);
+  const [step, setStep] = useState("waiting for the colour scheme");
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
-  const parityCase = getParityCase(component, caseName);
+  const parityCase = useMemo(() => getParityCase(component, caseName), [component, caseName]);
 
-  function onLayout() {
-    if (active !== target || !stage.current || !subject.current) return;
-    const stageView = stage.current;
-    subject.current.measureLayout(stageView, (x, y, width, height) => {
-      stageView.measureInWindow(async (sx, sy, sw, sh) => {
-        try {
-          const response = await fetch(`${COLLECTOR}/metrics`, {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({
-              platform: Platform.OS,
-              run: `${component}/${caseName}/${target}`,
-              pixelRatio: PixelRatio.get(),
-              stage: { x: sx, y: sy, width: sw, height: sh },
-              parts: { subject: { x, y, width, height } },
-            }),
+  // Measure once the requested scheme is active and a frame has rendered. An effect (rather than
+  // onLayout) re-runs when the scheme flips, so the measurement can't be skipped.
+  useEffect(() => {
+    if (!parityCase || active !== target) return;
+    let cancelled = false;
+    const frame = requestAnimationFrame(() => {
+      const stageView = stage.current;
+      const subjectView = subject.current;
+      if (cancelled || !stageView || !subjectView) {
+        if (!cancelled) setError("stage or subject view not mounted");
+        return;
+      }
+      setStep("measuring");
+      subjectView.measureLayout(
+        stageView,
+        (x, y, width, height) => {
+          stageView.measureInWindow(async (sx, sy, sw, sh) => {
+            if (cancelled) return;
+            setStep(`posting to ${COLLECTOR}`);
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), POST_TIMEOUT_MS);
+            try {
+              const response = await fetch(`${COLLECTOR}/metrics`, {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                signal: controller.signal,
+                body: JSON.stringify({
+                  platform: Platform.OS,
+                  run: `${component}/${caseName}/${target}`,
+                  pixelRatio: PixelRatio.get(),
+                  stage: { x: sx, y: sy, width: sw, height: sh },
+                  parts: { subject: { x, y, width, height } },
+                }),
+              });
+              if (!response.ok) throw new Error(`collector answered ${response.status}`);
+              if (!cancelled) setReady(true);
+            } catch (e) {
+              const reason = controller.signal.aborted
+                ? `no answer within ${POST_TIMEOUT_MS} ms`
+                : e instanceof Error
+                  ? e.message
+                  : String(e);
+              if (!cancelled) setError(`${COLLECTOR}: ${reason}`);
+            } finally {
+              clearTimeout(timeout);
+            }
           });
-          if (!response.ok) throw new Error(`collector answered ${response.status}`);
-          setReady(true);
-        } catch (e) {
-          setError(`${COLLECTOR}: ${e instanceof Error ? e.message : String(e)}`);
-        }
-      });
+        },
+        () => {
+          if (!cancelled) setError("measureLayout failed");
+        },
+      );
     });
-  }
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frame);
+    };
+  }, [active, target, parityCase, component, caseName]);
 
   if (!parityCase) {
     return <Text testID="parity-status">{`unknown parity case: ${component}/${caseName}`}</Text>;
@@ -78,7 +114,6 @@ export default function ParityCase() {
         key={active}
         ref={stage}
         testID="stage"
-        onLayout={onLayout}
         style={{
           width: 390,
           padding: 16,
@@ -95,7 +130,7 @@ export default function ParityCase() {
       {ready && <Text testID="parity-ready">ready</Text>}
       {error && <Text testID="parity-error">{`parity error: ${error}`}</Text>}
       {!ready && !error && (
-        <Text testID="parity-status">{`waiting: scheme ${active}, wanted ${target}`}</Text>
+        <Text testID="parity-status">{`${step} (scheme ${active}, wanted ${target})`}</Text>
       )}
     </View>
   );
