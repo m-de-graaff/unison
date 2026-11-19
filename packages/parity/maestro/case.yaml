@@ -1,6 +1,14 @@
 appId: dev.unison.demo
 ---
 - openLink: unison-demo://parity/${COMPONENT}/${CASE}?scheme=${SCHEME}
+# iOS asks "Open in “Unison Demo”?" before following a custom-scheme link.
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          text: "Open"
+          optional: true
 - extendedWaitUntil:
     visible:
       id: "parity-ready"
