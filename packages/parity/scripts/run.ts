@@ -1,6 +1,6 @@
 // Entry for `pnpm test:parity`: collector → platforms → compare → report.
 import { execSync, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { parseArgs } from "node:util";
@@ -53,6 +53,22 @@ function runWeb(): void {
   if (result.status !== 0) throw new Error("web parity run failed");
 }
 
+const caseFlow = readFileSync(resolve("maestro/case.yaml"), "utf8");
+
+/** Prints the texts and test ids on screen, so a failed run can be diagnosed from the CI log. */
+function printScreen(platform: "ios" | "android"): void {
+  const hierarchy = spawnSync("maestro", ["hierarchy"], { encoding: "utf8" }).stdout ?? "";
+  const seen = new Set<string>();
+  for (const m of hierarchy.matchAll(
+    /"(?:text|accessibilityText|resource-id|id)"\s*:\s*"([^"]+)"/g,
+  )) {
+    if (m[1]) seen.add(m[1]);
+  }
+  console.error(
+    `parity: ${platform} screen shows: ${[...seen].join(" | ") || "(nothing readable)"}`,
+  );
+}
+
 /**
  * Native: Maestro deep-links each run into the release build, the app POSTs its metrics to the
  * collector, and the full-screen screenshot is cropped to the stage it reported.
@@ -64,23 +80,23 @@ async function runNative(platform: "ios" | "android"): Promise<void> {
       const metricsFile = metricsPath(platform, r.id);
       rmSync(metricsFile, { force: true });
       const full = join(shots, r.id.replaceAll("/", "_"));
-      const result = spawnSync(
-        "maestro",
-        [
-          "test",
-          "-e",
-          `COMPONENT=${r.component}`,
-          "-e",
-          `CASE=${r.caseName}`,
-          "-e",
-          `SCHEME=${r.scheme}`,
-          "-e",
-          `OUT=${full}`,
-          resolve("maestro/case.yaml"),
-        ],
-        { stdio: "inherit" },
+      // Fill the flow's placeholders here instead of relying on Maestro's -e substitution, so the
+      // deep link that runs is exactly the one logged.
+      const flow = join(shots, `${r.id.replaceAll("/", "_")}.yaml`);
+      writeFileSync(
+        flow,
+        caseFlow
+          .replaceAll("${COMPONENT}", r.component)
+          .replaceAll("${CASE}", r.caseName)
+          .replaceAll("${SCHEME}", r.scheme)
+          .replaceAll("${OUT}", full),
       );
-      if (result.status !== 0) throw new Error(`maestro failed for ${platform} ${r.id}`);
+      console.log(`parity: ${platform} ${r.id}`);
+      const result = spawnSync("maestro", ["test", flow], { stdio: "inherit" });
+      if (result.status !== 0) {
+        printScreen(platform);
+        throw new Error(`maestro failed for ${platform} ${r.id}`);
+      }
       if (!existsSync(metricsFile)) {
         throw new Error(`no metrics for ${platform} ${r.id}: did the app reach the collector?`);
       }

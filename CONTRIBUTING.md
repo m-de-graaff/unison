@@ -127,6 +127,12 @@ install chromium webkit`). Two optional environment variables help on machines w
 preinstalled browser set: `PARITY_CHROMIUM_PATH` (a Chromium executable to use instead of
 Playwright's) and `PARITY_WEB_PROJECTS` (e.g. `web-chromium` to skip WebKit).
 
+**Native baselines without a Mac:** CI can generate them. Push a commit whose message contains
+`[update-baselines]`: the `parity-ios` and `parity-android` jobs then run with `--update` and commit
+the new baselines back to the branch as `github-actions[bot]`. Review those images in the PR like
+any other baseline change. On failure the jobs upload Maestro's debug output (`maestro-debug-*`),
+and the log shows what was on screen.
+
 **When you may update baselines:** only for an intended visual change. Say why in the PR, and
 attach the parity report. A baseline update that nobody explains will be sent back.
 

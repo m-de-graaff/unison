@@ -49,12 +49,14 @@ export function startCollector(port = 4545): Promise<() => Promise<void>> {
         return;
       }
       if (!isMetrics(parsed)) {
+        console.error(`collector: rejected ${body.slice(0, 200)}`);
         res.writeHead(400, cors).end("invalid metrics");
         return;
       }
       const file = metricsPath(parsed.platform, parsed.run);
       mkdirSync(dirname(file), { recursive: true });
       writeFileSync(file, `${JSON.stringify(parsed, null, 2)}\n`);
+      console.log(`collector: ${parsed.platform} ${parsed.run}`);
       res.writeHead(204, cors).end();
     });
   });
