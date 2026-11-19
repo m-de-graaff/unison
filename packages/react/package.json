@@ -1,0 +1,40 @@
+{
+  "name": "@unison-ui/react",
+  "version": "0.0.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@unison-ui/core": "workspace:^",
+    "@unison-ui/motion": "workspace:^",
+    "@unison-ui/tokens": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-dom": ">=19"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@unison-ui/tsconfig": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tsdown": "^0.23.7",
+    "typescript": "catalog:",
+    "vitest": "^5.1.1"
+  }
+}
