@@ -22,7 +22,7 @@
   },
   "scripts": {
     "build": "tsdown",
-    "dev": "tsdown --watch",
+    "dev": "tsdown --watch --no-clean",
     "typecheck": "tsc --noEmit -p tsconfig.shared.json && tsc --noEmit -p tsconfig.web.json && tsc --noEmit -p tsconfig.native.json",
     "test": "vitest run --coverage"
   },
