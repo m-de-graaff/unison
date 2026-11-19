@@ -74,6 +74,11 @@ function printScreen(platform: "ios" | "android"): void {
  * collector, and the full-screen screenshot is cropped to the stage it reported.
  */
 async function runNative(platform: "ios" | "android"): Promise<void> {
+  if (platform === "android") {
+    // Let the emulator's localhost:4545 reach the collector on the host.
+    const reverse = spawnSync("adb", ["reverse", "tcp:4545", "tcp:4545"], { stdio: "inherit" });
+    if (reverse.status !== 0) throw new Error("adb reverse tcp:4545 failed");
+  }
   const shots = mkdtempSync(join(tmpdir(), `unison-parity-${platform}-`));
   try {
     for (const r of runs()) {
