@@ -1,6 +1,14 @@
 // Entry for `pnpm test:parity`: collector → platforms → compare → report.
 import { execSync, spawn, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { parseArgs } from "node:util";
@@ -55,6 +63,20 @@ function runWeb(): void {
 
 const caseFlow = readFileSync(resolve("maestro/case.yaml"), "utf8");
 
+/** The first file called `name` below `dir`, or undefined. */
+function findFile(dir: string, name: string): string | undefined {
+  if (!existsSync(dir)) return undefined;
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+    if (entry.isFile() && entry.name === name) return path;
+    if (entry.isDirectory()) {
+      const found = findFile(path, name);
+      if (found) return found;
+    }
+  }
+  return undefined;
+}
+
 /**
  * Runs a command without blocking the event loop. The collector lives in this process, so a
  * spawnSync while the app POSTs its metrics would leave the request unanswered.
@@ -96,7 +118,10 @@ async function runNative(platform: "ios" | "android"): Promise<void> {
     for (const r of runs()) {
       const metricsFile = metricsPath(platform, r.id);
       rmSync(metricsFile, { force: true });
-      const full = join(shots, r.id.replaceAll("/", "_"));
+      // Maestro only writes screenshots inside its test output folder, so pass a bare name and
+      // look the file up there afterwards.
+      const shotName = r.id.replaceAll("/", "_");
+      const outputDir = join(shots, `${shotName}-out`);
       // Fill the flow's placeholders here instead of relying on Maestro's -e substitution, so the
       // deep link that runs is exactly the one logged.
       const flow = join(shots, `${r.id.replaceAll("/", "_")}.yaml`);
@@ -106,10 +131,10 @@ async function runNative(platform: "ios" | "android"): Promise<void> {
           .replaceAll("${COMPONENT}", r.component)
           .replaceAll("${CASE}", r.caseName)
           .replaceAll("${SCHEME}", r.scheme)
-          .replaceAll("${OUT}", full),
+          .replaceAll("${OUT}", shotName),
       );
       console.log(`parity: ${platform} ${r.id}`);
-      const status = await runAsync("maestro", ["test", flow]);
+      const status = await runAsync("maestro", ["test", "--test-output-dir", outputDir, flow]);
       if (status !== 0) {
         printScreen(platform);
         throw new Error(`maestro failed for ${platform} ${r.id}`);
@@ -121,7 +146,9 @@ async function runNative(platform: "ios" | "android"): Promise<void> {
       const px = (n: number) => Math.round(n * m.pixelRatio);
       const out = screenshotPath(platform, r.id);
       mkdirSync(dirname(out), { recursive: true });
-      await sharp(`${full}.png`)
+      const full = findFile(outputDir, `${shotName}.png`);
+      if (!full) throw new Error(`maestro wrote no ${shotName}.png under ${outputDir}`);
+      await sharp(full)
         .extract({
           left: px(m.stage.x),
           top: px(m.stage.y),
