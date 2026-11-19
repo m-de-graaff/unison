@@ -1,0 +1,1 @@
+{ "extends": "@unison-ui/tsconfig/shared.json", "include": ["src/shared"] }
