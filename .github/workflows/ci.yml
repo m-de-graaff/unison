@@ -134,8 +134,10 @@ jobs:
           xcrun simctl bootstatus "$UDID" -b
           echo "PARITY_IOS_DEVICE=$NAME" >> "$GITHUB_ENV"
       - run: pnpm build
-      # Incremental Xcode builds: keep CocoaPods downloads and DerivedData between runs.
-      - uses: actions/cache@v6
+      # Incremental Xcode builds: keep CocoaPods downloads and DerivedData between runs. Restore and
+      # save are split so a failed parity run still leaves a warm cache for the next one.
+      - uses: actions/cache/restore@v6
+        id: ios-cache
         with:
           path: |
             ~/Library/Caches/CocoaPods
@@ -145,6 +147,13 @@ jobs:
       - name: Release build on the simulator
         working-directory: apps/mobile
         run: npx expo run:ios --configuration Release --device "$PARITY_IOS_DEVICE" --no-bundler
+      - uses: actions/cache/save@v6
+        if: always() && steps.ios-cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/Library/Caches/CocoaPods
+            ~/Library/Developer/Xcode/DerivedData
+          key: ios-build-${{ hashFiles('pnpm-lock.yaml', 'apps/mobile/app.json') }}
       - run: pnpm test:parity --platform ios $PARITY_FLAGS
       - name: Commit generated baselines
         if: env.PARITY_FLAGS == '--update'
@@ -203,8 +212,9 @@ jobs:
           curl -fsSL "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
       - run: pnpm build
-      # Incremental Gradle builds between runs.
-      - uses: actions/cache@v6
+      # Incremental Gradle builds between runs (restore here, save at the end even on failure).
+      - uses: actions/cache/restore@v6
+        id: gradle-cache
         with:
           path: |
             ~/.gradle/caches
@@ -213,7 +223,7 @@ jobs:
           restore-keys: gradle-
       # A cached, already-booted emulator snapshot (reactivecircus/android-emulator-runner README).
       # Emulator profile: packages/parity/parity-devices.json (android).
-      - uses: actions/cache@v6
+      - uses: actions/cache/restore@v6
         id: avd-cache
         with:
           path: |
@@ -233,6 +243,13 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
+      - uses: actions/cache/save@v6
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-36-google_apis-x86_64-pixel_7
       - uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 36
@@ -246,6 +263,13 @@ jobs:
           script: |
             cd apps/mobile && npx expo run:android --variant release --no-bundler
             pnpm test:parity --platform android $PARITY_FLAGS
+      - uses: actions/cache/save@v6
+        if: always() && steps.gradle-cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('pnpm-lock.yaml', 'apps/mobile/app.json') }}
       - name: Commit generated baselines
         if: env.PARITY_FLAGS == '--update'
         run: |
