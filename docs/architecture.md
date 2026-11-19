@@ -45,10 +45,14 @@ Enforced by `tooling/scripts/check-boundaries.ts` (part of `pnpm lint`):
 
 | Files | Must not import |
 | --- | --- |
-| `packages/tokens`, `packages/core`, `packages/motion/src/shared/**` | `react-dom`, `react-native`, `react-native-*` |
-| `packages/motion/src/web/**`, `packages/react/**` | `react-native`, `react-native-*` |
-| `packages/motion/src/native/**`, `packages/native/**` | `react-dom` |
+| `packages/tokens`, `packages/core`, `packages/motion/src/shared/**` | `react-dom`, `react-native`, `react-native-*`, `@unison-ui/react`, `@unison-ui/native`, `@unison-ui/ui` |
+| `packages/motion/src/web/**`, `packages/react/**` | `react-native`, `react-native-*`, `@unison-ui/native`, `@unison-ui/ui` |
+| `packages/motion/src/native/**`, `packages/native/**` | `react-dom`, `@unison-ui/react`, `@unison-ui/ui` |
 | any package | a relative import that leaves its own package |
+
+The renderers count as platform imports because they pull in `react-dom` or `react-native`
+transitively. The check reads static and side-effect imports, re-exports, `import()` and
+`require()` (string or plain template literal), and ignores comments.
 
 TypeScript backs this up: `tokens`, `core` and `motion/src/shared` are typechecked without the DOM
 lib, so a stray `window` or `document` fails.
