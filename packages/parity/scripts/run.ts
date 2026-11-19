@@ -17,12 +17,14 @@ const { values } = parseArgs({
   options: {
     platform: { type: "string", default: "all" },
     update: { type: "boolean", default: false },
+    // CI: each job has only its own platform, so skip the cross-platform check there.
+    "baseline-only": { type: "boolean", default: false },
   },
 });
 
 const selected = values.platform;
 if (!["web", "ios", "android", "all"].includes(selected)) {
-  console.error("Usage: test:parity [--platform web|ios|android|all] [--update]");
+  console.error("Usage: test:parity [--platform web|ios|android|all] [--update] [--baseline-only]");
   process.exit(1);
 }
 const targets: Target[] = selected === "all" ? ["web", "ios", "android"] : [selected as Target];
@@ -115,7 +117,7 @@ try {
     }
     await runPlatform(target);
   }
-  const failures = compare({ update: values.update });
+  const failures = compare({ update: values.update, baselineOnly: values["baseline-only"] });
   const report = writeReport(failures);
   if (failures.length > 0) {
     console.error(failures.join("\n"));

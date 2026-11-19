@@ -1,0 +1,169 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CI: "1"
+  TURBO_UI: "false"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0 } # turbo --affected needs history
+      - uses: pnpm/action-setup@v6 # reads packageManager from package.json
+      - uses: actions/setup-node@v7
+        with: { node-version-file: .nvmrc, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm turbo run typecheck test build --affected
+      # check:packages packs every package, so they all need dist/ (cached by turbo).
+      - run: pnpm build
+      - run: pnpm check:packages
+
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      native: ${{ steps.filter.outputs.native }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          filters: |
+            native:
+              - "packages/**"
+              - "apps/mobile/**"
+              - "packages/parity/**"
+
+  parity-web:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0 }
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with: { node-version-file: .nvmrc, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @unison-ui/parity exec playwright install --with-deps chromium webkit
+      - run: pnpm test:parity --platform web --baseline-only
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: parity-${{ github.job }}
+          path: packages/parity/parity-output
+
+  parity-ios:
+    needs: [check, changes]
+    if: needs.changes.outputs.native == 'true'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0 }
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with: { node-version-file: .nvmrc, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - name: Install Maestro
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+      - name: Boot the parity simulator (packages/parity/parity-devices.json)
+        run: |
+          NAME=$(node -p "require('./packages/parity/parity-devices.json').ios.name")
+          TYPE=$(node -p "require('./packages/parity/parity-devices.json').ios.deviceType")
+          UDID=$(xcrun simctl create "$NAME" "$TYPE")
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          echo "PARITY_IOS_DEVICE=$NAME" >> "$GITHUB_ENV"
+      - run: pnpm build
+      - name: Release build on the simulator
+        working-directory: apps/mobile
+        run: npx expo run:ios --configuration Release --device "$PARITY_IOS_DEVICE" --no-bundler
+      - run: pnpm test:parity --platform ios --baseline-only
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: parity-${{ github.job }}
+          path: packages/parity/parity-output
+
+  parity-android:
+    needs: [check, changes]
+    if: needs.changes.outputs.native == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0 }
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with: { node-version-file: .nvmrc, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: actions/setup-java@v6
+        with: { distribution: temurin, java-version: 17 }
+      - name: Install Maestro
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+      - run: pnpm build
+      # Emulator profile: packages/parity/parity-devices.json (android).
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7
+          avd-name: unison-parity
+          script: |
+            cd apps/mobile && npx expo run:android --variant release --no-bundler
+            pnpm test:parity --platform android --baseline-only
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: parity-${{ github.job }}
+          path: packages/parity/parity-output
+
+  parity-compare:
+    needs: [parity-web, parity-ios, parity-android]
+    # Runs when every parity job succeeded or was skipped (docs-only PRs skip the native ones).
+    if: always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with: { node-version-file: .nvmrc, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: parity-*
+          path: packages/parity/parity-output
+          merge-multiple: true
+      - name: Cross-platform comparison and report
+        working-directory: packages/parity
+        run: |
+          status=0
+          pnpm exec tsx scripts/compare.ts --cross-only || status=$?
+          pnpm exec tsx scripts/report.ts --cross-only
+          exit $status
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: parity-report
+          path: packages/parity/parity-output/report.html

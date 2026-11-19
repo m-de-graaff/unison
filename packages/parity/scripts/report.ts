@@ -2,8 +2,10 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { parseArgs } from "node:util";
 import { runs } from "../src/fixtures";
 import { type Metrics, metricsPath, OUT, PLATFORMS, screenshotPath } from "../src/types";
+import { compare } from "./compare";
 
 const escapeHtml = (s: string) =>
   s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
@@ -64,5 +66,16 @@ ${rows.join("\n")}
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  console.log(`wrote ${writeReport([])}`);
+  // Same flags as compare.ts; the report includes the failures that comparison finds.
+  const { values } = parseArgs({
+    options: {
+      "baseline-only": { type: "boolean", default: false },
+      "cross-only": { type: "boolean", default: false },
+    },
+  });
+  const failures = compare({
+    baselineOnly: values["baseline-only"],
+    crossOnly: values["cross-only"],
+  });
+  console.log(`wrote ${writeReport(failures)}`);
 }
