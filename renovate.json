@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":semanticCommits", "group:monorepos"],
+  "schedule": ["before 6am on monday"],
+  "packageRules": [
+    {
+      "description": "Expo SDK and everything pinned to it is upgraded by hand with npx expo install --fix",
+      "matchPackageNames": [
+        "expo",
+        "react",
+        "react-dom",
+        "react-native",
+        "@types/react",
+        "jest-expo",
+        "react-native-reanimated",
+        "react-native-gesture-handler",
+        "react-native-worklets",
+        "@types/react-dom",
+        "@react-native/jest-preset",
+        "/^expo-/",
+        "/^@expo\\//",
+        "/^react-native-/"
+      ],
+      "enabled": false
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "dev dependencies (non-major)"
+    }
+  ]
+}

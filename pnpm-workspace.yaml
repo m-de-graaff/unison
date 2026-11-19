@@ -1,0 +1,21 @@
+packages:
+  - apps/*
+  - packages/*
+  - tooling/*
+
+catalog:
+  typescript: 7.0.2
+  react: 19.3.0
+  react-dom: 19.3.0
+  "@types/react": ~19.3.0
+  "@types/react-dom": ~19.3.0
+
+# pnpm 12 reads these from here, not from .npmrc (see docs/plans/phase-0.md, OQ-1)
+nodeLinker: hoisted
+autoInstallPeers: true
+strictPeerDependencies: false
+linkWorkspacePackages: true
+allowBuilds:
+  "@parcel/watcher": false
+  esbuild: true
+  lefthook: false # hooks are installed by the root "prepare" script (todo step 25)

@@ -1,0 +1,57 @@
+name: Snapshot
+
+# Publishes 0.0.0-pr<n>-<timestamp> versions under the pr<n> dist-tag for PRs labelled "snapshot".
+# The PR needs at least one changeset.
+on:
+  pull_request:
+    types: [labeled, synchronize]
+
+concurrency:
+  group: snapshot-${{ github.event.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  id-token: write # npm provenance
+
+env:
+  CI: "1"
+  TURBO_UI: "false"
+
+jobs:
+  snapshot:
+    if: contains(github.event.pull_request.labels.*.name, 'snapshot')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0 }
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm changeset version --snapshot pr${{ github.event.number }}
+      - run: pnpm changeset publish --tag pr${{ github.event.number }} --no-git-tag
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const tag = `pr${context.issue.number}`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: [
+                "Snapshot published. Install it with:",
+                "",
+                "```bash",
+                `pnpm add @unison-ui/ui@${tag} @unison-ui/tokens@${tag}`,
+                "```",
+              ].join("\n"),
+            });

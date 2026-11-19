@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.turbo/
+.next/
+.expo/
+expo-env.d.ts
+apps/mobile/ios/
+apps/mobile/android/
+coverage/
+playwright-report/
+test-results/
+parity-output/
+*.tsbuildinfo
+.DS_Store
+.env*.local

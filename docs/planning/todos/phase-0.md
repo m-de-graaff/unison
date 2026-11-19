@@ -27,16 +27,16 @@ These are the defaults the steps below are written for. Each one becomes an ADR 
 
 | Decision | Default | Affects steps |
 | --- | --- | --- |
-| Name and scope | Unison, npm scope `@unison-ui`, GitHub org `unison-ui` | All |
-| Package manager and monorepo | pnpm workspaces + Turborepo | 3, 6 |
-| Native support | Expo only for v1 (bare React Native is not tested) | 17, 21 |
-| Minimum versions | React 19, React Native New Architecture only | 3, 17 |
-| Native Tailwind engine | Uniwind (confirm with the spike in step 17.5; fall back to NativeWind if it fails) | 17 |
-| Web motion engine | CSS + Web Animations API; decide on adding Motion in phase 4 | 10 |
-| Package builds | tsdown, ESM only | 11–13 |
-| Lint and format | Biome | 5 |
-| Tests | Vitest for web and shared code, Jest (`jest-expo`) for native | 18 |
-| License | MIT | 1 |
+| [Name and scope](../../adr/0001-name-and-scope.md) | Unison, npm scope `@unison-ui`, GitHub org `unison-ui` | All |
+| [Package manager and monorepo](../../adr/0002-pnpm-and-turborepo.md) | pnpm workspaces + Turborepo | 3, 6 |
+| [Native support](../../adr/0003-expo-only-native.md) | Expo only for v1 (bare React Native is not tested) | 17, 21 |
+| [Minimum versions](../../adr/0004-react-19-new-architecture.md) | React 19, React Native New Architecture only | 3, 17 |
+| [Native Tailwind engine](../../adr/0005-native-tailwind-engine.md) | Uniwind (confirm with the spike in step 17.5; fall back to NativeWind if it fails) | 17 |
+| [Web motion engine](../../adr/0006-web-motion-engine.md) | CSS + Web Animations API; decide on adding Motion in phase 4 | 10 |
+| [Package builds](../../adr/0007-tsdown-esm-only.md) | tsdown, ESM only | 11–13 |
+| [Lint and format](../../adr/0011-biome-lint-and-format.md) | Biome | 5 |
+| [Tests](../../adr/0009-testing-stack.md) | Vitest for web and shared code, Jest (`jest-expo`) for native | 18 |
+| [License](../../adr/0010-mit-license.md) | MIT | 1 |
 
 ### Target layout
 

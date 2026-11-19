@@ -1,0 +1,4 @@
+{
+  "extends": "@unison-ui/tsconfig/web.json",
+  "include": ["test"]
+}

@@ -1,0 +1,471 @@
+name: CI
+
+on:
+  pull_request:
+    # "labeled" so adding the `native` label starts the native parity jobs.
+    types: [opened, synchronize, reopened, labeled]
+  push:
+    branches: [main]
+  schedule:
+    # Nightly on main: native parity with full release builds, so a repacked app (see the note above
+    # parity-ios) can't drift from a real build for longer than a day.
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+    inputs:
+      platforms:
+        description: Native platforms to run
+        type: choice
+        options: [both, ios, android, none]
+        default: both
+      update_baselines:
+        description: Regenerate the native baselines and commit them to this branch
+        type: boolean
+        default: false
+      full_build:
+        description: Rebuild the native apps instead of reusing a cached build
+        type: boolean
+        default: false
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CI: "1"
+  TURBO_UI: "false"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0 } # turbo --affected needs history
+      - uses: pnpm/action-setup@v6 # reads packageManager from package.json
+      - uses: actions/setup-node@v7
+        with: { node-version-file: .nvmrc, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm turbo run typecheck test build --affected
+      # check:packages packs every package, so they all need dist/ (cached by turbo).
+      - run: pnpm build
+      - run: pnpm check:packages
+
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      ios: ${{ steps.decide.outputs.ios }}
+      android: ${{ steps.decide.outputs.android }}
+      update: ${{ steps.decide.outputs.update }}
+      full: ${{ steps.decide.outputs.full }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: dorny/paths-filter@v4
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
+        id: filter
+        with:
+          filters: |
+            native:
+              - "packages/tokens/**"
+              - "packages/core/**"
+              - "packages/motion/**"
+              - "packages/native/**"
+              - "packages/ui/**"
+              - "packages/demo-content/**"
+              - "packages/parity/**"
+              - "apps/mobile/**"
+              - "pnpm-lock.yaml"
+              - ".github/workflows/ci.yml"
+      # When native parity runs (CONTRIBUTING.md, section 4):
+      # - PR or push to main: native code changed AND (the `native` label, main, or a head commit
+      #   containing [update-baselines], which also regenerates the baselines);
+      # - nightly: both platforms, full builds;
+      # - manual (workflow_dispatch): as chosen.
+      # Skipped native jobs count as passing in parity-compare.
+      - id: decide
+        env:
+          EVENT: ${{ github.event_name }}
+          CHANGED: ${{ steps.filter.outputs.native }}
+          LABELLED: ${{ contains(github.event.pull_request.labels.*.name, 'native') }}
+          ON_MAIN: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          PLATFORMS: ${{ inputs.platforms }}
+          IN_UPDATE: ${{ inputs.update_baselines }}
+          IN_FULL: ${{ inputs.full_build }}
+        run: |
+          ios=false android=false update=false full=false
+          case "$EVENT" in
+            workflow_dispatch)
+              case "$PLATFORMS" in
+                both) ios=true android=true ;;
+                ios) ios=true ;;
+                android) android=true ;;
+              esac
+              update=$IN_UPDATE
+              full=$IN_FULL
+              ;;
+            schedule)
+              ios=true android=true full=true
+              ;;
+            *)
+              git log -1 --format=%B | grep -qF "[update-baselines]" && update=true
+              if [ "$CHANGED" = true ] && { [ "$LABELLED" = true ] || [ "$ON_MAIN" = true ] || [ "$update" = true ]; }; then
+                ios=true android=true
+              fi
+              ;;
+          esac
+          [ "$ios" = true ] || [ "$android" = true ] || update=false
+          {
+            echo "ios=$ios"
+            echo "android=$android"
+            echo "update=$update"
+            echo "full=$full"
+          } >> "$GITHUB_OUTPUT"
+          echo "event=$EVENT changed=$CHANGED label=$LABELLED main=$ON_MAIN: ios=$ios android=$android update=$update full=$full"
+
+  parity-web:
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Browsers and their system libraries are preinstalled, so no apt step (and no dependency on
+    # Ubuntu's mirrors). Keep the tag equal to @playwright/test in packages/parity.
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.1-noble
+      options: --user 1001
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0 }
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with: { node-version-file: .nvmrc, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test:parity --platform web --baseline-only
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: parity-${{ github.job }}
+          path: packages/parity/parity-output
+
+  # The native jobs build the release app only when its native side changed. The built app is
+  # cached under its @expo/fingerprint, which covers native dependencies, config plugins and
+  # app.json but not the JS of the workspace packages. On a cache hit, @expo/repack-app puts a fresh
+  # JS bundle into the cached app (export:embed with Hermes bytecode, as the release build does):
+  # about a minute instead of a 20-40 minute build. Nightly runs and full_build skip the cache.
+  parity-ios:
+    needs: [check, changes]
+    if: needs.changes.outputs.ios == 'true'
+    runs-on: macos-latest
+    # A cache miss means a full release build (measured 21-37 minutes), plus about 10 minutes of
+    # setup and tests. A repacked run takes about 8 minutes.
+    timeout-minutes: 60
+    env:
+      PARITY_FLAGS: ${{ needs.changes.outputs.update == 'true' && '--update' || '--baseline-only' }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with: { node-version-file: .nvmrc, cache: pnpm }
+      - name: Start the parity simulator (packages/parity/parity-devices.json)
+        # It boots while the next steps run; "Wait for the simulator" waits for it.
+        run: |
+          NAME=$(node -p "require('./packages/parity/parity-devices.json').ios.name")
+          TYPE=$(node -p "require('./packages/parity/parity-devices.json').ios.deviceType")
+          UDID=$(xcrun simctl create "$NAME" "$TYPE")
+          xcrun simctl boot "$UDID"
+          echo "PARITY_IOS_DEVICE=$NAME" >> "$GITHUB_ENV"
+          echo "PARITY_IOS_UDID=$UDID" >> "$GITHUB_ENV"
+      - run: pnpm install --frozen-lockfile
+      - name: Install Maestro
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+      - run: pnpm build
+      - name: Native fingerprint
+        id: fp
+        working-directory: apps/mobile
+        run: |
+          FP=$(npx fingerprint fingerprint:generate --platform ios | node -e "process.stdout.write(JSON.parse(require('fs').readFileSync(0, 'utf8')).hash)")
+          XCODE=$(xcodebuild -version | head -1 | tr -cd '[:alnum:].')
+          echo "key=ios-app-v1-$XCODE-$FP" >> "$GITHUB_OUTPUT"
+          echo "fingerprint $FP, $XCODE"
+      - uses: actions/cache/restore@v6
+        id: app-cache
+        if: needs.changes.outputs.full != 'true'
+        with:
+          path: ${{ runner.temp }}/native-app/ios
+          key: ${{ steps.fp.outputs.key }}
+      - name: Wait for the simulator
+        run: xcrun simctl bootstatus "$PARITY_IOS_UDID" -b
+      - name: Release build on the simulator
+        id: build
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        working-directory: apps/mobile
+        # A step timeout fails the step instead of cancelling the job, so the log upload below
+        # still runs and a hung build can be diagnosed.
+        timeout-minutes: 45
+        run: |
+          set -o pipefail
+          npx expo run:ios --configuration Release --device "$PARITY_IOS_DEVICE" --no-bundler 2>&1 | tee "$RUNNER_TEMP/ios-build.log"
+          APP=$(find ~/Library/Developer/Xcode/DerivedData -maxdepth 5 -type d -path "*/Build/Products/Release-iphonesimulator/*.app" | head -1)
+          test -n "$APP"
+          mkdir -p "$RUNNER_TEMP/native-app/ios"
+          cp -R "$APP" "$RUNNER_TEMP/native-app/ios/"
+      - uses: actions/upload-artifact@v7
+        if: failure() && steps.build.outcome == 'failure'
+        with:
+          name: ios-build-log
+          path: |
+            ${{ runner.temp }}/ios-build.log
+            apps/mobile/.expo/xcodebuild*.log
+      - uses: actions/cache/save@v6
+        if: steps.build.outcome == 'success'
+        with:
+          path: ${{ runner.temp }}/native-app/ios
+          key: ${{ steps.fp.outputs.key }}
+      - name: Repack the cached app with the current JS and install it
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: |
+          SOURCE=$(ls -d "$RUNNER_TEMP"/native-app/ios/*.app | head -1)
+          OUT="$RUNNER_TEMP/repacked/$(basename "$SOURCE")"
+          mkdir -p "$(dirname "$OUT")"
+          npx repack-app --platform ios --js-bundle-only --source-app "$SOURCE" \
+            --working-directory "$RUNNER_TEMP/repack-work" --output "$OUT" apps/mobile
+          xcrun simctl install "$PARITY_IOS_UDID" "$OUT"
+      - run: pnpm test:parity --platform ios $PARITY_FLAGS
+      - uses: actions/upload-artifact@v7
+        if: needs.changes.outputs.update == 'true'
+        with:
+          name: baselines-ios
+          path: packages/parity/baselines/ios
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: parity-${{ github.job }}
+          path: packages/parity/parity-output
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: maestro-debug-ios
+          path: ~/.maestro/tests
+
+  parity-android:
+    needs: [check, changes]
+    if: needs.changes.outputs.android == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      PARITY_FLAGS: ${{ needs.changes.outputs.update == 'true' && '--update' || '--baseline-only' }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with: { node-version-file: .nvmrc, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: actions/setup-java@v6
+        with: { distribution: temurin, java-version: 17 }
+      - name: Install Maestro
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+      - run: pnpm build
+      - name: Native fingerprint
+        id: fp
+        working-directory: apps/mobile
+        run: |
+          FP=$(npx fingerprint fingerprint:generate --platform android | node -e "process.stdout.write(JSON.parse(require('fs').readFileSync(0, 'utf8')).hash)")
+          echo "fp=$FP" >> "$GITHUB_OUTPUT"
+          echo "key=android-apk-v1-$FP" >> "$GITHUB_OUTPUT"
+          echo "fingerprint $FP"
+      - uses: actions/cache/restore@v6
+        id: app-cache
+        if: needs.changes.outputs.full != 'true'
+        with:
+          path: ${{ runner.temp }}/native-app/android
+          key: ${{ steps.fp.outputs.key }}
+      # Gradle's caches only matter when the APK is built.
+      - uses: actions/cache/restore@v6
+        id: gradle-cache
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ steps.fp.outputs.fp }}
+          restore-keys: gradle-
+      - name: Release build
+        id: build
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        working-directory: apps/mobile
+        timeout-minutes: 30
+        # Only the emulator's ABI, as `expo run:android` does for the device it installs on.
+        run: |
+          npx expo prebuild --platform android --no-install
+          (cd android && ./gradlew :app:assembleRelease -PreactNativeArchitectures=x86_64)
+          mkdir -p "$RUNNER_TEMP/native-app/android"
+          cp android/app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/native-app/android/"
+          echo "PARITY_APK=$RUNNER_TEMP/native-app/android/app-release.apk" >> "$GITHUB_ENV"
+      - uses: actions/cache/save@v6
+        if: always() && steps.build.outcome != 'skipped' && steps.gradle-cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ steps.fp.outputs.fp }}
+      - uses: actions/cache/save@v6
+        if: steps.build.outcome == 'success'
+        with:
+          path: ${{ runner.temp }}/native-app/android
+          key: ${{ steps.fp.outputs.key }}
+      - name: Repack the cached APK with the current JS
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: |
+          TOOLS="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)"
+          OUT="$RUNNER_TEMP/repacked/app-release.apk"
+          mkdir -p "$(dirname "$OUT")"
+          npx repack-app --platform android --js-bundle-only \
+            --source-app "$RUNNER_TEMP/native-app/android/app-release.apk" \
+            --android-build-tools-dir "$TOOLS" \
+            --working-directory "$RUNNER_TEMP/repack-work" --output "$OUT" apps/mobile
+          echo "PARITY_APK=$OUT" >> "$GITHUB_ENV"
+      # A cached, already-booted emulator snapshot (reactivecircus/android-emulator-runner README).
+      # Emulator profile: packages/parity/parity-devices.json (android).
+      - uses: actions/cache/restore@v6
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-36-google_apis-x86_64-pixel_7
+      - name: Create the emulator snapshot
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7
+          avd-name: unison-parity
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+      - uses: actions/cache/save@v6
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-36-google_apis-x86_64-pixel_7
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7
+          avd-name: unison-parity
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: |
+            adb install -r "$PARITY_APK"
+            pnpm test:parity --platform android $PARITY_FLAGS
+      - uses: actions/upload-artifact@v7
+        if: needs.changes.outputs.update == 'true'
+        with:
+          name: baselines-android
+          path: packages/parity/baselines/android
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: parity-${{ github.job }}
+          path: packages/parity/parity-output
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: maestro-debug-android
+          path: ~/.maestro/tests
+
+  parity-compare:
+    needs: [parity-web, parity-ios, parity-android]
+    # Runs when every parity job succeeded or was skipped (docs-only PRs skip the native ones).
+    if: always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with: { node-version-file: .nvmrc, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: parity-*
+          path: packages/parity/parity-output
+          merge-multiple: true
+      - name: Cross-platform comparison and report
+        working-directory: packages/parity
+        run: |
+          status=0
+          pnpm exec tsx scripts/compare.ts --cross-only || status=$?
+          pnpm exec tsx scripts/report.ts --cross-only
+          exit $status
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: parity-report
+          path: packages/parity/parity-output/report.html
+
+  # [update-baselines] or update_baselines: one commit with every regenerated platform, made once
+  # all parity jobs passed. A push made with GITHUB_TOKEN starts no CI of its own, so this job then
+  # dispatches CI on the new head (GitHub allows workflow_dispatch from GITHUB_TOKEN), and the PR
+  # gets checks for its head without another commit. That run skips the native jobs: their
+  # results are the screenshots just committed.
+  commit-baselines:
+    needs: [changes, parity-ios, parity-android, parity-compare]
+    if: always() && needs.changes.outputs.update == 'true' && needs.parity-compare.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      actions: write # gh workflow run
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: baselines-*
+          path: ${{ runner.temp }}/baselines
+      - name: Commit the baselines and run CI on the new head
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          platforms=""
+          for dir in "$RUNNER_TEMP"/baselines/baselines-*; do
+            platform=${dir##*/baselines-}
+            rm -rf "packages/parity/baselines/$platform"
+            cp -R "$dir" "packages/parity/baselines/$platform"
+            platforms="$platforms${platforms:+ and }$platform"
+          done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/parity/baselines
+          if git diff --cached --quiet; then echo "no baseline changes"; exit 0; fi
+          git commit -m "test(parity): $platforms baselines from CI"
+          git push origin "HEAD:$BRANCH"
+          gh workflow run ci.yml --ref "$BRANCH" -f platforms=none

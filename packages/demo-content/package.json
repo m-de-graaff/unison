@@ -1,0 +1,36 @@
+{
+  "name": "demo-content",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/demo.d.ts",
+      "default": "./dist/demo.js"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch --no-clean",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@unison-ui/ui": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@unison-ui/tsconfig": "workspace:*",
+    "react": "catalog:",
+    "tsdown": "^0.23.7",
+    "typescript": "catalog:",
+    "vitest": "^5.1.1"
+  }
+}

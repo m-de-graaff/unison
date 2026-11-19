@@ -1,0 +1,5 @@
+{
+  "extends": "@unison-ui/tsconfig/web.json",
+  "compilerOptions": { "types": [] },
+  "include": ["src/web", "src/native", "src/shared", "test"]
+}

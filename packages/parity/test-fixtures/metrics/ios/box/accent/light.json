@@ -1,0 +1,7 @@
+{
+  "platform": "ios",
+  "run": "box/accent/light",
+  "pixelRatio": 3,
+  "stage": { "x": 0, "y": 0, "width": 390, "height": 128 },
+  "parts": { "subject": { "x": 18, "y": 16, "width": 96, "height": 96 } }
+}

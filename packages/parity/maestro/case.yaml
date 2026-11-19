@@ -1,0 +1,20 @@
+appId: dev.unison.demo
+---
+# One run. run.ts fills the placeholders and chains every run's commands into a single flow, so
+# Maestro (and its iOS driver) starts once per platform instead of once per run.
+- openLink: unison-demo://parity/${COMPONENT}/${CASE}?scheme=${SCHEME}
+# iOS asks "Open in “Unison Demo”?" before following a custom-scheme link.
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          text: "Open"
+          optional: true
+# The marker names its run, so a marker left over from the previous run never matches.
+- extendedWaitUntil:
+    visible:
+      id: "parity-ready"
+      text: "ready ${COMPONENT}/${CASE}/${SCHEME}"
+    timeout: 15000
+- takeScreenshot: ${OUT}

@@ -1,0 +1,7 @@
+{
+  "platform": "web-chromium",
+  "run": "box/accent/light",
+  "pixelRatio": 2,
+  "stage": { "x": 0, "y": 0, "width": 390, "height": 128 },
+  "parts": { "subject": { "x": 16, "y": 16, "width": 96, "height": 96 } }
+}

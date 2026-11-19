@@ -1,0 +1,1 @@
+{ "extends": "@unison-ui/tsconfig/native.json", "include": ["src/native", "src/shared"] }

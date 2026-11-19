@@ -1,0 +1,36 @@
+{
+  "name": "unison",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.21.0+sha512.66fd8278ee28935ce951792d34367ff3af5c432a2756445823029533835b8da529bbe0be5130afd56ed0713fb8789e47bad82d93bd5ae2fe54b15562d6276ef0",
+  "engines": {
+    "node": "^26"
+  },
+  "scripts": {
+    "lint": "biome check . && tsx tooling/scripts/check-boundaries.ts",
+    "format": "biome check --write .",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "dev:web": "turbo run dev --filter=web-next --filter=web-vite",
+    "dev:mobile": "turbo run dev --filter=mobile",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:parity": "turbo run test:parity --filter=@unison-ui/parity --",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "check:packages": "pnpm -r --filter \"./packages/*\" exec sh -c 'publint && attw --pack . --profile esm-only'",
+    "release": "pnpm build && changeset publish",
+    "prepare": "lefthook install",
+    "doctor": "tsx tooling/scripts/doctor.ts",
+    "new:component": "tsx tooling/scripts/new-component.ts"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@biomejs/biome": "^2.6.8",
+    "@changesets/cli": "^3.0.3",
+    "lefthook": "^2.2.2",
+    "publint": "^0.3.25",
+    "tsx": "^4.23.15",
+    "turbo": "^2.11.12",
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "ios": {
+    "name": "Unison Parity iPhone",
+    "deviceType": "com.apple.CoreSimulator.SimDeviceType.iPhone-16e",
+    "widthPt": 390
+  },
+  "android": {
+    "avd": "unison-parity",
+    "device": "pixel_7",
+    "apiLevel": 36,
+    "systemImage": "system-images;android-36;google_apis;x86_64"
+  }
+}

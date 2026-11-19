@@ -1,0 +1,48 @@
+{
+  "name": "@unison-ui/core",
+  "version": "0.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-de-graaff/unison.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/m-de-graaff/unison#readme",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch --no-clean",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@unison-ui/tsconfig": "workspace:*",
+    "@vitest/coverage-v8": "^5.1.1",
+    "jsdom": "^31.0.1",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tsdown": "^0.23.7",
+    "typescript": "catalog:",
+    "vitest": "^5.1.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

@@ -1,0 +1,30 @@
+name: Bug report
+description: Something renders or behaves wrong
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: Where does it happen?
+      multiple: true
+      options:
+        - Web
+        - iOS
+        - Android
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      description: The @unison-ui/* version you use (e.g. 0.1.0 or pr123)
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Steps or a minimal snippet, what you expected and what happened instead.
+    validations:
+      required: true

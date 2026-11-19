@@ -1,0 +1,51 @@
+{
+  "name": "@unison-ui/ui",
+  "version": "0.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-de-graaff/unison.git",
+    "directory": "packages/ui"
+  },
+  "homepage": "https://github.com/m-de-graaff/unison#readme",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/web.d.ts",
+      "react-native": "./dist/native.js",
+      "browser": "./dist/web.js",
+      "default": "./dist/web.js"
+    }
+  },
+  "react-native": "./dist/native.js",
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch --no-clean",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@unison-ui/native": "workspace:^",
+    "@unison-ui/react": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@unison-ui/tsconfig": "workspace:*",
+    "react": "catalog:",
+    "react-native": "0.88.1",
+    "tsdown": "^0.23.7",
+    "typescript": "catalog:",
+    "vitest": "^5.1.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
