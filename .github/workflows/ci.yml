@@ -69,9 +69,22 @@ jobs:
     needs: [check, changes]
     if: needs.changes.outputs.native == 'true'
     runs-on: macos-latest
+    permissions:
+      contents: write # commits generated baselines back in [update-baselines] mode
     steps:
       - uses: actions/checkout@v7
-        with: { fetch-depth: 0 }
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref_name }}
+      - name: Baseline mode
+        # A head commit message containing [update-baselines] regenerates this platform's
+        # baselines and commits them back (there's no macOS machine to do it locally).
+        run: |
+          if git log -1 --format=%B | grep -qF "[update-baselines]"; then
+            echo "PARITY_FLAGS=--update" >> "$GITHUB_ENV"
+          else
+            echo "PARITY_FLAGS=--baseline-only" >> "$GITHUB_ENV"
+          fi
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with: { node-version-file: .nvmrc, cache: pnpm }
@@ -92,20 +105,48 @@ jobs:
       - name: Release build on the simulator
         working-directory: apps/mobile
         run: npx expo run:ios --configuration Release --device "$PARITY_IOS_DEVICE" --no-bundler
-      - run: pnpm test:parity --platform ios --baseline-only
+      - run: pnpm test:parity --platform ios $PARITY_FLAGS
+      - name: Commit generated baselines
+        if: env.PARITY_FLAGS == '--update'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/parity/baselines/ios
+          if git diff --cached --quiet; then echo "no baseline changes"; exit 0; fi
+          git commit -m "test(parity): ios baselines from CI"
+          for i in 1 2 3; do git pull --rebase && git push && exit 0; sleep 5; done
+          exit 1
       - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: parity-${{ github.job }}
           path: packages/parity/parity-output
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: maestro-debug-ios
+          path: ~/.maestro/tests
 
   parity-android:
     needs: [check, changes]
     if: needs.changes.outputs.native == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # commits generated baselines back in [update-baselines] mode
     steps:
       - uses: actions/checkout@v7
-        with: { fetch-depth: 0 }
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref_name }}
+      - name: Baseline mode
+        # A head commit message containing [update-baselines] regenerates this platform's
+        # baselines and commits them back (there's no macOS machine to do it locally).
+        run: |
+          if git log -1 --format=%B | grep -qF "[update-baselines]"; then
+            echo "PARITY_FLAGS=--update" >> "$GITHUB_ENV"
+          else
+            echo "PARITY_FLAGS=--baseline-only" >> "$GITHUB_ENV"
+          fi
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with: { node-version-file: .nvmrc, cache: pnpm }
@@ -132,12 +173,27 @@ jobs:
           avd-name: unison-parity
           script: |
             cd apps/mobile && npx expo run:android --variant release --no-bundler
-            pnpm test:parity --platform android --baseline-only
+            pnpm test:parity --platform android $PARITY_FLAGS
+      - name: Commit generated baselines
+        if: env.PARITY_FLAGS == '--update'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/parity/baselines/android
+          if git diff --cached --quiet; then echo "no baseline changes"; exit 0; fi
+          git commit -m "test(parity): android baselines from CI"
+          for i in 1 2 3; do git pull --rebase && git push && exit 0; sleep 5; done
+          exit 1
       - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: parity-${{ github.job }}
           path: packages/parity/parity-output
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: maestro-debug-android
+          path: ~/.maestro/tests
 
   parity-compare:
     needs: [parity-web, parity-ios, parity-android]
