@@ -41,6 +41,20 @@ OQ-9 on whether to update the docs.
 
 ---
 
+## Answers (Nov 19, 2026)
+
+| OQ | Answer |
+| --- | --- |
+| 1 | pnpm 12 (`@latest`); workspace settings in `pnpm-workspace.yaml` (`.npmrc` kept as the todo says) |
+| 2 | TypeScript **7.0.2** in the catalog |
+| 3 | Node **26**, `.nvmrc` `26`, `engines.node` `^26`; install Corepack with `npm i -g corepack` |
+| 4 | `biome.json` excludes `**/*.md` and `.claude` |
+| 5 | Repo stays `m-de-graaff/unison`; npm scope stays `@unison-ui` |
+| 6 | Single branch `feat/monorepo-foundation`, one commit per todo step |
+| 7–12, 14–16 | Plan defaults: no `cli` shell; ADR 0006 Proposed; docs untouched except the final gate tick; `react-native` peer `>=0.88`, required; no React Compiler / AGENTS.md / Cache Components; remove oxlint, add `@types/react-dom` to the catalog; compare only platforms present; self-import for `UnisonTheme`; three tsconfigs for `motion` |
+| 13 | `deps: { neverBundle: [...] }` instead of `external` |
+| 17 | Do everything possible here; mark checks that need a Mac, simulators or accounts as "unverified, needs Mark" and continue |
+
 ## Open questions
 
 These are places where the todo is ambiguous, contradicts the concept or roadmap, or no longer
