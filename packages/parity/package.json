@@ -1,0 +1,43 @@
+{
+  "name": "@unison-ui/parity",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "exports": {
+    "./registry": {
+      "types": "./dist/registry.d.ts",
+      "default": "./dist/registry.js"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit",
+    "test:parity": "tsx scripts/run.ts"
+  },
+  "dependencies": {
+    "@unison-ui/ui": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^26.6.6",
+    "@types/pngjs": "^6.0.5",
+    "@types/react": "catalog:",
+    "@unison-ui/tsconfig": "workspace:*",
+    "pixelmatch": "^8.0.0",
+    "pngjs": "^7.0.0",
+    "react": "catalog:",
+    "sharp": "^0.35.5",
+    "tsdown": "^0.23.7",
+    "tsx": "^4.23.15",
+    "typescript": "catalog:"
+  }
+}
