@@ -1,14 +1,27 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
+  "concurrency": "20",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
-    "dev": { "dependsOn": ["^build"], "cache": false, "persistent": true },
-    "typecheck": { "dependsOn": ["^build"] },
-    "test": { "dependsOn": ["^build"], "outputs": ["coverage/**"] },
-    "test:parity": { "dependsOn": ["build"], "cache": false }
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "test:parity": {
+      "dependsOn": ["build"],
+      "cache": false
+    }
   }
 }
