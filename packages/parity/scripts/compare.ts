@@ -5,6 +5,7 @@ import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 import pixelmatch from "pixelmatch";
 import { PNG } from "pngjs";
+import { runs } from "../src/fixtures";
 import {
   baselinePath,
   CROSS_PLATFORMS,
@@ -36,16 +37,21 @@ function walk(dir: string, ext: string, out: string[] = []): string[] {
   return out;
 }
 
+// Only the current fixtures count: stale output from a deleted fixture must not fail the run.
+const currentRuns = () => new Set(runs().map((r) => r.id));
+
 const runIdOf = (root: string, file: string, ext: string) =>
   relative(root, file).split("\\").join("/").slice(0, -ext.length);
 
 function compareCross(metricsDir: string): { failures: string[]; runs: number } {
   const failures: string[] = [];
   const byRun = new Map<string, Map<Platform, Metrics>>();
+  const known = currentRuns();
   for (const platform of CROSS_PLATFORMS) {
     const root = join(metricsDir, platform);
     for (const file of walk(root, ".json")) {
       const run = runIdOf(root, file, ".json");
+      if (!known.has(run)) continue;
       const metrics = JSON.parse(readFileSync(file, "utf8")) as Metrics;
       if (!byRun.has(run)) byRun.set(run, new Map());
       byRun.get(run)?.set(platform, metrics);
@@ -77,11 +83,13 @@ function compareCross(metricsDir: string): { failures: string[]; runs: number } 
 function compareBaselines(update: boolean): { failures: string[]; runs: number } {
   const failures: string[] = [];
   let count = 0;
+  const known = currentRuns();
   for (const platform of PLATFORMS) {
     const root = join(OUT, "screenshots", platform);
     for (const file of walk(root, ".png")) {
-      count++;
       const run = runIdOf(root, file, ".png");
+      if (!known.has(run)) continue;
+      count++;
       const baseline = baselinePath(platform, run);
       if (update) {
         mkdirSync(dirname(baseline), { recursive: true });
