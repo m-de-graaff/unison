@@ -19,6 +19,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 // localhost:4545 to the host with `adb reverse`.
 const COLLECTOR = "http://localhost:4545";
 const POST_TIMEOUT_MS = 5000;
+// Measure only after the layout has stayed put this long (any change restarts the wait).
+const SETTLE_MS = 400;
 
 // Route: unison-demo://parity/<component>/<case>?scheme=light|dark. Follows the stage contract in
 // packages/parity: a 390-wide stage with 16 padding, the subject top-left, metrics POSTed to the
@@ -51,10 +53,17 @@ export default function ParityCase() {
 
   // Measure once the requested scheme is active and a frame has rendered. An effect (rather than
   // onLayout) re-runs when the scheme flips, so the measurement can't be skipped.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: insets.top is a trigger, re-measure when it changes
   useEffect(() => {
     if (!parityCase || active !== target) return;
+    // A layout change (hiding the status bar shrinks the top inset on Android) re-runs this effect:
+    // drop any earlier result so Maestro never screenshots a layout that moved after measuring.
+    setReady(false);
+    setError(undefined);
+    setStep("waiting for the layout to settle");
     let cancelled = false;
-    const frame = requestAnimationFrame(() => {
+    const settle = setTimeout(measure, SETTLE_MS);
+    function measure() {
       const stageView = stage.current;
       const subjectView = subject.current;
       if (cancelled || !stageView || !subjectView) {
@@ -101,12 +110,12 @@ export default function ParityCase() {
           if (!cancelled) setError("measureLayout failed");
         },
       );
-    });
+    }
     return () => {
       cancelled = true;
-      cancelAnimationFrame(frame);
+      clearTimeout(settle);
     };
-  }, [active, target, parityCase, component, caseName]);
+  }, [active, target, parityCase, component, caseName, insets.top]);
 
   if (!parityCase) {
     return <Text testID="parity-status">{`unknown parity case: ${component}/${caseName}`}</Text>;

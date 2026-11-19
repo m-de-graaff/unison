@@ -128,9 +128,13 @@ async function runNative(platform: "ios" | "android"): Promise<void> {
       writeFileSync(
         flow,
         caseFlow
+          // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
           .replaceAll("${COMPONENT}", r.component)
+          // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
           .replaceAll("${CASE}", r.caseName)
+          // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
           .replaceAll("${SCHEME}", r.scheme)
+          // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
           .replaceAll("${OUT}", shotName),
       );
       console.log(`parity: ${platform} ${r.id}`);
