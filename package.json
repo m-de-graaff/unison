@@ -20,7 +20,8 @@
     "check:packages": "pnpm -r --filter \"./packages/*\" exec sh -c 'publint && attw --pack . --profile esm-only'",
     "release": "pnpm build && changeset publish",
     "prepare": "lefthook install",
-    "doctor": "tsx tooling/scripts/doctor.ts"
+    "doctor": "tsx tooling/scripts/doctor.ts",
+    "new:component": "tsx tooling/scripts/new-component.ts"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
