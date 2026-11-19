@@ -147,7 +147,7 @@ the JS of the workspace packages. The release app (`.app` / `.apk`) is cached un
 fingerprint. On a cache hit, `@expo/repack-app --js-bundle-only` puts a fresh JS bundle into the
 cached app. It uses `expo export:embed` with Hermes bytecode, as a release build does. Only a
 native change rebuilds the app. Measured on this repo: with a cached app, about 5 minutes for
-Android and 10–13 minutes for iOS (most of it setup); with a rebuild, about 14 minutes for Android
+Android and 13–15 minutes for iOS (`pnpm install` alone takes about 3 minutes on the macOS runner); with a rebuild, about 14 minutes for Android
 and 45 minutes for iOS. The jobs run in parallel. The nightly run
 and the manual "full build" option always rebuild, so a repacked app can't drift from a real build
 for long. Caches written on `main` are shared with every PR. A PR's own caches are shared only
