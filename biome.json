@@ -1,7 +1,15 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
-  "files": { "includes": ["**", "!**/*.md", "!.claude", "!apps/mobile/assets"] },
+  "files": {
+    "includes": [
+      "**",
+      "!**/*.md",
+      "!.claude",
+      "!apps/mobile/assets",
+      "!apps/mobile/src/uniwind-types.d.ts"
+    ]
+  },
   "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
   "javascript": { "formatter": { "quoteStyle": "double", "semicolons": "always" } },
   "linter": { "enabled": true, "rules": { "preset": "recommended" } }
