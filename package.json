@@ -19,7 +19,8 @@
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "check:packages": "pnpm -r --filter \"./packages/*\" exec sh -c 'publint && attw --pack . --profile esm-only'",
     "release": "pnpm build && changeset publish",
-    "prepare": "lefthook install"
+    "prepare": "lefthook install",
+    "doctor": "tsx tooling/scripts/doctor.ts"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
