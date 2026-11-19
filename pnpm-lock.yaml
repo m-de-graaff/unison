@@ -357,6 +357,9 @@ importers:
 
   apps/web-vite:
     dependencies:
+      '@unison-ui/parity':
+        specifier: workspace:*
+        version: link:../../packages/parity
       '@unison-ui/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens

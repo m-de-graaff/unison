@@ -21,7 +21,17 @@
     },
     "test:parity": {
       "dependsOn": ["build"],
-      "cache": false
+      "cache": false,
+      "passThroughEnv": [
+        "CI",
+        "PLAYWRIGHT_BROWSERS_PATH",
+        "PARITY_CHROMIUM_PATH",
+        "PARITY_WEB_PROJECTS",
+        "ANDROID_HOME",
+        "ANDROID_SDK_ROOT",
+        "JAVA_HOME",
+        "DEVELOPER_DIR"
+      ]
     }
   }
 }

@@ -14,7 +14,8 @@
     "@unison-ui/ui": "workspace:*",
     "demo-content": "workspace:*",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "@unison-ui/parity": "workspace:*"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.5",

@@ -1,5 +1,5 @@
 // Entry for `pnpm test:parity`: collector → platforms → compare → report.
-import { execSync } from "node:child_process";
+import { execSync, spawnSync } from "node:child_process";
 import { parseArgs } from "node:util";
 import { startCollector } from "./collector";
 import { compare, countRuns } from "./compare";
@@ -34,9 +34,20 @@ const deviceRunning: Record<Exclude<Target, "web">, () => boolean> = {
   android: () => /\tdevice$/m.test(quiet("adb devices")),
 };
 
-async function runPlatform(target: Target, opts: { update: boolean }): Promise<void> {
-  void opts;
-  throw new Error(`${target} runner not implemented yet (todo steps 20 and 21)`);
+/** Web: Playwright renders every run in Chromium and WebKit (see playwright.config.ts). */
+function runWeb(): void {
+  const projects = (process.env.PARITY_WEB_PROJECTS ?? "web-chromium,web-webkit")
+    .split(",")
+    .flatMap((p) => ["--project", p.trim()]);
+  const result = spawnSync("pnpm", ["exec", "playwright", "test", "--trace", "off", ...projects], {
+    stdio: "inherit",
+  });
+  if (result.status !== 0) throw new Error("web parity run failed");
+}
+
+async function runPlatform(target: Target, _opts: { update: boolean }): Promise<void> {
+  if (target === "web") return runWeb();
+  throw new Error(`${target} runner not implemented yet (todo step 21)`);
 }
 
 const stop = await startCollector();
