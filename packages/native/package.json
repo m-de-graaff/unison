@@ -1,0 +1,38 @@
+{
+  "name": "@unison-ui/native",
+  "version": "0.0.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@unison-ui/core": "workspace:^",
+    "@unison-ui/motion": "workspace:^",
+    "@unison-ui/tokens": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-native": ">=0.88"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@unison-ui/tsconfig": "workspace:*",
+    "react": "catalog:",
+    "react-native": "0.88.1",
+    "tsdown": "^0.23.7",
+    "typescript": "catalog:"
+  }
+}
