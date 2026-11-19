@@ -1,0 +1,8 @@
+appId: dev.unison.demo
+---
+- openLink: unison-demo://parity/${COMPONENT}/${CASE}?scheme=${SCHEME}
+- extendedWaitUntil:
+    visible:
+      id: "parity-ready"
+    timeout: 15000
+- takeScreenshot: ${OUT}

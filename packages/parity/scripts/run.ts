@@ -1,6 +1,12 @@
 // Entry for `pnpm test:parity`: collector → platforms → compare → report.
 import { execSync, spawnSync } from "node:child_process";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 import { parseArgs } from "node:util";
+import sharp from "sharp";
+import { runs } from "../src/fixtures";
+import { type Metrics, metricsPath, screenshotPath } from "../src/types";
 import { startCollector } from "./collector";
 import { compare, countRuns } from "./compare";
 import { writeReport } from "./report";
@@ -45,9 +51,58 @@ function runWeb(): void {
   if (result.status !== 0) throw new Error("web parity run failed");
 }
 
-async function runPlatform(target: Target, _opts: { update: boolean }): Promise<void> {
+/**
+ * Native: Maestro deep-links each run into the release build, the app POSTs its metrics to the
+ * collector, and the full-screen screenshot is cropped to the stage it reported.
+ */
+async function runNative(platform: "ios" | "android"): Promise<void> {
+  const shots = mkdtempSync(join(tmpdir(), `unison-parity-${platform}-`));
+  try {
+    for (const r of runs()) {
+      const metricsFile = metricsPath(platform, r.id);
+      rmSync(metricsFile, { force: true });
+      const full = join(shots, r.id.replaceAll("/", "_"));
+      const result = spawnSync(
+        "maestro",
+        [
+          "test",
+          "-e",
+          `COMPONENT=${r.component}`,
+          "-e",
+          `CASE=${r.caseName}`,
+          "-e",
+          `SCHEME=${r.scheme}`,
+          "-e",
+          `OUT=${full}`,
+          resolve("maestro/case.yaml"),
+        ],
+        { stdio: "inherit" },
+      );
+      if (result.status !== 0) throw new Error(`maestro failed for ${platform} ${r.id}`);
+      if (!existsSync(metricsFile)) {
+        throw new Error(`no metrics for ${platform} ${r.id}: did the app reach the collector?`);
+      }
+      const m = JSON.parse(readFileSync(metricsFile, "utf8")) as Metrics;
+      const px = (n: number) => Math.round(n * m.pixelRatio);
+      const out = screenshotPath(platform, r.id);
+      mkdirSync(dirname(out), { recursive: true });
+      await sharp(`${full}.png`)
+        .extract({
+          left: px(m.stage.x),
+          top: px(m.stage.y),
+          width: px(m.stage.width),
+          height: px(m.stage.height),
+        })
+        .toFile(out);
+    }
+  } finally {
+    rmSync(shots, { recursive: true, force: true });
+  }
+}
+
+async function runPlatform(target: Target): Promise<void> {
   if (target === "web") return runWeb();
-  throw new Error(`${target} runner not implemented yet (todo step 21)`);
+  return runNative(target);
 }
 
 const stop = await startCollector();
@@ -58,7 +113,7 @@ try {
       console.warn(`warn: skipping ${target} (no booted simulator or emulator)`);
       continue;
     }
-    await runPlatform(target, { update: values.update });
+    await runPlatform(target);
   }
   const failures = compare({ update: values.update });
   const report = writeReport(failures);
