@@ -36,6 +36,8 @@
     "uniwind": "^1.14.0"
   },
   "devDependencies": {
+    "@expo/fingerprint": "0.21.10",
+    "@expo/repack-app": "0.10.4",
     "@types/react": "catalog:",
     "typescript": "catalog:"
   },
