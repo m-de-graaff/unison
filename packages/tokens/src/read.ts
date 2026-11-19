@@ -41,15 +41,19 @@ function validValue(type: TokenType, value: unknown): boolean {
   }
 }
 
-/** Flattens a DTCG tree into `{ path, type, value }` records. Throws with the token path. */
-export function flatten(tree: unknown, prefix = ""): Token[] {
+/**
+ * Flattens a DTCG tree into `{ path, type, value }` records. A token without its own `$type`
+ * inherits the nearest group's, as the DTCG format allows. Throws with the token path.
+ */
+export function flatten(tree: unknown, prefix = "", inheritedType?: unknown): Token[] {
   if (!isRecord(tree)) throw new Error(`Expected an object at ${prefix || "<root>"}`);
+  const groupType = "$type" in tree ? tree.$type : inheritedType;
   const out: Token[] = [];
   for (const [key, node] of Object.entries(tree)) {
     if (key.startsWith("$")) continue;
     const path = prefix ? `${prefix}.${key}` : key;
     if (isRecord(node) && "$value" in node) {
-      const type = node.$type;
+      const type = "$type" in node ? node.$type : groupType;
       if (typeof type !== "string" || !TYPES.has(type)) {
         throw new Error(`Unknown $type "${String(type)}" at ${path}`);
       }
@@ -58,7 +62,7 @@ export function flatten(tree: unknown, prefix = ""): Token[] {
       }
       out.push({ path, type: type as TokenType, value: node.$value as Token["value"] });
     } else {
-      out.push(...flatten(node, path));
+      out.push(...flatten(node, path, groupType));
     }
   }
   return out;
