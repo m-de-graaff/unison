@@ -1,18 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Mode = "system" | "light" | "dark";
 const next: Record<Mode, Mode> = { system: "light", light: "dark", dark: "system" };
 
-function initialMode(): Mode {
-  if (typeof document === "undefined") return "system";
-  const t = document.documentElement.dataset.theme;
-  return t === "light" || t === "dark" ? t : "system";
-}
-
 /** Cycles system → light → dark. App code, not library code. */
 export function ThemeToggle() {
-  const [mode, setMode] = useState<Mode>(initialMode);
+  // The server can't know the saved theme, so render "system" first and read the real mode
+  // (set by the before-paint script in layout.tsx) after hydration.
+  const [mode, setMode] = useState<Mode>("system");
+  useEffect(() => {
+    const t = document.documentElement.dataset.theme;
+    if (t === "light" || t === "dark") setMode(t);
+  }, []);
 
   function cycle() {
     const m = next[mode];
@@ -28,7 +28,7 @@ export function ThemeToggle() {
   }
 
   return (
-    <button type="button" data-testid="theme-toggle" onClick={cycle} suppressHydrationWarning>
+    <button type="button" data-testid="theme-toggle" onClick={cycle}>
       theme: {mode}
     </button>
   );
