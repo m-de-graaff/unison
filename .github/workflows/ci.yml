@@ -2,6 +2,8 @@ name: CI
 
 on:
   pull_request:
+    # "labeled" so adding the `native` label starts the native parity jobs.
+    types: [opened, synchronize, reopened, labeled]
   push:
     branches: [main]
 
@@ -35,17 +37,43 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      native: ${{ steps.filter.outputs.native }}
+      # The native parity jobs take 15-50 minutes, so they only run when native code changed AND
+      # the PR has the `native` label, the push is to main, or the head commit asks for
+      # [update-baselines]. Skipped native jobs count as passing in parity-compare.
+      native: ${{ steps.decide.outputs.native }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: dorny/paths-filter@v4
         id: filter
         with:
           filters: |
             native:
-              - "packages/**"
-              - "apps/mobile/**"
+              - "packages/tokens/**"
+              - "packages/core/**"
+              - "packages/motion/**"
+              - "packages/native/**"
+              - "packages/ui/**"
+              - "packages/demo-content/**"
               - "packages/parity/**"
+              - "apps/mobile/**"
+              - "pnpm-lock.yaml"
+              - ".github/workflows/ci.yml"
+      - id: decide
+        env:
+          CHANGED: ${{ steps.filter.outputs.native }}
+          LABELLED: ${{ contains(github.event.pull_request.labels.*.name, 'native') }}
+          ON_MAIN: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: |
+          update=false
+          git log -1 --format=%B | grep -qF "[update-baselines]" && update=true
+          if [ "$CHANGED" = true ] && { [ "$LABELLED" = true ] || [ "$ON_MAIN" = true ] || [ "$update" = true ]; }; then
+            echo "native=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "native=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "native changed=$CHANGED label=$LABELLED main=$ON_MAIN update-baselines=$update"
 
   parity-web:
     needs: check
@@ -102,6 +130,14 @@ jobs:
           xcrun simctl bootstatus "$UDID" -b
           echo "PARITY_IOS_DEVICE=$NAME" >> "$GITHUB_ENV"
       - run: pnpm build
+      # Incremental Xcode builds: keep CocoaPods downloads and DerivedData between runs.
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/Library/Caches/CocoaPods
+            ~/Library/Developer/Xcode/DerivedData
+          key: ios-build-${{ hashFiles('pnpm-lock.yaml', 'apps/mobile/app.json') }}
+          restore-keys: ios-build-
       - name: Release build on the simulator
         working-directory: apps/mobile
         run: npx expo run:ios --configuration Release --device "$PARITY_IOS_DEVICE" --no-bundler
@@ -163,7 +199,36 @@ jobs:
           curl -fsSL "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
       - run: pnpm build
+      # Incremental Gradle builds between runs.
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('pnpm-lock.yaml', 'apps/mobile/app.json') }}
+          restore-keys: gradle-
+      # A cached, already-booted emulator snapshot (reactivecircus/android-emulator-runner README).
       # Emulator profile: packages/parity/parity-devices.json (android).
+      - uses: actions/cache@v6
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-36-google_apis-x86_64-pixel_7
+      - name: Create the emulator snapshot
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7
+          avd-name: unison-parity
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
       - uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 36
@@ -171,6 +236,9 @@ jobs:
           arch: x86_64
           profile: pixel_7
           avd-name: unison-parity
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
           script: |
             cd apps/mobile && npx expo run:android --variant release --no-bundler
             pnpm test:parity --platform android $PARITY_FLAGS

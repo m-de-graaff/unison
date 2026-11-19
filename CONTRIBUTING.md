@@ -127,6 +127,12 @@ install chromium webkit`). Two optional environment variables help on machines w
 preinstalled browser set: `PARITY_CHROMIUM_PATH` (a Chromium executable to use instead of
 Playwright's) and `PARITY_WEB_PROJECTS` (e.g. `web-chromium` to skip WebKit).
 
+**When native parity runs in CI:** the `parity-ios` and `parity-android` jobs take 15–50 minutes,
+so on a PR they only run when native code changed **and** the PR has the `native` label (adding
+the label starts them), or the head commit message contains `[update-baselines]`. Every push to
+`main` runs them. Other pushes finish in about two minutes; skipped native jobs count as passing.
+Gradle, Xcode DerivedData, CocoaPods and a booted emulator snapshot are cached between runs.
+
 **Native baselines without a Mac:** CI can generate them. Push a commit whose message contains
 `[update-baselines]`: the `parity-ios` and `parity-android` jobs then run with `--update` and commit
 the new baselines back to the branch as `github-actions[bot]`. Review those images in the PR like
