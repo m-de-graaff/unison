@@ -1,6 +1,7 @@
 import { getParityCase } from "@unison-ui/parity/registry";
 import { themes } from "@unison-ui/tokens/native";
 import { useLocalSearchParams } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Appearance,
@@ -12,6 +13,7 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // The iOS simulator shares the host's localhost; on Android, run.ts maps the emulator's
 // localhost:4545 to the host with `adb reverse`.
@@ -38,6 +40,7 @@ export default function ParityCase() {
   }, []);
 
   const active = useColorScheme() === "dark" ? "dark" : "light";
+  const insets = useSafeAreaInsets();
   const stage = useRef<HostInstance>(null);
   const subject = useRef<HostInstance>(null);
   const [step, setStep] = useState("waiting for the colour scheme");
@@ -109,7 +112,10 @@ export default function ParityCase() {
     return <Text testID="parity-status">{`unknown parity case: ${component}/${caseName}`}</Text>;
   }
   return (
-    <View style={{ flex: 1 }}>
+    // Below the safe area, with the status bar hidden: the screenshot crop must never contain the
+    // clock or status icons, which change between runs.
+    <View style={{ flex: 1, paddingTop: insets.top }}>
+      <StatusBar hidden />
       <View
         key={active}
         ref={stage}
