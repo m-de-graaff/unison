@@ -23,7 +23,7 @@ questions are text and belong in `AskUserQuestion`.
    calibrates how much design the request actually warrants.
 2. Write the page to a file in your scratchpad directory. Content only — no `<!doctype>`,
    `<html>`, `<head>`, or `<body>`; those are added at publish time.
-3. Publish with `Artifact`, passing a `favicon` and a one-line `description`.
+3. Publish with `Artifact`, passing a `icon` and a one-line `description`.
 4. Give the user the URL, plus **one line in chat saying what's on it** ("three homepage
    layouts — A dense, B airy, C sidebar"). They should not have to open the tab to know whether
    it's worth opening.
@@ -31,7 +31,7 @@ questions are text and belong in `AskUserQuestion`.
 
 **Iterating: republish the same file path.** Same path means the same URL, so the tab they
 already have open just needs a refresh. A new path mints a new URL and a second tab — only do
-that when it's genuinely a different artifact. Keep the `favicon` stable across redeploys too;
+that when it's genuinely a different artifact. Keep the `icon` stable across redeploys too;
 users find the tab by its icon.
 
 ## Label everything
