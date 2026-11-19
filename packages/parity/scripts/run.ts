@@ -61,7 +61,13 @@ function runWeb(): void {
   if (result.status !== 0) throw new Error("web parity run failed");
 }
 
-const caseFlow = readFileSync(resolve("maestro/case.yaml"), "utf8");
+// maestro/case.yaml: the appId header, then one run's commands.
+const [flowHeader, caseCommands] = (() => {
+  const text = readFileSync(resolve("maestro/case.yaml"), "utf8");
+  const split = text.indexOf("\n---\n");
+  if (split < 0) throw new Error("maestro/case.yaml needs an appId header and a --- line");
+  return [text.slice(0, split + 5), text.slice(split + 5)];
+})();
 
 /** The first file called `name` below `dir`, or undefined. */
 function findFile(dir: string, name: string): string | undefined {
@@ -105,7 +111,8 @@ function printScreen(platform: "ios" | "android"): void {
 
 /**
  * Native: Maestro deep-links each run into the release build, the app POSTs its metrics to the
- * collector, and the full-screen screenshot is cropped to the stage it reported.
+ * collector, and the full-screen screenshot is cropped to the stage it reported. All runs share
+ * one Maestro session: starting Maestro (on iOS, its XCTest driver) costs about a minute.
  */
 async function runNative(platform: "ios" | "android"): Promise<void> {
   if (platform === "android") {
@@ -115,34 +122,38 @@ async function runNative(platform: "ios" | "android"): Promise<void> {
   }
   const shots = mkdtempSync(join(tmpdir(), `unison-parity-${platform}-`));
   try {
-    for (const r of runs()) {
-      const metricsFile = metricsPath(platform, r.id);
-      rmSync(metricsFile, { force: true });
-      // Maestro only writes screenshots inside its test output folder, so pass a bare name and
-      // look the file up there afterwards.
-      const shotName = r.id.replaceAll("/", "_");
-      const outputDir = join(shots, `${shotName}-out`);
-      // Fill the flow's placeholders here instead of relying on Maestro's -e substitution, so the
-      // deep link that runs is exactly the one logged.
-      const flow = join(shots, `${r.id.replaceAll("/", "_")}.yaml`);
-      writeFileSync(
-        flow,
-        caseFlow
-          // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
-          .replaceAll("${COMPONENT}", r.component)
-          // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
-          .replaceAll("${CASE}", r.caseName)
-          // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
-          .replaceAll("${SCHEME}", r.scheme)
-          // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
-          .replaceAll("${OUT}", shotName),
-      );
+    const all = runs().map((r) => ({ ...r, shotName: r.id.replaceAll("/", "_") }));
+    // Fill the flow's placeholders here instead of relying on Maestro's -e substitution, so the
+    // deep links that run are exactly the ones logged.
+    let flow = flowHeader;
+    for (const r of all) {
+      rmSync(metricsPath(platform, r.id), { force: true });
       console.log(`parity: ${platform} ${r.id}`);
-      const status = await runAsync("maestro", ["test", "--test-output-dir", outputDir, flow]);
-      if (status !== 0) {
-        printScreen(platform);
-        throw new Error(`maestro failed for ${platform} ${r.id}`);
-      }
+      flow += `# run ${r.id}\n${caseCommands
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
+        .replaceAll("${COMPONENT}", r.component)
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
+        .replaceAll("${CASE}", r.caseName)
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
+        .replaceAll("${SCHEME}", r.scheme)
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
+        .replaceAll("${OUT}", r.shotName)}`;
+    }
+    const flowFile = join(shots, "parity.yaml");
+    writeFileSync(flowFile, flow);
+    // Maestro only writes screenshots inside its test output folder, so the flow uses bare names
+    // and the files are looked up there afterwards.
+    const outputDir = join(shots, "out");
+    const status = await runAsync("maestro", ["test", "--test-output-dir", outputDir, flowFile]);
+    if (status !== 0) {
+      printScreen(platform);
+      const done = all.filter((r) => existsSync(metricsPath(platform, r.id))).map((r) => r.id);
+      throw new Error(
+        `maestro failed on ${platform} (runs with metrics: ${done.join(", ") || "none"})`,
+      );
+    }
+    for (const r of all) {
+      const metricsFile = metricsPath(platform, r.id);
       if (!existsSync(metricsFile)) {
         throw new Error(`no metrics for ${platform} ${r.id}: did the app reach the collector?`);
       }
@@ -150,8 +161,8 @@ async function runNative(platform: "ios" | "android"): Promise<void> {
       const px = (n: number) => Math.round(n * m.pixelRatio);
       const out = screenshotPath(platform, r.id);
       mkdirSync(dirname(out), { recursive: true });
-      const full = findFile(outputDir, `${shotName}.png`);
-      if (!full) throw new Error(`maestro wrote no ${shotName}.png under ${outputDir}`);
+      const full = findFile(outputDir, `${r.shotName}.png`);
+      if (!full) throw new Error(`maestro wrote no ${r.shotName}.png under ${outputDir}`);
       await sharp(full)
         .extract({
           left: px(m.stage.x),

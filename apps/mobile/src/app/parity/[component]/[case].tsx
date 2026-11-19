@@ -46,10 +46,14 @@ export default function ParityCase() {
   const stage = useRef<HostInstance>(null);
   const subject = useRef<HostInstance>(null);
   const [step, setStep] = useState("waiting for the colour scheme");
-  const [ready, setReady] = useState(false);
+  // The run whose metrics reached the collector. A run id, not a boolean: when a deep link reuses
+  // this screen for the next run, the previous run's marker must not show for a frame.
+  const [readyRun, setReadyRun] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
 
   const parityCase = useMemo(() => getParityCase(component, caseName), [component, caseName]);
+  const run = `${component}/${caseName}/${target}`;
+  const ready = readyRun === run;
 
   // Measure once the requested scheme is active and a frame has rendered. An effect (rather than
   // onLayout) re-runs when the scheme flips, so the measurement can't be skipped.
@@ -58,7 +62,7 @@ export default function ParityCase() {
     if (!parityCase || active !== target) return;
     // A layout change (hiding the status bar shrinks the top inset on Android) re-runs this effect:
     // drop any earlier result so Maestro never screenshots a layout that moved after measuring.
-    setReady(false);
+    setReadyRun(undefined);
     setError(undefined);
     setStep("waiting for the layout to settle");
     let cancelled = false;
@@ -86,14 +90,14 @@ export default function ParityCase() {
                 signal: controller.signal,
                 body: JSON.stringify({
                   platform: Platform.OS,
-                  run: `${component}/${caseName}/${target}`,
+                  run,
                   pixelRatio: PixelRatio.get(),
                   stage: { x: sx, y: sy, width: sw, height: sh },
                   parts: { subject: { x, y, width, height } },
                 }),
               });
               if (!response.ok) throw new Error(`collector answered ${response.status}`);
-              if (!cancelled) setReady(true);
+              if (!cancelled) setReadyRun(run);
             } catch (e) {
               const reason = controller.signal.aborted
                 ? `no answer within ${POST_TIMEOUT_MS} ms`
@@ -115,7 +119,7 @@ export default function ParityCase() {
       cancelled = true;
       clearTimeout(settle);
     };
-  }, [active, target, parityCase, component, caseName, insets.top]);
+  }, [active, target, parityCase, run, insets.top]);
 
   if (!parityCase) {
     return <Text testID="parity-status">{`unknown parity case: ${component}/${caseName}`}</Text>;
@@ -142,7 +146,7 @@ export default function ParityCase() {
         </View>
       </View>
       {/* Below the stage, so outside the screenshot crop. Read by run.ts when a run fails. */}
-      {ready && <Text testID="parity-ready">ready</Text>}
+      {ready && <Text testID="parity-ready">{`ready ${run}`}</Text>}
       {error && <Text testID="parity-error">{`parity error: ${error}`}</Text>}
       {!ready && !error && (
         <Text testID="parity-status">{`${step} (scheme ${active}, wanted ${target})`}</Text>
