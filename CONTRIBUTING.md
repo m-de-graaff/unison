@@ -127,17 +127,40 @@ install chromium webkit`). Two optional environment variables help on machines w
 preinstalled browser set: `PARITY_CHROMIUM_PATH` (a Chromium executable to use instead of
 Playwright's) and `PARITY_WEB_PROJECTS` (e.g. `web-chromium` to skip WebKit).
 
-**When native parity runs in CI:** the `parity-ios` and `parity-android` jobs take 15–50 minutes,
-so on a PR they only run when native code changed **and** the PR has the `native` label (adding
-the label starts them), or the head commit message contains `[update-baselines]`. Every push to
-`main` runs them. Other pushes finish in about two minutes; skipped native jobs count as passing.
-Gradle, Xcode DerivedData, CocoaPods and a booted emulator snapshot are cached between runs.
+**When native parity runs in CI:** a normal PR push runs only `check`, `parity-web` and
+`parity-compare`, which takes about two minutes. The `parity-ios` and `parity-android` jobs run:
+
+| Trigger | Native jobs |
+| --- | --- |
+| PR with the `native` label (adding the label starts them), when native code changed | both |
+| PR head commit message containing `[update-baselines]`, when native code changed | both, regenerating baselines |
+| Push to `main`, when native code changed | both |
+| Nightly on `main` (03:17 UTC) | both, with full builds |
+| Manual: Actions → CI → Run workflow (pick the branch, platforms, update baselines, full build) | as chosen |
+
+Skipped native jobs count as passing. "Native code changed" means a change in `packages/tokens`, `core`,
+`motion`, `native`, `ui`, `demo-content` or `parity`, in `apps/mobile`, the lockfile or `ci.yml`.
+
+**How the native jobs stay fast:** each job computes the `@expo/fingerprint` of `apps/mobile`
+for its platform. It covers native dependencies, config plugins, `app.json` and its assets, but not
+the JS of the workspace packages. The release app (`.app` / `.apk`) is cached under that
+fingerprint. On a cache hit, `@expo/repack-app --js-bundle-only` puts a fresh JS bundle into the
+cached app. It uses `expo export:embed` with Hermes bytecode, as a release build does. Only a
+native change rebuilds the app. Expect about 8 minutes per native job with a cached app, and 20–40
+minutes (iOS) or about 15 minutes (Android) for a rebuild. The jobs run in parallel. The nightly run
+and the manual "full build" option always rebuild, so a repacked app can't drift from a real build
+for long. Caches written on `main` are shared with every PR. A PR's own caches are shared only
+with later runs of the same PR. The iOS build step has its own timeout, and if it fails or hangs,
+its log is uploaded as `ios-build-log`.
 
 **Native baselines without a Mac:** CI can generate them. Push a commit whose message contains
-`[update-baselines]`: the `parity-ios` and `parity-android` jobs then run with `--update` and commit
-the new baselines back to the branch as `github-actions[bot]`. Review those images in the PR like
-any other baseline change. On failure the jobs upload Maestro's debug output (`maestro-debug-*`),
-and the log shows what was on screen.
+`[update-baselines]`, or run the workflow manually with "update baselines" ticked. The native jobs
+then run with `--update`. Once every parity job passed, `commit-baselines` commits the new images
+for all regenerated platforms to the branch, in one commit as `github-actions[bot]`. A push made
+by the bot starts no CI of its own, so that job then starts CI on the new head (without native
+jobs), and the PR shows checks for it. Review the images in the PR like any other baseline change.
+On failure the jobs upload Maestro's debug output (`maestro-debug-*`), and the log shows what was
+on screen.
 
 **When you may update baselines:** only for an intended visual change. Say why in the PR, and
 attach the parity report. A baseline update that nobody explains will be sent back.
