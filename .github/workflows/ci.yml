@@ -160,7 +160,9 @@ jobs:
     needs: [check, changes]
     if: needs.changes.outputs.ios == 'true'
     runs-on: macos-latest
-    timeout-minutes: 50
+    # A cache miss means a full release build (measured 21-37 minutes), plus about 10 minutes of
+    # setup and tests. A repacked run takes about 8 minutes.
+    timeout-minutes: 60
     env:
       PARITY_FLAGS: ${{ needs.changes.outputs.update == 'true' && '--update' || '--baseline-only' }}
     steps:
@@ -207,7 +209,7 @@ jobs:
         working-directory: apps/mobile
         # A step timeout fails the step instead of cancelling the job, so the log upload below
         # still runs and a hung build can be diagnosed.
-        timeout-minutes: 40
+        timeout-minutes: 45
         run: |
           set -o pipefail
           npx expo run:ios --configuration Release --device "$PARITY_IOS_DEVICE" --no-bundler 2>&1 | tee "$RUNNER_TEMP/ios-build.log"
