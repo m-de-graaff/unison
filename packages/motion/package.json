@@ -17,7 +17,7 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "typecheck": "tsc --noEmit -p tsconfig.shared.json && tsc --noEmit -p tsconfig.web.json && tsc --noEmit -p tsconfig.native.json",
-    "test": "vitest run"
+    "test": "vitest run --coverage"
   },
   "dependencies": {
     "@unison-ui/tokens": "workspace:^"
@@ -32,9 +32,14 @@
     }
   },
   "devDependencies": {
+    "@testing-library/react": "^16.3.3",
     "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@unison-ui/tsconfig": "workspace:*",
+    "@vitest/coverage-v8": "^5.1.1",
+    "jsdom": "^31.0.1",
     "react": "catalog:",
+    "react-dom": "catalog:",
     "react-native": "0.88.1",
     "tsdown": "^0.23.7",
     "typescript": "catalog:",

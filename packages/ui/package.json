@@ -32,6 +32,7 @@
     "@types/react": "catalog:",
     "@unison-ui/tsconfig": "workspace:*",
     "react": "catalog:",
+    "react-native": "0.88.1",
     "tsdown": "^0.23.7",
     "typescript": "catalog:",
     "vitest": "^5.1.1"

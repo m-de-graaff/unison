@@ -33,11 +33,12 @@
     "build": "tsdown && node dist/bin.js build",
     "dev": "tsx watch --include \"tokens/**\" src/bin.ts build",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run --coverage"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
     "@unison-ui/tsconfig": "workspace:*",
+    "@vitest/coverage-v8": "^5.1.1",
     "tsdown": "^0.23.7",
     "typescript": "catalog:",
     "vitest": "^5.1.1"

@@ -1,0 +1,113 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`compiles the token source to css, tailwind and native outputs > dist/native/theme.js 1`] = `
+"export const themes = {
+  "light": {
+    "color": {
+      "accent": "#5b5bd6",
+      "surface": "#ffffff",
+      "fg": "#111113",
+      "border": "#e4e4e7"
+    },
+    "space": {
+      "1": 4,
+      "2": 8,
+      "4": 16
+    },
+    "radius": {
+      "md": 8
+    },
+    "size": {
+      "box": 96
+    },
+    "motion": {
+      "duration": {
+        "base": 200
+      },
+      "spring": {
+        "snappy": {
+          "stiffness": 400,
+          "damping": 30,
+          "mass": 1
+        }
+      }
+    }
+  },
+  "dark": {
+    "color": {
+      "accent": "#5b5bd6",
+      "surface": "#111113",
+      "fg": "#ededef",
+      "border": "#2e2e32"
+    },
+    "space": {
+      "1": 4,
+      "2": 8,
+      "4": 16
+    },
+    "radius": {
+      "md": 8
+    },
+    "size": {
+      "box": 96
+    },
+    "motion": {
+      "duration": {
+        "base": 200
+      },
+      "spring": {
+        "snappy": {
+          "stiffness": 400,
+          "damping": 30,
+          "mass": 1
+        }
+      }
+    }
+  }
+};
+"
+`;
+
+exports[`compiles the token source to css, tailwind and native outputs > dist/web/theme.css 1`] = `
+"@theme inline {
+  --color-accent: var(--unison-color-accent);
+  --color-surface: var(--unison-color-surface);
+  --color-fg: var(--unison-color-fg);
+  --color-border: var(--unison-color-border);
+  --radius-md: var(--unison-radius-md);
+  --spacing: var(--unison-space-1);
+}
+"
+`;
+
+exports[`compiles the token source to css, tailwind and native outputs > dist/web/tokens.css 1`] = `
+":root {
+  --unison-color-accent: #5b5bd6;
+  --unison-color-surface: #ffffff;
+  --unison-color-fg: #111113;
+  --unison-color-border: #e4e4e7;
+  --unison-space-1: 4px;
+  --unison-space-2: 8px;
+  --unison-space-4: 16px;
+  --unison-radius-md: 8px;
+  --unison-size-box: 96px;
+  --unison-motion-duration-base: 200ms;
+  --unison-motion-spring-snappy-easing: linear(0, 0.0606, 0.148, 0.2901, 0.4381, 0.576, 0.6676, 0.7709, 0.8523, 0.9, 0.9478, 0.9806, 1.0016, 1.0114, 1.0186, 1.0211, 1.021, 1.0192, 1.0164, 1.014, 1.0109, 1.0081, 1.0057, 1.0043, 1.0027, 1.0015, 1.0008, 1.0002, 0.9999, 0.9997, 0.9996, 1);
+  --unison-motion-spring-snappy-duration: 479ms;
+}
+
+[data-theme="dark"] {
+  --unison-color-surface: #111113;
+  --unison-color-fg: #ededef;
+  --unison-color-border: #2e2e32;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --unison-color-surface: #111113;
+    --unison-color-fg: #ededef;
+    --unison-color-border: #2e2e32;
+  }
+}
+"
+`;
