@@ -125,11 +125,8 @@ async function runNative(platform: "ios" | "android"): Promise<void> {
     const all = runs().map((r) => ({ ...r, shotName: r.id.replaceAll("/", "_") }));
     // Fill the flow's placeholders here instead of relying on Maestro's -e substitution, so the
     // deep links that run are exactly the ones logged.
-    let flow = flowHeader;
-    for (const r of all) {
-      rmSync(metricsPath(platform, r.id), { force: true });
-      console.log(`parity: ${platform} ${r.id}`);
-      flow += `# run ${r.id}\n${caseCommands
+    const commandsFor = (r: (typeof all)[number]) =>
+      caseCommands
         // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
         .replaceAll("${COMPONENT}", r.component)
         // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
@@ -137,7 +134,22 @@ async function runNative(platform: "ios" | "android"): Promise<void> {
         // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
         .replaceAll("${SCHEME}", r.scheme)
         // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
-        .replaceAll("${OUT}", r.shotName)}`;
+        .replaceAll("${OUT}", r.shotName);
+    // Warm-up: open one run without a screenshot. On a cold start the parity screen hides the
+    // status bar after its first measurement, which moves the layout up (Android). The next deep
+    // link would cancel the re-measurement, leaving metrics that don't match the screenshot. After
+    // the warm-up the status bar is already hidden. It uses the last run, so the first real run is
+    // a fresh navigation rather than a link to the screen already shown.
+    const warmUp = all.at(-1);
+    let flow = flowHeader;
+    if (warmUp) {
+      flow += `# warm-up\n${commandsFor(warmUp).replace(/^- takeScreenshot:.*$/m, "")}`;
+      flow += "- waitForAnimationToEnd:\n    timeout: 3000\n";
+    }
+    for (const r of all) {
+      rmSync(metricsPath(platform, r.id), { force: true });
+      console.log(`parity: ${platform} ${r.id}`);
+      flow += `# run ${r.id}\n${commandsFor(r)}`;
     }
     const flowFile = join(shots, "parity.yaml");
     writeFileSync(flowFile, flow);
