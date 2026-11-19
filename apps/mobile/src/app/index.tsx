@@ -23,7 +23,12 @@ export default function Index() {
     <StyledSafeAreaView className="flex-1 bg-surface p-4 flex-row flex-wrap items-center gap-4">
       <DemoItems />
       <View testID="tw-box" className="size-24 rounded-md border border-border bg-accent" />
-      <Pressable testID="theme-toggle" onPress={cycle}>
+      <Pressable
+        testID="theme-toggle"
+        onPress={cycle}
+        accessibilityRole="button"
+        accessibilityLabel={`theme: ${mode}`}
+      >
         <Text className="text-fg">theme: {mode}</Text>
       </Pressable>
     </StyledSafeAreaView>
