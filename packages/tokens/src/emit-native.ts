@@ -66,7 +66,47 @@ function themeType(tokens: Token[], tree: Tree): string {
   return walk(tree, "", 0);
 }
 
-/** Writes dist/native/theme.js and dist/native/theme.d.ts; returns the written paths. */
+function colorDeclarations(tokens: Token[], indent: string): string[] {
+  return tokens
+    .filter((t) => t.type === "color")
+    .map(
+      (t) => `${indent}--color-${t.path.replace(/^color\./, "").replaceAll(".", "-")}: ${t.value};`,
+    );
+}
+
+const tokenValue = (tokens: Token[], path: string) => tokens.find((t) => t.path === path)?.value;
+
+/**
+ * Tailwind theme for Uniwind (native className support). Uniwind can't resolve the
+ * `var(--unison-…)` chain from theme.css on native, so this file carries literal values:
+ * colours per light/dark variant, plus the static radius and spacing.
+ */
+function nativeThemeCss(sets: TokenSets): string {
+  return [
+    "@theme {",
+    `  --radius-md: ${tokenValue(sets.light, "radius.md")};`,
+    `  --spacing: ${tokenValue(sets.light, "space.1")};`,
+    "}",
+    "",
+    "@layer theme {",
+    "  :root {",
+    "    @variant light {",
+    ...colorDeclarations(sets.light, "      "),
+    "    }",
+    "",
+    "    @variant dark {",
+    ...colorDeclarations(sets.dark, "      "),
+    "    }",
+    "  }",
+    "}",
+    "",
+  ].join("\n");
+}
+
+/**
+ * Writes dist/native/theme.js, dist/native/theme.d.ts and dist/native/theme.css;
+ * returns the written paths.
+ */
 export function emitNative(outDir: string, sets: TokenSets): string[] {
   mkdirSync(outDir, { recursive: true });
   const light = toTree(sets.light);
@@ -80,7 +120,9 @@ export function emitNative(outDir: string, sets: TokenSets): string[] {
   ].join("\n");
   const jsPath = join(outDir, "theme.js");
   const dtsPath = join(outDir, "theme.d.ts");
+  const cssPath = join(outDir, "theme.css");
   writeFileSync(jsPath, js);
   writeFileSync(dtsPath, dts);
-  return [jsPath, dtsPath];
+  writeFileSync(cssPath, nativeThemeCss(sets));
+  return [jsPath, dtsPath, cssPath];
 }

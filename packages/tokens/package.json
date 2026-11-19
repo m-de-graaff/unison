@@ -23,7 +23,8 @@
       "default": "./dist/native/theme.js"
     },
     "./tokens.css": "./dist/web/tokens.css",
-    "./theme.css": "./dist/web/theme.css"
+    "./theme.css": "./dist/web/theme.css",
+    "./native-theme.css": "./dist/native/theme.css"
   },
   "sideEffects": [
     "*.css"
