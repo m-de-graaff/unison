@@ -16,12 +16,15 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "test:parity": "turbo run test:parity --filter=@unison-ui/parity",
-    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "check:packages": "pnpm -r --filter \"./packages/*\" exec sh -c 'publint && attw --pack . --profile esm-only'"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@biomejs/biome": "^2.6.8",
     "@changesets/cli": "^3.0.3",
     "lefthook": "^2.2.2",
+    "publint": "^0.3.25",
     "tsx": "^4.23.15",
     "turbo": "^2.11.12",
     "typescript": "catalog:"
