@@ -78,6 +78,11 @@ jobs:
   parity-web:
     needs: check
     runs-on: ubuntu-latest
+    # Browsers and their system libraries are preinstalled, so no apt step (and no dependency on
+    # Ubuntu's mirrors). Keep the tag equal to @playwright/test in packages/parity.
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.1-noble
+      options: --user 1001
     steps:
       - uses: actions/checkout@v7
         with: { fetch-depth: 0 }
@@ -85,7 +90,6 @@ jobs:
       - uses: actions/setup-node@v7
         with: { node-version-file: .nvmrc, cache: pnpm }
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @unison-ui/parity exec playwright install --with-deps chromium webkit
       - run: pnpm test:parity --platform web --baseline-only
       - uses: actions/upload-artifact@v7
         if: always()
