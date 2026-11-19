@@ -150,7 +150,19 @@ jobs:
           restore-keys: ios-build-
       - name: Release build on the simulator
         working-directory: apps/mobile
-        run: npx expo run:ios --configuration Release --device "$PARITY_IOS_DEVICE" --no-bundler
+        # A step timeout fails the step instead of cancelling the job, so the log upload below
+        # still runs and a hung build can be diagnosed.
+        timeout-minutes: 35
+        run: |
+          set -o pipefail
+          npx expo run:ios --configuration Release --device "$PARITY_IOS_DEVICE" --no-bundler 2>&1 | tee "$RUNNER_TEMP/ios-build.log"
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: ios-build-log
+          path: |
+            ${{ runner.temp }}/ios-build.log
+            apps/mobile/.expo/xcodebuild*.log
       - uses: actions/cache/save@v6
         if: always() && steps.ios-cache.outputs.cache-hit != 'true'
         with:
