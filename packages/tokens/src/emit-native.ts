@@ -1,0 +1,86 @@
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import type { Token, TokenSets } from "./read";
+import type { SpringConfig } from "./spring";
+
+type Leaf = string | number | SpringConfig;
+interface Tree {
+  [key: string]: Tree | Leaf;
+}
+
+function nativeValue(t: Token): Leaf {
+  switch (t.type) {
+    case "dimension":
+      return Number.parseFloat((t.value as string).replace(/px$/, ""));
+    case "duration":
+      return Number.parseFloat((t.value as string).replace(/ms$/, ""));
+    case "spring": {
+      const { stiffness, damping, mass } = t.value as SpringConfig;
+      return { stiffness, damping, mass };
+    }
+    case "color":
+      return t.value as string;
+  }
+}
+
+function toTree(tokens: Token[]): Tree {
+  const root: Tree = {};
+  for (const t of tokens) {
+    const keys = t.path.split(".");
+    let node = root;
+    for (const key of keys.slice(0, -1)) {
+      node[key] ??= {};
+      node = node[key] as Tree;
+    }
+    node[keys.at(-1) as string] = nativeValue(t);
+  }
+  return root;
+}
+
+const SPRING_TYPE =
+  "{ readonly stiffness: number; readonly damping: number; readonly mass: number }";
+
+function typeOf(node: Tree | Leaf, depth: number, isSpring: boolean): string {
+  if (typeof node === "string") return "string";
+  if (typeof node === "number") return "number";
+  if (isSpring) return SPRING_TYPE;
+  const pad = "  ".repeat(depth + 1);
+  const lines = Object.entries(node).map(
+    ([k, v]) => `${pad}readonly ${JSON.stringify(k)}: ${typeOf(v, depth + 1, false)};`,
+  );
+  return `{\n${lines.join("\n")}\n${"  ".repeat(depth)}}`;
+}
+
+/** Builds the UnisonTheme type from the light tree, so the type cannot drift from the data. */
+function themeType(tokens: Token[], tree: Tree): string {
+  const springs = new Set(tokens.filter((t) => t.type === "spring").map((t) => t.path));
+  const walk = (node: Tree | Leaf, path: string, depth: number): string => {
+    if (typeof node !== "object" || springs.has(path)) return typeOf(node, depth, true);
+    const pad = "  ".repeat(depth + 1);
+    const lines = Object.entries(node).map(([k, v]) => {
+      const childPath = path ? `${path}.${k}` : k;
+      return `${pad}readonly ${JSON.stringify(k)}: ${walk(v, childPath, depth + 1)};`;
+    });
+    return `{\n${lines.join("\n")}\n${"  ".repeat(depth)}}`;
+  };
+  return walk(tree, "", 0);
+}
+
+/** Writes dist/native/theme.js and dist/native/theme.d.ts; returns the written paths. */
+export function emitNative(outDir: string, sets: TokenSets): string[] {
+  mkdirSync(outDir, { recursive: true });
+  const light = toTree(sets.light);
+  const dark = toTree(sets.dark);
+  const js = `export const themes = ${JSON.stringify({ light, dark }, null, 2)};\n`;
+  const dts = [
+    `export interface UnisonTheme ${themeType(sets.light, light)}`,
+    "",
+    "export declare const themes: { readonly light: UnisonTheme; readonly dark: UnisonTheme };",
+    "",
+  ].join("\n");
+  const jsPath = join(outDir, "theme.js");
+  const dtsPath = join(outDir, "theme.d.ts");
+  writeFileSync(jsPath, js);
+  writeFileSync(dtsPath, dts);
+  return [jsPath, dtsPath];
+}
