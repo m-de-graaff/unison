@@ -21,6 +21,7 @@ env:
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
         with: { fetch-depth: 0 } # turbo --affected needs history
@@ -36,6 +37,7 @@ jobs:
 
   changes:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       # The native parity jobs take 15-50 minutes, so they only run when native code changed AND
       # the PR has the `native` label, the push is to main, or the head commit asks for
@@ -78,6 +80,7 @@ jobs:
   parity-web:
     needs: check
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     # Browsers and their system libraries are preinstalled, so no apt step (and no dependency on
     # Ubuntu's mirrors). Keep the tag equal to @playwright/test in packages/parity.
     container:
@@ -101,6 +104,7 @@ jobs:
     needs: [check, changes]
     if: needs.changes.outputs.native == 'true'
     runs-on: macos-latest
+    timeout-minutes: 45
     permissions:
       contents: write # commits generated baselines back in [update-baselines] mode
     steps:
@@ -180,6 +184,7 @@ jobs:
     needs: [check, changes]
     if: needs.changes.outputs.native == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     permissions:
       contents: write # commits generated baselines back in [update-baselines] mode
     steps:
@@ -296,6 +301,7 @@ jobs:
     # Runs when every parity job succeeded or was skipped (docs-only PRs skip the native ones).
     if: always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
