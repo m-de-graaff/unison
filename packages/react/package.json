@@ -1,6 +1,13 @@
 {
   "name": "@unison-ui/react",
   "version": "0.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-de-graaff/unison.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/m-de-graaff/unison#readme",
   "type": "module",
   "files": [
     "dist"
@@ -39,5 +46,9 @@
     "tsdown": "^0.23.7",
     "typescript": "catalog:",
     "vitest": "^5.1.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }

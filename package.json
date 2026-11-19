@@ -17,7 +17,8 @@
     "test": "turbo run test",
     "test:parity": "turbo run test:parity --filter=@unison-ui/parity --",
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
-    "check:packages": "pnpm -r --filter \"./packages/*\" exec sh -c 'publint && attw --pack . --profile esm-only'"
+    "check:packages": "pnpm -r --filter \"./packages/*\" exec sh -c 'publint && attw --pack . --profile esm-only'",
+    "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
