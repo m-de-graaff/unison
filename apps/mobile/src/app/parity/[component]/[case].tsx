@@ -39,6 +39,7 @@ export default function ParityCase() {
   const stage = useRef<HostInstance>(null);
   const subject = useRef<HostInstance>(null);
   const [ready, setReady] = useState(false);
+  const [error, setError] = useState<string | undefined>();
 
   const parityCase = getParityCase(component, caseName);
 
@@ -47,23 +48,30 @@ export default function ParityCase() {
     const stageView = stage.current;
     subject.current.measureLayout(stageView, (x, y, width, height) => {
       stageView.measureInWindow(async (sx, sy, sw, sh) => {
-        await fetch(`${COLLECTOR}/metrics`, {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            platform: Platform.OS,
-            run: `${component}/${caseName}/${target}`,
-            pixelRatio: PixelRatio.get(),
-            stage: { x: sx, y: sy, width: sw, height: sh },
-            parts: { subject: { x, y, width, height } },
-          }),
-        });
-        setReady(true);
+        try {
+          const response = await fetch(`${COLLECTOR}/metrics`, {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              platform: Platform.OS,
+              run: `${component}/${caseName}/${target}`,
+              pixelRatio: PixelRatio.get(),
+              stage: { x: sx, y: sy, width: sw, height: sh },
+              parts: { subject: { x, y, width, height } },
+            }),
+          });
+          if (!response.ok) throw new Error(`collector answered ${response.status}`);
+          setReady(true);
+        } catch (e) {
+          setError(`${COLLECTOR}: ${e instanceof Error ? e.message : String(e)}`);
+        }
       });
     });
   }
 
-  if (!parityCase) return <Text>unknown parity case</Text>;
+  if (!parityCase) {
+    return <Text testID="parity-status">{`unknown parity case: ${component}/${caseName}`}</Text>;
+  }
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -83,7 +91,12 @@ export default function ParityCase() {
           <parityCase.Subject {...parityCase.props} testID="subject" />
         </View>
       </View>
+      {/* Below the stage, so outside the screenshot crop. Read by run.ts when a run fails. */}
       {ready && <Text testID="parity-ready">ready</Text>}
+      {error && <Text testID="parity-error">{`parity error: ${error}`}</Text>}
+      {!ready && !error && (
+        <Text testID="parity-status">{`waiting: scheme ${active}, wanted ${target}`}</Text>
+      )}
     </View>
   );
 }
