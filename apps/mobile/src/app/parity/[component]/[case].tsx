@@ -1,5 +1,4 @@
 import { getParityCase } from "@unison-ui/parity/registry";
-import { themes } from "@unison-ui/tokens/native";
 import { useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -14,6 +13,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { themes } from "../../../../.unison/native/theme.js";
 
 // The iOS simulator shares the host's localhost; on Android, run.ts maps the emulator's
 // localhost:4545 to the host with `adb reverse`.

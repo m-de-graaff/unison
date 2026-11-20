@@ -106,6 +106,80 @@ function accentProblem(at: string, v: unknown): string | undefined {
   return `${at}: expected a preset (${Object.keys(ACCENT_PRESETS).join(", ")}), a "#rrggbb" colour or { hue, chroma }`;
 }
 
+const THEME_NAME = /^[a-z0-9-]+$/;
+
+/** Theme names, the reserved "default" theme and `extends` targets and cycles. */
+function structureProblems(themes: Record<string, unknown>): string[] {
+  const problems: string[] = [];
+  const names = Object.keys(themes);
+  for (const name of names) {
+    if (!THEME_NAME.test(name)) {
+      problems.push(`themes.${name}: theme names may only use a-z, 0-9 and "-"`);
+    }
+  }
+  if (!names.includes("default")) problems.push('themes: missing the "default" theme');
+  const parentOf = (name: string): unknown =>
+    isRecord(themes[name]) ? (themes[name] as Record<string, unknown>).extends : undefined;
+  const reported = new Set<string>();
+  for (const name of names) {
+    const parent = parentOf(name);
+    if (parent === undefined) continue;
+    if (typeof parent !== "string") continue; // reported with the theme's other options
+    if (!(parent in themes)) {
+      const hint = nearest(parent, names);
+      problems.push(
+        `themes.${name}.extends: no theme ${JSON.stringify(parent)}${hint ? `, did you mean "${hint}"?` : ""}`,
+      );
+      continue;
+    }
+    const chain = [name];
+    for (
+      let cur = parent;
+      typeof cur === "string" && cur in themes;
+      cur = parentOf(cur) as string
+    ) {
+      if (chain.includes(cur)) {
+        const cycle = [...chain.slice(chain.indexOf(cur)), cur];
+        if (!cycle.some((n) => reported.has(n))) {
+          problems.push(`themes.${cycle[0]}.extends: cycle ${cycle.join(" → ")}`);
+          for (const n of cycle) reported.add(n);
+        }
+        break;
+      }
+      chain.push(cur);
+    }
+  }
+  return problems;
+}
+
+/**
+ * Flattens `extends`: parent options first, the child's keys win, and `overrides` merge per path.
+ * Expects a config whose structure already passed `validateConfig`.
+ */
+export function resolveExtends(config: UnisonConfig): UnisonConfig {
+  const done = new Map<string, ThemeOptions>();
+  const flatten = (name: string): ThemeOptions => {
+    const hit = done.get(name);
+    if (hit) return hit;
+    const { extends: parent, ...own } = config.themes[name] as ThemeOptions;
+    let out: ThemeOptions = own;
+    if (parent) {
+      const base = flatten(parent);
+      out = { ...base, ...own };
+      if (base.overrides || own.overrides) out.overrides = { ...base.overrides, ...own.overrides };
+      if (base.fonts || own.fonts) {
+        out.fonts = { ...base.fonts, ...own.fonts };
+        const nf = { ...base.fonts?.nativeFonts, ...own.fonts?.nativeFonts };
+        if (Object.keys(nf).length > 0) out.fonts.nativeFonts = nf;
+      }
+    }
+    done.set(name, out);
+    return out;
+  };
+  const themes = Object.fromEntries(Object.keys(config.themes).map((n) => [n, flatten(n)]));
+  return { ...config, themes };
+}
+
 /**
  * Checks a config's shape; returns every problem (empty = valid). `semanticPaths`, when given,
  * also checks that overrides only target semantic tokens.
@@ -121,6 +195,7 @@ export function validateConfig(c: unknown, semanticPaths?: ReadonlySet<string>):
   if (!isRecord(c.themes) || Object.keys(c.themes).length === 0) {
     return [...problems, "themes: expected at least one theme"];
   }
+  problems.push(...structureProblems(c.themes));
   if (c.defaultTheme !== undefined && !(String(c.defaultTheme) in c.themes)) {
     problems.push(`defaultTheme: ${JSON.stringify(c.defaultTheme)} is not one of the themes`);
   }

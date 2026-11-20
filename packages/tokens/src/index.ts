@@ -13,6 +13,7 @@ export {
   DEFAULT_CONFIG,
   defineConfig,
   defineTheme,
+  resolveExtends,
   toBuildOptions,
   validateConfig,
 } from "./config";

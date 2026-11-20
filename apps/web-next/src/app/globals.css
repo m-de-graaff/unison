@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@import "@unison-ui/tokens/tokens.css";
-@import "@unison-ui/tokens/theme-strict.css";
+@import "../../.unison/web/tokens.css";
+@import "../../.unison/web/theme-strict.css";
 
 @layer base {
   html {

@@ -13,3 +13,4 @@ parity-output/
 *.tsbuildinfo
 .DS_Store
 .env*.local
+.unison/

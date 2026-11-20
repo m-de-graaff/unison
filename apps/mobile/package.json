@@ -41,6 +41,7 @@
     "@expo/fingerprint": "0.21.10",
     "@expo/repack-app": "0.10.4",
     "@types/react": "catalog:",
+    "concurrently": "^10.0.7",
     "typescript": "catalog:"
   },
   "scripts": {
@@ -48,8 +49,9 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "dev": "expo start",
-    "typecheck": "tsc --noEmit"
+    "dev": "concurrently --kill-others --names tokens,expo \"unison-tokens build --watch --config unison.config.ts --out .unison\" \"expo start\"",
+    "typecheck": "pnpm tokens && tsc --noEmit",
+    "tokens": "unison-tokens build --config unison.config.ts --out .unison"
   },
   "private": true,
   "expo": {

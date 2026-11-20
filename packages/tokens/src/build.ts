@@ -6,6 +6,8 @@ import { BUILT_IN_PALETTES, colorPrimitives, type PaletteSpec } from "./color/pa
 import {
   ConfigError,
   DEFAULT_CONFIG,
+  resolveExtends,
+  type ThemeOptions,
   toBuildOptions,
   type UnisonConfig,
   validateConfig,
@@ -199,8 +201,11 @@ export function build(
   assertTiers(layers);
   const problems = validateConfig(config, new Set(semanticTokens(layers).map((t) => t.path)));
   if (problems.length > 0) throw new ConfigError(problems);
-  const themes = Object.entries(config.themes).map(([name, o]) =>
-    buildTheme(toBuildOptions(name, o), layers),
+  // The base theme comes first: the CSS emits it on :root and diffs the other themes against it.
+  const flat = resolveExtends(config).themes;
+  const names = ["default", ...Object.keys(flat).filter((n) => n !== "default")];
+  const themes = names.map((name) =>
+    buildTheme(toBuildOptions(name, flat[name] as ThemeOptions), layers),
   );
   const defaultTheme = config.defaultTheme ?? (themes[0] as ThemeBuild).name;
   return { themes, defaultTheme, warnings: themes.flatMap((t) => t.warnings) };
