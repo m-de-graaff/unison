@@ -186,7 +186,9 @@ function selectorsFor(name: string, isFirst: boolean) {
     [compound, `:where(${where.join(", ")})`, ...near].join(", ");
   const scheme = (attr: string) =>
     list(
-      `${s}${attr}`,
+      // The base theme's compound skips :root: <html> is covered by the zero-specificity base
+      // shapes, so app CSS that sets a token on :root still wins once ThemeScript has run.
+      isFirst ? `${s}${attr}:where(:not(:root))` : `${s}${attr}`,
       [
         ...(isFirst ? (attr === LIGHT ? [":root", attr] : [attr]) : []),
         ...(attr === LIGHT ? [s] : [`:root${attr} ${s}`]),

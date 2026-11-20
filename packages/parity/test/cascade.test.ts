@@ -241,6 +241,23 @@ describe.skipIf(!hasBrowser)("rendered theme cascade (Chromium)", () => {
     expectColours(await resolve(htmlAttrs, body, os), theme, scheme);
   });
 
+  // ADR 0018: app CSS that sets a token on :root still wins over the default theme, also once
+  // ThemeScript has put both attributes on <html> (the default compound skips :root).
+  it.each([
+    ["a bare <html>", ""],
+    ["<html> after ThemeScript, light", 'data-unison-theme="default" data-theme="light"'],
+    ["<html> after ThemeScript, dark", 'data-unison-theme="default" data-theme="dark"'],
+  ])("an app :root override wins on %s", async (_name, attrs) => {
+    await page.emulateMedia({ colorScheme: "light", reducedMotion: "no-preference" });
+    await page.setContent(`<!doctype html><html ${attrs}><head><style>${css}</style>
+      <style>:root { --unison-color-accent: rgb(255, 0, 0); }</style></head><body>
+      <i id="a" style="display:block;color:var(--unison-color-accent)"></i></body></html>`);
+    const colour = await page.evaluate(
+      () => getComputedStyle(document.getElementById("a") as Element).color,
+    );
+    expect(colour).toBe("rgb(255, 0, 0)");
+  });
+
   it("radius follows brand inside a brand scope in a dark default page", async () => {
     await page.setContent(`<!doctype html><html data-unison-theme="default" data-theme="dark"><head>
       <style>${css}</style></head><body>${scope("brand", "light", '<i id="r" style="display:block;border-top-left-radius:var(--unison-radius-card)"></i>')}<i id="d" style="display:block;border-top-left-radius:var(--unison-radius-card)"></i></body></html>`);

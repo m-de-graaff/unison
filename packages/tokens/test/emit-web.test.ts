@@ -18,7 +18,8 @@ const list = (theme: string, scheme: "light" | "dark", first: boolean) => {
   const a = `[data-theme="${scheme}"]`;
   const base = first ? (scheme === "light" ? [":root", a] : [a]) : [];
   const own = scheme === "light" ? s : `:root${a} ${s}`;
-  return `${s}${a}, :where(${[...base, own, `:root${s} ${a}`].join(", ")}), :where(:not(:root)${a}) ${s}, :where(:not(:root)${s}) ${a}`;
+  const compound = first ? `${s}${a}:where(:not(:root))` : `${s}${a}`;
+  return `${compound}, :where(${[...base, own, `:root${s} ${a}`].join(", ")}), :where(:not(:root)${a}) ${s}, :where(:not(:root)${s}) ${a}`;
 };
 const LIGHT = list("default", "light", true);
 const DARK = list("default", "dark", true);
@@ -63,10 +64,16 @@ describe("selectors (OQ-8, ADR 0018)", () => {
   it("the compound on the element is the only selector that isn't inside :where()", () => {
     // [theme][scheme] weighs (0,2,0); one attribute with the other on a non-root ancestor (0,1,0);
     // everything else 0. So a scope's compound beats any rule an ancestor makes match.
-    expect(LIGHT.startsWith('[data-unison-theme="default"][data-theme="light"], :where(')).toBe(
-      true,
-    );
-    expect(DARK.startsWith('[data-unison-theme="default"][data-theme="dark"], :where(')).toBe(true);
+    expect(
+      LIGHT.startsWith(
+        '[data-unison-theme="default"][data-theme="light"]:where(:not(:root)), :where(',
+      ),
+    ).toBe(true);
+    expect(
+      DARK.startsWith(
+        '[data-unison-theme="default"][data-theme="dark"]:where(:not(:root)), :where(',
+      ),
+    ).toBe(true);
     for (const sel of [LIGHT, DARK]) {
       const outside = sel.replace(/:where\((?:[^()]|\([^()]*\))*\)/g, "");
       expect(outside).not.toContain(":root");

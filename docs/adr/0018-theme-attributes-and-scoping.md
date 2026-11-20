@@ -19,7 +19,9 @@ web, and scoped to a subtree (a dark card in a light page, a brand panel).
   - **(0,2,0): the compound on the element itself**, `[data-unison-theme="N"][data-theme="light"]`
     and `[data-unison-theme="N"][data-theme="dark"]`, for every theme, `default` included. It's
     the only selector outside `:where()`, so an element carrying both attributes shows exactly
-    that theme × scheme whatever its ancestors are.
+    that theme × scheme whatever its ancestors are. The base theme's compound skips `<html>`
+    (`[data-unison-theme="default"][data-theme="light"]:where(:not(:root))`, still (0,2,0)):
+    `<html>` is covered by the zero-weight base shapes, so it stays overridable.
   - **(0,1,0): one attribute on the element, the other on a non-root ancestor**, e.g.
     `:where(:not(:root)[data-theme="dark"]) [data-unison-theme="N"]` and
     `:where(:not(:root)[data-unison-theme="N"]) [data-theme="dark"]`. A nearer ancestor beats
@@ -32,7 +34,9 @@ web, and scoped to a subtree (a dark card in a light page, a brand panel).
     the OS setting applies only where neither the element nor an ancestor sets `data-theme`.
 
   Equal weights fall back to source order (themes in config order, light before dark). App CSS
-  that sets a token on `:root` beats the base shapes without `!important`.
+  that sets a token on `:root` beats the default theme without `!important`, also after
+  ThemeScript has put both attributes on `<html>`. A cascade test covers it. A named theme on
+  `<html>` still wins over such an override, because the theme is the more specific choice.
 - **Override blocks declare every token whose resolved value differs anywhere**, in any theme ×
   scheme, because a scope can sit inside any other theme × scheme. Comparing resolved values (not
   alias text) matters: a `var()` is substituted where it's declared, so a nested subtree would

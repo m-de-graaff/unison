@@ -251,7 +251,8 @@ On the web this is a `<div style="display: contents">` carrying `data-unison-the
 nearest scope's or the page's value, and the scope shows exactly its theme and scheme whatever
 its ancestors are. You can also put the attributes on any element yourself; put both on it to get
 the same guarantee. `useTheme()` inside a scope returns its `theme` and `resolvedScheme` on both
-platforms (the setters still change the whole app), and on native also the scoped `tokens`. Uniwind's theme is global, so style scoped native content from
+platforms (the setters still change the whole app), and on native also the scoped `tokens`.
+Uniwind's theme is global, so style scoped native content from
 `useTheme().tokens` rather than `className`. See
 [ADR 0018](adr/0018-theme-attributes-and-scoping.md).
 
