@@ -29,25 +29,37 @@ const configSource = (accent: string) =>
 export default defineConfig({ themes: { default: defineTheme({ accent: ${JSON.stringify(accent)} }) } });
 `;
 
-it("builds a config into --out and reports every file", () => {
-  const config = join(tmp, "unison.config.ts");
-  const out = join(tmp, "out");
-  writeFileSync(config, configSource("#e11d48"));
-  const stdout = execFileSync(tsx, [bin, "build", "--config", config, "--out", out], {
-    encoding: "utf8",
-  });
-  for (const file of OUTPUTS) expect(stdout).toContain(`wrote ${join(out, file)}\n`);
-  expect(readFileSync(join(out, "web/tokens.css"), "utf8")).toContain("#e11d48");
-});
+// Each test spawns tsx and runs a full build in a subprocess: a cold tsx start on a busy CI runner
+// (turbo runs every package's tasks in parallel) takes well over vitest's 5 s default.
+const SUBPROCESS_TIMEOUT = 30_000;
 
-it("builds the default theme without --config", () => {
-  const out = join(tmp, "default");
-  const stdout = execFileSync(tsx, [bin, "build", "--out", out], { encoding: "utf8" });
-  expect(stdout).toContain(`wrote ${join(out, "web/tokens.css")}`);
-  expect(readFileSync(join(out, "web/tokens.css"), "utf8")).toContain(
-    "--unison-color-accent-600: #535cda;",
-  );
-});
+it(
+  "builds a config into --out and reports every file",
+  () => {
+    const config = join(tmp, "unison.config.ts");
+    const out = join(tmp, "out");
+    writeFileSync(config, configSource("#e11d48"));
+    const stdout = execFileSync(tsx, [bin, "build", "--config", config, "--out", out], {
+      encoding: "utf8",
+    });
+    for (const file of OUTPUTS) expect(stdout).toContain(`wrote ${join(out, file)}\n`);
+    expect(readFileSync(join(out, "web/tokens.css"), "utf8")).toContain("#e11d48");
+  },
+  SUBPROCESS_TIMEOUT,
+);
+
+it(
+  "builds the default theme without --config",
+  () => {
+    const out = join(tmp, "default");
+    const stdout = execFileSync(tsx, [bin, "build", "--out", out], { encoding: "utf8" });
+    expect(stdout).toContain(`wrote ${join(out, "web/tokens.css")}`);
+    expect(readFileSync(join(out, "web/tokens.css"), "utf8")).toContain(
+      "--unison-color-accent-600: #535cda;",
+    );
+  },
+  SUBPROCESS_TIMEOUT,
+);
 
 /** Starts `build --watch` and resolves once it's watching. */
 async function startWatch(config: string, out: string) {
