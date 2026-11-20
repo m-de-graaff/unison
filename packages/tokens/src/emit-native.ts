@@ -109,8 +109,9 @@ function nativeThemeCss(sets: TokenSets): string {
  */
 export function emitNative(outDir: string, sets: TokenSets): string[] {
   mkdirSync(outDir, { recursive: true });
-  const light = toTree(sets.light);
-  const dark = toTree(sets.dark);
+  const text = Object.fromEntries(sets.text.map(({ style, native }) => [style, { ...native }]));
+  const light = { ...toTree(sets.light), text };
+  const dark = { ...toTree(sets.dark), text };
   const js = `export const themes = ${JSON.stringify({ light, dark }, null, 2)};\n`;
   const dts = [
     `export interface UnisonTheme ${themeType(sets.light, light)}`,

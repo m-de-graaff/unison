@@ -84,6 +84,7 @@ export const FIELD_TYPES: Partial<Record<TokenType, Record<string, TokenType>>> 
     fontWeight: "fontWeight",
     fontSize: "dimension",
     lineHeight: "dimension",
+    letterSpacing: "number",
   },
   shadow: {
     x: "dimension",
@@ -93,4 +94,9 @@ export const FIELD_TYPES: Partial<Record<TokenType, Record<string, TokenType>>> 
     color: "color",
   },
   transition: { duration: "duration", easing: "cubicBezier", spring: "spring" },
+};
+
+/** Composite fields whose aliased primitive is stored in another shape (`letter-spacing.*` are em numbers). */
+export const FIELD_COERCE: Partial<Record<TokenType, Record<string, (v: unknown) => unknown>>> = {
+  typography: { letterSpacing: (v) => (typeof v === "number" ? { value: v, unit: "em" } : v) },
 };

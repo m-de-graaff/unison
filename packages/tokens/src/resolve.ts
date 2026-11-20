@@ -1,4 +1,11 @@
-import { ALIAS, FIELD_TYPES, isAlias, type SourceToken, type TokenType } from "./schema";
+import {
+  ALIAS,
+  FIELD_COERCE,
+  FIELD_TYPES,
+  isAlias,
+  type SourceToken,
+  type TokenType,
+} from "./schema";
 
 export interface ResolvedToken extends Omit<SourceToken, "value"> {
   /** No aliases left. */
@@ -37,14 +44,21 @@ export function resolve(base: SourceToken[], ...overrides: SourceToken[][]): Res
     return resolved.value;
   }
 
-  function deep(from: SourceToken, v: unknown, fields?: Record<string, TokenType>): unknown {
+  function deep(
+    from: SourceToken,
+    v: unknown,
+    fields?: Record<string, TokenType>,
+    coerce?: Record<string, (v: unknown) => unknown>,
+  ): unknown {
     if (isAlias(v)) return deref(from, refOf(v));
-    if (Array.isArray(v)) return v.map((x) => deep(from, x, fields));
+    if (Array.isArray(v)) return v.map((x) => deep(from, x, fields, coerce));
     if (isRecord(v)) {
       return Object.fromEntries(
         Object.entries(v).map(([k, x]) => {
           const expected = fields?.[k];
-          return [k, expected && isAlias(x) ? deref(from, refOf(x), expected) : deep(from, x)];
+          if (!(expected && isAlias(x))) return [k, deep(from, x)];
+          const value = deref(from, refOf(x), expected);
+          return [k, coerce?.[k] ? coerce[k](value) : value];
         }),
       );
     }
@@ -62,7 +76,7 @@ export function resolve(base: SourceToken[], ...overrides: SourceToken[][]): Res
     const whole = isAlias(tok.value);
     const value = whole
       ? deref(tok, refOf(tok.value as string), tok.type)
-      : deep(tok, tok.value, FIELD_TYPES[tok.type]);
+      : deep(tok, tok.value, FIELD_TYPES[tok.type], FIELD_COERCE[tok.type]);
     stack.pop();
     const out: ResolvedToken = {
       ...tok,

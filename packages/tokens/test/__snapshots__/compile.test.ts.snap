@@ -65,6 +65,68 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
           "mass": 1
         }
       }
+    },
+    "text": {
+      "caption": {
+        "fontFamily": "Inter_400Regular",
+        "fontSize": 12,
+        "lineHeight": 16,
+        "letterSpacing": 0
+      },
+      "label": {
+        "fontFamily": "Inter_500Medium",
+        "fontSize": 13,
+        "lineHeight": 18,
+        "letterSpacing": 0
+      },
+      "body-sm": {
+        "fontFamily": "Inter_400Regular",
+        "fontSize": 14,
+        "lineHeight": 20,
+        "letterSpacing": 0
+      },
+      "body": {
+        "fontFamily": "Inter_400Regular",
+        "fontSize": 16,
+        "lineHeight": 24,
+        "letterSpacing": -0.18
+      },
+      "body-lg": {
+        "fontFamily": "Inter_400Regular",
+        "fontSize": 18,
+        "lineHeight": 28,
+        "letterSpacing": -0.2
+      },
+      "title-sm": {
+        "fontFamily": "Inter_600SemiBold",
+        "fontSize": 16,
+        "lineHeight": 24,
+        "letterSpacing": -0.18
+      },
+      "title": {
+        "fontFamily": "Inter_600SemiBold",
+        "fontSize": 20,
+        "lineHeight": 28,
+        "letterSpacing": -0.22
+      },
+      "title-lg": {
+        "fontFamily": "Inter_600SemiBold",
+        "fontSize": 24,
+        "lineHeight": 32,
+        "letterSpacing": -0.48
+      },
+      "display": {
+        "fontFamily": "Inter_700Bold",
+        "fontSize": 36,
+        "lineHeight": 40,
+        "letterSpacing": -0.72
+      },
+      "code": {
+        "fontFamily": "JetBrainsMono_400Regular",
+        "fontSize": 13,
+        "lineHeight": 20,
+        "letterSpacing": 0
+      }
     }
   },
   "dark": {
@@ -129,6 +191,68 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
           "damping": 30,
           "mass": 1
         }
+      }
+    },
+    "text": {
+      "caption": {
+        "fontFamily": "Inter_400Regular",
+        "fontSize": 12,
+        "lineHeight": 16,
+        "letterSpacing": 0
+      },
+      "label": {
+        "fontFamily": "Inter_500Medium",
+        "fontSize": 13,
+        "lineHeight": 18,
+        "letterSpacing": 0
+      },
+      "body-sm": {
+        "fontFamily": "Inter_400Regular",
+        "fontSize": 14,
+        "lineHeight": 20,
+        "letterSpacing": 0
+      },
+      "body": {
+        "fontFamily": "Inter_400Regular",
+        "fontSize": 16,
+        "lineHeight": 24,
+        "letterSpacing": -0.18
+      },
+      "body-lg": {
+        "fontFamily": "Inter_400Regular",
+        "fontSize": 18,
+        "lineHeight": 28,
+        "letterSpacing": -0.2
+      },
+      "title-sm": {
+        "fontFamily": "Inter_600SemiBold",
+        "fontSize": 16,
+        "lineHeight": 24,
+        "letterSpacing": -0.18
+      },
+      "title": {
+        "fontFamily": "Inter_600SemiBold",
+        "fontSize": 20,
+        "lineHeight": 28,
+        "letterSpacing": -0.22
+      },
+      "title-lg": {
+        "fontFamily": "Inter_600SemiBold",
+        "fontSize": 24,
+        "lineHeight": 32,
+        "letterSpacing": -0.48
+      },
+      "display": {
+        "fontFamily": "Inter_700Bold",
+        "fontSize": 36,
+        "lineHeight": 40,
+        "letterSpacing": -0.72
+      },
+      "code": {
+        "fontFamily": "JetBrainsMono_400Regular",
+        "fontSize": 13,
+        "lineHeight": 20,
+        "letterSpacing": 0
       }
     }
   }
@@ -196,6 +320,46 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
   --unison-color-warning-border: #ffca78;
   --unison-color-warning-fg: #845100;
   --unison-color-warning-subtle: #fff1d5;
+  --unison-text-caption-size: 12px;
+  --unison-text-caption-line-height: 16px;
+  --unison-text-caption-weight: 400;
+  --unison-text-caption-tracking: 0em;
+  --unison-text-label-size: 13px;
+  --unison-text-label-line-height: 18px;
+  --unison-text-label-weight: 500;
+  --unison-text-label-tracking: 0em;
+  --unison-text-body-sm-size: 14px;
+  --unison-text-body-sm-line-height: 20px;
+  --unison-text-body-sm-weight: 400;
+  --unison-text-body-sm-tracking: 0em;
+  --unison-text-body-size: 16px;
+  --unison-text-body-line-height: 24px;
+  --unison-text-body-weight: 400;
+  --unison-text-body-tracking: -0.011em;
+  --unison-text-body-lg-size: 18px;
+  --unison-text-body-lg-line-height: 28px;
+  --unison-text-body-lg-weight: 400;
+  --unison-text-body-lg-tracking: -0.011em;
+  --unison-text-title-sm-size: 16px;
+  --unison-text-title-sm-line-height: 24px;
+  --unison-text-title-sm-weight: 600;
+  --unison-text-title-sm-tracking: -0.011em;
+  --unison-text-title-size: 20px;
+  --unison-text-title-line-height: 28px;
+  --unison-text-title-weight: 600;
+  --unison-text-title-tracking: -0.011em;
+  --unison-text-title-lg-size: 24px;
+  --unison-text-title-lg-line-height: 32px;
+  --unison-text-title-lg-weight: 600;
+  --unison-text-title-lg-tracking: -0.02em;
+  --unison-text-display-size: 36px;
+  --unison-text-display-line-height: 40px;
+  --unison-text-display-weight: 700;
+  --unison-text-display-tracking: -0.02em;
+  --unison-text-code-size: 13px;
+  --unison-text-code-line-height: 20px;
+  --unison-text-code-weight: 400;
+  --unison-text-code-tracking: 0em;
 }
 
 [data-theme="dark"] {

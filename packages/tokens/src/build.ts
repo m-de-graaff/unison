@@ -5,21 +5,37 @@ import { BUILT_IN_PALETTES, colorPrimitives, type PaletteSpec } from "./color/pa
 import { assertTiers } from "./lint-tiers";
 import { loadSource } from "./load";
 import { type Resolved, type ResolvedToken, resolve } from "./resolve";
-import type { ColorValue, Dimension, Duration, SourceToken } from "./schema";
+import type { ColorValue, Dimension, Duration, SourceToken, Typography } from "./schema";
 import type { SpringConfig } from "./spring";
+import {
+  DEFAULT_NATIVE_FONTS,
+  type NativeFonts,
+  type NativeTextStyle,
+  TEXT_STYLES,
+  toNativeTextStyle,
+} from "./typography";
 
 export interface Token {
   path: string;
   type: "color" | "dimension" | "duration" | "spring";
   value: string | SpringConfig;
 }
+/** One text style for the interim emitters: web CSS values and the native style. */
+export interface TextStyleOutput {
+  style: string;
+  web: { size: string; "line-height": string; weight: string; tracking: string };
+  native: NativeTextStyle;
+}
 export interface TokenSets {
   light: Token[];
   dark: Token[];
   darkOverrides: Token[];
+  text: TextStyleOutput[];
 }
 
 const LEGACY_TYPES = new Set(["color", "dimension", "duration", "spring"]);
+/** Primitives that only feed text styles; the interim emitters output the styles instead. */
+const TEXT_PRIMITIVE = /^(font-size|line-height)\./;
 
 /** Phase 0 emitters still take string values; this adapter goes away in Tasks 14 and 16. */
 export function toLegacy(tokens: (SourceToken | ResolvedToken)[]): Token[] {
@@ -28,6 +44,7 @@ export function toLegacy(tokens: (SourceToken | ResolvedToken)[]): Token[] {
       (t) =>
         LEGACY_TYPES.has(t.type) &&
         typeof t.value !== "string" &&
+        !TEXT_PRIMITIVE.test(t.path) &&
         (!("file" in t) || t.file !== "generated"),
     )
     .map((t) => {
@@ -77,7 +94,32 @@ export function legacyFromBuild(build: ThemeBuild): TokenSets {
   const d = ordered(toLegacy([...build.dark.tokens.values()]));
   const lightValues = new Map(l.map((t) => [t.path, JSON.stringify(t.value)]));
   const darkOverrides = d.filter((t) => lightValues.get(t.path) !== JSON.stringify(t.value));
-  return { light: l, dark: d, darkOverrides };
+  return { light: l, dark: d, darkOverrides, text: textStyles(build) };
+}
+
+const measure = (v: { value: number; unit: string }) => `${v.value}${v.unit}`;
+
+/** Text styles are scheme-independent, so they come from the light scheme. */
+function textStyles(build: ThemeBuild): TextStyleOutput[] {
+  const tokens = build.light.tokens;
+  const mono = JSON.stringify(tokens.get("font-family.mono")?.value);
+  return TEXT_STYLES.flatMap((style) => {
+    const t = tokens.get(`text.${style}`)?.value as Typography | undefined;
+    if (!t) return [];
+    const family = JSON.stringify(t.fontFamily) === mono ? "mono" : "sans";
+    return [
+      {
+        style,
+        web: {
+          size: measure(t.fontSize),
+          "line-height": measure(t.lineHeight),
+          weight: String(t.fontWeight),
+          tracking: measure(t.letterSpacing),
+        },
+        native: toNativeTextStyle(t, family, build.nativeFonts),
+      },
+    ];
+  });
 }
 
 export { ContrastError };
@@ -91,6 +133,8 @@ export interface ThemeBuildOptions {
   accent: PaletteSpec;
   neutral: PaletteSpec;
   autoContrast: boolean;
+  /** Native font face per family and weight; defaults to `DEFAULT_NATIVE_FONTS`. */
+  nativeFonts?: NativeFonts;
   /** Where `tokens/` lives. Defaults to this package. */
   root?: string;
 }
@@ -103,6 +147,7 @@ export interface ThemeBuild {
   light: SchemeBuild;
   dark: SchemeBuild;
   warnings: string[];
+  nativeFonts: NativeFonts;
 }
 
 /** Builds one theme for both schemes and enforces contrast; throws `ContrastError` on failures. */
@@ -139,5 +184,11 @@ export function buildTheme(opts: ThemeBuildOptions): ThemeBuild {
   const light = build("light");
   const dark = build("dark");
   if (failures.length > 0) throw new ContrastError(failures);
-  return { name: opts.name, light, dark, warnings };
+  return {
+    name: opts.name,
+    light,
+    dark,
+    warnings,
+    nativeFonts: opts.nativeFonts ?? DEFAULT_NATIVE_FONTS,
+  };
 }
