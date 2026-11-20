@@ -11,7 +11,7 @@ build when they drift apart.
 > **Status: early.** Unison is built in six phases (0–5); this is the end of phase 0, the
 > foundation. In place: the monorepo, the token compiler, the platform split, three demo apps,
 > the parity harness and CI. There are no real components yet (only `Box` and `MotionBadge`,
-> which prove the pipeline), and nothing is published to npm.
+> which prove the pipeline). There's no release yet; only PR snapshots are on npm.
 > See the [roadmap](docs/planning/roadmap.md).
 
 ## Packages
