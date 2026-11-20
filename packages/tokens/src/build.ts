@@ -1,7 +1,10 @@
-import { BUILT_IN_PALETTES, colorPrimitives } from "./color/palettes";
+import { fileURLToPath } from "node:url";
+import { ContrastError, type ContrastResult, checkContrast } from "./color/auto-contrast";
+import type { Mode } from "./color/generate-scale";
+import { BUILT_IN_PALETTES, colorPrimitives, type PaletteSpec } from "./color/palettes";
 import { assertTiers } from "./lint-tiers";
 import { loadSource } from "./load";
-import { type ResolvedToken, resolve } from "./resolve";
+import { type Resolved, type ResolvedToken, resolve } from "./resolve";
 import type { ColorValue, Dimension, Duration, SourceToken } from "./schema";
 import type { SpringConfig } from "./spring";
 
@@ -68,17 +71,73 @@ const ordered = (tokens: Token[]) =>
     .sort((a, b) => rank(a.t.path) - rank(b.t.path) || a.i - b.i)
     .map(({ t }) => t);
 
-/** light = primitive + semantic + light; dark = the same with dark merged over light. */
-export function legacySets(root: string): TokenSets {
-  const layers = loadSource(root);
-  assertTiers(layers);
-  const { primitive, semantic, light, dark } = layers;
-  const palettes = BUILT_IN_PALETTES();
-  const lightPrimitive = [...colorPrimitives(palettes, "light"), ...primitive];
-  const darkPrimitive = [...colorPrimitives(palettes, "dark"), ...primitive];
-  const l = ordered(toLegacy([...resolve(lightPrimitive, semantic, light).values()]));
-  const d = ordered(toLegacy([...resolve(darkPrimitive, semantic, light, dark).values()]));
+/** The phase 0 token sets, taken from a theme build so the outputs match what contrast checked. */
+export function legacyFromBuild(build: ThemeBuild): TokenSets {
+  const l = ordered(toLegacy([...build.light.tokens.values()]));
+  const d = ordered(toLegacy([...build.dark.tokens.values()]));
   const lightValues = new Map(l.map((t) => [t.path, JSON.stringify(t.value)]));
   const darkOverrides = d.filter((t) => lightValues.get(t.path) !== JSON.stringify(t.value));
   return { light: l, dark: d, darkOverrides };
+}
+
+export { ContrastError };
+
+/** The folder that holds `tokens/`, from this module's own location (`src/` or `dist/`). */
+// Lazy: consumers that only import `compile`-adjacent helpers may load this under a non-file URL.
+const packageRoot = () => fileURLToPath(new URL("..", import.meta.url));
+
+export interface ThemeBuildOptions {
+  name: string;
+  accent: PaletteSpec;
+  neutral: PaletteSpec;
+  autoContrast: boolean;
+  /** Where `tokens/` lives. Defaults to this package. */
+  root?: string;
+}
+export interface SchemeBuild {
+  tokens: Resolved;
+  contrast: ContrastResult[];
+}
+export interface ThemeBuild {
+  name: string;
+  light: SchemeBuild;
+  dark: SchemeBuild;
+  warnings: string[];
+}
+
+/** Builds one theme for both schemes and enforces contrast; throws `ContrastError` on failures. */
+export function buildTheme(opts: ThemeBuildOptions): ThemeBuild {
+  const layers = loadSource(opts.root ?? packageRoot());
+  assertTiers(layers);
+  const palettes = BUILT_IN_PALETTES().map((p) =>
+    p.name === opts.accent.name ? opts.accent : p.name === opts.neutral.name ? opts.neutral : p,
+  );
+  const warnings: string[] = [];
+  const failures: ContrastResult[] = [];
+  const build = (scheme: Mode): SchemeBuild => {
+    const base = [...colorPrimitives(palettes, scheme), ...layers.primitive];
+    const stacks =
+      scheme === "light"
+        ? [layers.semantic, layers.light]
+        : [layers.semantic, layers.light, layers.dark];
+    const first = resolve(base, ...stacks);
+    const {
+      results,
+      overrides,
+      warnings: w,
+    } = checkContrast(first, {
+      theme: opts.name,
+      scheme,
+      autoContrast: opts.autoContrast,
+    });
+    warnings.push(...w);
+    failures.push(...results.filter((r) => !r.pass));
+    // Auto-contrast overrides are applied after the tier lint, so they may be raw.
+    const tokens = overrides.length > 0 ? resolve(base, ...stacks, overrides) : first;
+    return { tokens, contrast: results };
+  };
+  const light = build("light");
+  const dark = build("dark");
+  if (failures.length > 0) throw new ContrastError(failures);
+  return { name: opts.name, light, dark, warnings };
 }

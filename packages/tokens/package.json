@@ -57,6 +57,7 @@
     "provenance": true
   },
   "dependencies": {
+    "colorjs.io": "^0.7.1",
     "culori": "^4.0.2"
   }
 }

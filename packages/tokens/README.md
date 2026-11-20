@@ -24,7 +24,7 @@ React Native with [Uniwind](https://uniwind.dev): import `@unison-ui/tokens/nati
 | `@unison-ui/tokens/native-theme.css` | Literal colours for Uniwind on native |
 | `@unison-ui/tokens/native` | Typed native theme (`UnisonTheme`) |
 | `@unison-ui/tokens/spring` | `simulateSpring`, `springToCssLinear` |
-| `@unison-ui/tokens` | Compiler API (`compile`, `contrastRatio`, `assertContrast`, …) |
+| `@unison-ui/tokens` | Compiler API (`compile`, `wcagRatio` (also exported as `contrastRatio`), …) |
 | `unison-tokens build` | CLI that compiles the token source |
 
 > **Preview.** Only `0.0.0-pr…` snapshot builds exist so far; the API will change before `0.1.0`.

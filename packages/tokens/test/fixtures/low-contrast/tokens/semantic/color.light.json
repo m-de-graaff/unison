@@ -1,32 +1,157 @@
 {
   "color": {
     "$type": "color",
-    "accent": {
-      "$value": "#5b5bd6",
-      "$extensions": {
-        "dev.unison": {
-          "raw": true
-        }
-      }
+    "canvas": {
+      "$value": "{color.gray.50}",
+      "$description": "App background"
     },
     "surface": {
-      "$value": "#ffffff",
-      "$extensions": {
-        "dev.unison": {
-          "raw": true
-        }
-      }
+      "$value": "{color.white}",
+      "$description": "Cards, inputs, sheets"
+    },
+    "surface-raised": {
+      "$value": "{color.white}",
+      "$description": "Popovers, menus, dialogs"
+    },
+    "subtle": {
+      "$value": "{color.gray.100}",
+      "$description": "Hover backgrounds, zebra rows"
+    },
+    "muted": {
+      "$value": "{color.gray.200}",
+      "$description": "Pressed backgrounds, disabled fills"
     },
     "fg": {
-      "$value": "#bbbbbb",
-      "$extensions": {
-        "dev.unison": {
-          "raw": true
-        }
-      }
+      "$value": "{color.gray.400}",
+      "$description": "Primary text"
+    },
+    "fg-muted": {
+      "$value": "{color.gray.700}",
+      "$description": "Secondary text"
+    },
+    "fg-subtle": {
+      "$value": "{color.gray.500}",
+      "$description": "Placeholder, hints"
     },
     "border": {
-      "$value": "#e4e4e7",
+      "$value": "{color.gray.200}",
+      "$description": "Decorative borders, dividers (not contrast-checked)"
+    },
+    "border-strong": {
+      "$value": "{color.gray.500}",
+      "$description": "Input and control borders (meets 3:1)"
+    },
+    "ring": {
+      "$value": "{color.accent.600}",
+      "$description": "Focus ring"
+    },
+    "accent": {
+      "$value": "{color.accent.600}",
+      "$description": "Primary actions"
+    },
+    "accent-hover": {
+      "$value": "{color.accent.700}",
+      "$description": "Hover"
+    },
+    "accent-active": {
+      "$value": "{color.accent.800}",
+      "$description": "Pressed"
+    },
+    "accent-subtle": {
+      "$value": "{color.accent.100}",
+      "$description": "Selected rows, soft buttons"
+    },
+    "accent-fg": {
+      "$value": "{color.accent.700}",
+      "$description": "Accent text on accent-subtle"
+    },
+    "on-accent": {
+      "$value": "{color.white}",
+      "$description": "Text on accent"
+    },
+    "success": {
+      "$value": "{color.success.600}",
+      "$description": "Solid status fill"
+    },
+    "success-subtle": {
+      "$value": "{color.success.100}",
+      "$description": "Status background"
+    },
+    "success-fg": {
+      "$value": "{color.success.700}",
+      "$description": "Status text on subtle"
+    },
+    "success-border": {
+      "$value": "{color.success.300}",
+      "$description": "Status border"
+    },
+    "on-success": {
+      "$value": "{color.white}",
+      "$description": "Text on solid status"
+    },
+    "warning": {
+      "$value": "{color.warning.400}",
+      "$description": "Solid status fill"
+    },
+    "warning-subtle": {
+      "$value": "{color.warning.100}",
+      "$description": "Status background"
+    },
+    "warning-fg": {
+      "$value": "{color.warning.700}",
+      "$description": "Status text on subtle"
+    },
+    "warning-border": {
+      "$value": "{color.warning.300}",
+      "$description": "Status border"
+    },
+    "on-warning": {
+      "$value": "{color.black}",
+      "$description": "Text on solid status"
+    },
+    "danger": {
+      "$value": "{color.danger.600}",
+      "$description": "Solid status fill"
+    },
+    "danger-subtle": {
+      "$value": "{color.danger.100}",
+      "$description": "Status background"
+    },
+    "danger-fg": {
+      "$value": "{color.danger.700}",
+      "$description": "Status text on subtle"
+    },
+    "danger-border": {
+      "$value": "{color.danger.300}",
+      "$description": "Status border"
+    },
+    "on-danger": {
+      "$value": "{color.white}",
+      "$description": "Text on solid status"
+    },
+    "info": {
+      "$value": "{color.info.600}",
+      "$description": "Solid status fill"
+    },
+    "info-subtle": {
+      "$value": "{color.info.100}",
+      "$description": "Status background"
+    },
+    "info-fg": {
+      "$value": "{color.info.700}",
+      "$description": "Status text on subtle"
+    },
+    "info-border": {
+      "$value": "{color.info.300}",
+      "$description": "Status border"
+    },
+    "on-info": {
+      "$value": "{color.white}",
+      "$description": "Text on solid status"
+    },
+    "overlay": {
+      "$value": "#00000080",
+      "$description": "Scrim behind dialogs and sheets",
       "$extensions": {
         "dev.unison": {
           "raw": true

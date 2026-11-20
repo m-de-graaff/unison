@@ -27,5 +27,7 @@ it("compiles the token source to css, tailwind and native outputs", async () => 
 
 it("rejects low contrast and names both colours", async () => {
   const dir = workspaceWith(join(import.meta.dirname, "fixtures/low-contrast/tokens"));
-  await expect(compile({ cwd: dir })).rejects.toThrow(/#bbbbbb.*#ffffff/);
+  await expect(compile({ cwd: dir })).rejects.toThrow(
+    /contrast: theme default, scheme light, color\.fg on color\.canvas is \d\.\d\d:1 \(needs 4\.5:1\)/,
+  );
 });
