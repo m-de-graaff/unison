@@ -170,33 +170,47 @@ function rules(selector: string, decls: Decls, oklch: Decls, indent: string): st
 
 const scope = (name: string) => `[data-unison-theme="${name}"]`;
 const MEDIA_DARK = "@media (prefers-color-scheme: dark)";
-const NOT_LIGHT = ':not([data-theme="light"])';
+const LIGHT = '[data-theme="light"]';
+const DARK = '[data-theme="dark"]';
 
-/** The three selector lists of a theme; the first theme also owns `:root` and bare `[data-theme]`. */
+/**
+ * The selector lists of a theme (ADR 0018). Three weights, so a nearer element always wins:
+ * - (0,2,0) the compound `[theme][scheme]` on the element itself; ThemeScope always writes both.
+ * - (0,1,0) an element carrying one attribute, the other set on a non-root ancestor.
+ * - 0 (`:where()`) the base shapes and an element carrying one attribute, the other set on `:root`.
+ * Equal weights fall back to source order: themes in config order, light before dark.
+ */
 function selectorsFor(name: string, isFirst: boolean) {
   const s = scope(name);
-  return isFirst
-    ? {
-        light: `:root, ${s}, [data-theme="light"]`,
-        dark: `[data-theme="dark"], [data-theme="dark"] ${s}, ${s}[data-theme="dark"]`,
-        media: `:root${NOT_LIGHT}, :root${NOT_LIGHT} ${s}${NOT_LIGHT}`,
-      }
-    : {
-        light: `${s}, ${s}[data-theme="light"]`,
-        dark: `[data-theme="dark"] ${s}, ${s}[data-theme="dark"]`,
-        media: `:root${NOT_LIGHT} ${s}${NOT_LIGHT}`,
-      };
+  const list = (compound: string, where: string[], near: string[]) =>
+    [compound, `:where(${where.join(", ")})`, ...near].join(", ");
+  const scheme = (attr: string) =>
+    list(
+      `${s}${attr}`,
+      [
+        ...(isFirst ? (attr === LIGHT ? [":root", attr] : [attr]) : []),
+        ...(attr === LIGHT ? [s] : [`:root${attr} ${s}`]),
+        `:root${s} ${attr}`,
+      ],
+      [`:where(:not(:root)${attr}) ${s}`, `:where(:not(:root)${s}) ${attr}`],
+    );
+  // OS dark: only where nothing sets data-theme (the element or an ancestor).
+  const media = [
+    ...(isFirst ? [':root:not([data-theme="light"])'] : []),
+    `${s}:not([data-theme]):not([data-theme] *)`,
+  ];
+  return { light: scheme(LIGHT), dark: scheme(DARK), media: `:where(${media.join(", ")})` };
 }
 
 /** Browsers without linear() get a plain cubic-bezier instead (the duration variable still applies). */
-function springFallback(light: Decls): string[] {
+function springFallback(selector: string, light: Decls): string[] {
   const springs = [...light.keys()].filter(
     (k) => k.startsWith("--unison-spring-") && !k.endsWith("-duration"),
   );
   if (springs.length === 0) return [];
   return [
     "@supports not (transition-timing-function: linear(0, 1)) {",
-    "  :root {",
+    `  ${selector} {`,
     ...springs.map((k) => `    ${k}: cubic-bezier(0.2, 0, 0, 1);`),
     "  }",
     "}",
@@ -204,57 +218,59 @@ function springFallback(light: Decls): string[] {
   ];
 }
 
-/** The `tokens.css` of every theme; the first theme is the default and owns `:root`. */
+/** Names whose resolved value isn't the same in every theme × scheme (or is missing in one). */
+function varying(all: Decls[]): Set<string> {
+  const names = new Set(all.flatMap((d) => [...d.keys()]));
+  return new Set(
+    [...names].filter((k) => new Set(all.map((d) => d.get(k)?.resolved ?? "")).size > 1),
+  );
+}
+
+/**
+ * The `tokens.css` of every theme; the first theme is the default and owns `:root`. Since a scope
+ * may sit inside any other theme × scheme, every override rule declares each variable whose
+ * resolved value differs anywhere (a `var()` resolves where it's declared, so equal alias text
+ * isn't enough).
+ */
 export function emitTokensCss(themes: ThemeBuild[]): string {
   const [first] = themes;
   if (!first) throw new Error("emitTokensCss needs at least one theme");
-  const base = { light: schemeDecls(first, "light"), dark: schemeDecls(first, "dark") };
-  const blocks: string[] = [];
+  const decls = themes.map((t) => ({
+    light: schemeDecls(t, "light"),
+    dark: schemeDecls(t, "dark"),
+  }));
+  const vary = varying(decls.flatMap((d) => [d.light, d.dark]));
+  const reducedAll = themes.map(reducedDecls);
+  const reducedVary = varying(reducedAll);
+  const out: string[] = [];
   const reduced: string[] = [];
-  const reducedBase = reducedDecls(first);
 
   themes.forEach((theme, i) => {
     const sel = selectorsFor(theme.name, i === 0);
-    const light = i === 0 ? base.light : schemeDecls(theme, "light");
-    const dark = i === 0 ? base.dark : schemeDecls(theme, "dark");
-    const lightOut = only(
-      light,
-      (k, v) =>
-        i === 0 ||
-        base.light.get(k)?.resolved !== v.resolved ||
-        // Under a dark ancestor, anything equal to default-light would inherit default-dark.
-        base.dark.get(k)?.resolved !== v.resolved,
-    );
-    // Nothing may leak in from an ancestor's default dark, so also compare against it.
-    const darkOut = only(
-      dark,
-      (k, v) =>
-        light.get(k)?.resolved !== v.resolved ||
-        (i > 0 && base.dark.get(k)?.resolved !== v.resolved),
-    );
+    const { light, dark } = decls[i] as { light: Decls; dark: Decls };
+    const lightOut = only(light, (k) => i === 0 || vary.has(k));
+    const darkOut = only(dark, (k) => vary.has(k));
     const lightWide = oklchDecls(theme.light.tokens);
     const darkWide = oklchDecls(theme.dark.tokens);
-    blocks.push(
+    out.push(
       ...rules(sel.light, lightOut, lightWide, ""),
       ...rules(sel.dark, darkOut, darkWide, ""),
       ...(darkOut.size === 0
         ? []
         : [`${MEDIA_DARK} {`, ...rules(sel.media, darkOut, darkWide, "  ").slice(0, -1), "}", ""]),
     );
-    const own = reducedDecls(theme);
     const reducedOut = only(
-      own,
-      (k, v) =>
-        i === 0 ||
-        reducedBase.get(k)?.resolved !== v.resolved ||
-        base.light.get(k)?.resolved !== light.get(k)?.resolved,
+      reducedAll[i] as Decls,
+      (k) => i === 0 || vary.has(k) || reducedVary.has(k),
     );
-    if (reducedOut.size > 0) reduced.push(...rules(sel.light, reducedOut, new Map(), "  "));
+    if (reducedOut.size > 0) {
+      reduced.push(...rules(`${sel.light}, ${sel.dark}`, reducedOut, new Map(), "  "));
+    }
   });
 
   return [
-    ...blocks,
-    ...springFallback(base.light),
+    ...out,
+    ...springFallback(selectorsFor(first.name, true).light, decls[0]?.light ?? new Map()),
     ...keyframes(expandPresets(first.light.tokens, first.motion)),
     ...(reduced.length === 0
       ? []

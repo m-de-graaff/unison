@@ -2623,7 +2623,7 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
 `;
 
 exports[`compiles the token source to css, tailwind and native outputs > dist/web/tokens.css 1`] = `
-":root, [data-unison-theme="default"], [data-theme="light"] {
+"[data-unison-theme="default"][data-theme="light"], :where(:root, [data-theme="light"], [data-unison-theme="default"], :root[data-unison-theme="default"] [data-theme="light"]), :where(:not(:root)[data-theme="light"]) [data-unison-theme="default"], :where(:not(:root)[data-unison-theme="default"]) [data-theme="light"] {
   --unison-animate-fade: unison-fade-in var(--unison-motion-duration-base-enter) var(--unison-easing-enter) both;
   --unison-animate-fade-out: unison-fade-out var(--unison-motion-duration-base-exit) var(--unison-easing-exit) both;
   --unison-animate-pop: unison-pop-in var(--unison-spring-bouncy-duration) var(--unison-spring-bouncy) both;
@@ -2881,7 +2881,7 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
 }
 
 @supports (color: oklch(0 0 0)) {
-  :root, [data-unison-theme="default"], [data-theme="light"] {
+  [data-unison-theme="default"][data-theme="light"], :where(:root, [data-theme="light"], [data-unison-theme="default"], :root[data-unison-theme="default"] [data-theme="light"]), :where(:not(:root)[data-theme="light"]) [data-unison-theme="default"], :where(:not(:root)[data-unison-theme="default"]) [data-theme="light"] {
     --unison-color-accent-50: oklch(0.985 0.024 275);
     --unison-color-accent-100: oklch(0.967 0.05 275);
     --unison-color-accent-200: oklch(0.928 0.09 275);
@@ -2953,7 +2953,7 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
   }
 }
 
-[data-theme="dark"], [data-theme="dark"] [data-unison-theme="default"], [data-unison-theme="default"][data-theme="dark"] {
+[data-unison-theme="default"][data-theme="dark"], :where([data-theme="dark"], :root[data-theme="dark"] [data-unison-theme="default"], :root[data-unison-theme="default"] [data-theme="dark"]), :where(:not(:root)[data-theme="dark"]) [data-unison-theme="default"], :where(:not(:root)[data-unison-theme="default"]) [data-theme="dark"] {
   --unison-color-accent: var(--unison-color-accent-500);
   --unison-color-accent-50: #0d0f19;
   --unison-color-accent-100: #12162d;
@@ -3064,7 +3064,7 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
 }
 
 @supports (color: oklch(0 0 0)) {
-  [data-theme="dark"], [data-theme="dark"] [data-unison-theme="default"], [data-unison-theme="default"][data-theme="dark"] {
+  [data-unison-theme="default"][data-theme="dark"], :where([data-theme="dark"], :root[data-theme="dark"] [data-unison-theme="default"], :root[data-unison-theme="default"] [data-theme="dark"]), :where(:not(:root)[data-theme="dark"]) [data-unison-theme="default"], :where(:not(:root)[data-unison-theme="default"]) [data-theme="dark"] {
     --unison-color-accent-50: oklch(0.17 0.0216 275);
     --unison-color-accent-100: oklch(0.21 0.045 275);
     --unison-color-accent-200: oklch(0.26 0.081 275);
@@ -3135,7 +3135,7 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]), :root:not([data-theme="light"]) [data-unison-theme="default"]:not([data-theme="light"]) {
+  :where(:root:not([data-theme="light"]), [data-unison-theme="default"]:not([data-theme]):not([data-theme] *)) {
     --unison-color-accent: var(--unison-color-accent-500);
     --unison-color-accent-50: #0d0f19;
     --unison-color-accent-100: #12162d;
@@ -3246,7 +3246,7 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
   }
 
   @supports (color: oklch(0 0 0)) {
-    :root:not([data-theme="light"]), :root:not([data-theme="light"]) [data-unison-theme="default"]:not([data-theme="light"]) {
+    :where(:root:not([data-theme="light"]), [data-unison-theme="default"]:not([data-theme]):not([data-theme] *)) {
       --unison-color-accent-50: oklch(0.17 0.0216 275);
       --unison-color-accent-100: oklch(0.21 0.045 275);
       --unison-color-accent-200: oklch(0.26 0.081 275);
@@ -3318,7 +3318,7 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
 }
 
 @supports not (transition-timing-function: linear(0, 1)) {
-  :root {
+  [data-unison-theme="default"][data-theme="light"], :where(:root, [data-theme="light"], [data-unison-theme="default"], :root[data-unison-theme="default"] [data-theme="light"]), :where(:not(:root)[data-theme="light"]) [data-unison-theme="default"], :where(:not(:root)[data-unison-theme="default"]) [data-theme="light"] {
     --unison-spring-bouncy: cubic-bezier(0.2, 0, 0, 1);
     --unison-spring-smooth: cubic-bezier(0.2, 0, 0, 1);
     --unison-spring-snappy: cubic-bezier(0.2, 0, 0, 1);
@@ -3436,7 +3436,7 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root, [data-unison-theme="default"], [data-theme="light"] {
+  [data-unison-theme="default"][data-theme="light"], :where(:root, [data-theme="light"], [data-unison-theme="default"], :root[data-unison-theme="default"] [data-theme="light"]), :where(:not(:root)[data-theme="light"]) [data-unison-theme="default"], :where(:not(:root)[data-unison-theme="default"]) [data-theme="light"], [data-unison-theme="default"][data-theme="dark"], :where([data-theme="dark"], :root[data-theme="dark"] [data-unison-theme="default"], :root[data-unison-theme="default"] [data-theme="dark"]), :where(:not(:root)[data-theme="dark"]) [data-unison-theme="default"], :where(:not(:root)[data-unison-theme="default"]) [data-theme="dark"] {
     --unison-animate-fade: unison-fade-reduced-in var(--unison-motion-duration-fast-enter) var(--unison-easing-linear) both;
     --unison-animate-fade-out: unison-fade-reduced-out var(--unison-motion-duration-fast-exit) var(--unison-easing-linear) both;
     --unison-animate-pop: unison-pop-reduced-in var(--unison-motion-duration-fast-enter) var(--unison-easing-linear) both;

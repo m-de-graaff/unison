@@ -131,8 +131,9 @@ flowchart LR
 1. `unison/web/tokens.css` declares every token as a `--unison-*` variable. Semantic tokens are
    references (`--unison-color-accent: var(--unison-color-accent-600)`), and colour primitives come
    as hex with an `oklch()` re-declaration under `@supports`. Dark mode and every named theme are
-   blocks that re-declare only what resolves differently, selected by `data-theme` and
-   `data-unison-theme` ([ADR 0018](adr/0018-theme-attributes-and-scoping.md)).
+   blocks that re-declare only what resolves differently somewhere, selected by `data-theme` and
+   `data-unison-theme`; the two on one element always win over its ancestors
+   ([ADR 0018](adr/0018-theme-attributes-and-scoping.md)).
 2. `unison/web/theme.css` (or `theme-strict.css`) maps Tailwind's namespaces onto them:
    `--color-accent: var(--unison-color-accent)` inside `@theme inline`, so classes follow a runtime
    switch.

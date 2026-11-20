@@ -10,7 +10,19 @@ import {
   useSyncExternalStore,
 } from "react";
 
-const ThemeContext = createContext<ThemeState | null>(null);
+/** @internal The nearest theme state: the provider's, or a ThemeScope's scoped copy. */
+export const ThemeContext = createContext<ThemeState | null>(null);
+/**
+ * @internal Which of the context's theme and resolved scheme are the page's real values. On the
+ * server and during hydration the provider only knows its defaults, so a ThemeScope leaves out the
+ * attributes it would inherit and lets CSS take them from `<html>` (set by ThemeScript).
+ */
+export const KnownContext = createContext<{ theme: boolean; scheme: boolean }>({
+  theme: false,
+  scheme: false,
+});
+const KNOWN = { theme: true, scheme: true };
+const UNKNOWN = { theme: false, scheme: false };
 const CHANGE = "unison:theme-change";
 const DARK = "(prefers-color-scheme: dark)";
 const SCHEMES: readonly string[] = ["light", "dark", "system"];
@@ -99,9 +111,9 @@ export function ThemeProvider({
     subscribe,
     () => {
       const html = document.documentElement;
-      return `${storedScheme()}|${html.getAttribute("data-unison-theme") ?? defaultTheme}|${html.getAttribute("data-theme") ?? "light"}`;
+      return `${storedScheme()}|${html.getAttribute("data-unison-theme") ?? defaultTheme}|${html.getAttribute("data-theme") ?? "light"}|client`;
     },
-    () => `${defaultScheme}|${defaultTheme}|${defaultScheme === "dark" ? "dark" : "light"}`,
+    () => `${defaultScheme}|${defaultTheme}|${defaultScheme === "dark" ? "dark" : "light"}|server`,
   );
 
   // Fix up a stored theme the config no longer has, or a page without ThemeScript.
@@ -137,10 +149,19 @@ export function ThemeProvider({
     return { scheme, resolvedScheme: resolved, setScheme, theme, setTheme, themes };
   }, [snapshot, setScheme, setTheme, themes]);
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={value}>
+      <KnownContext.Provider value={snapshot.endsWith("|client") ? KNOWN : UNKNOWN}>
+        {children}
+      </KnownContext.Provider>
+    </ThemeContext.Provider>
+  );
 }
 
-/** The current theme and scheme, and setters. Throws outside `ThemeProvider`. */
+/**
+ * The current theme and scheme, and setters. Inside a `ThemeScope`, `theme` and `resolvedScheme`
+ * are the scope's; the setters still change the page. Throws outside `ThemeProvider`.
+ */
 export function useTheme(): ThemeState {
   const state = useContext(ThemeContext);
   if (!state) throw new Error("useTheme must be used inside ThemeProvider");

@@ -27,8 +27,13 @@ it("builds both demo themes, default first", () => {
 });
 
 it("emits a CSS block set for brand", () => {
-  // The todo's `[data-unison-theme="brand"] {` gained OQ-8's extra selectors after it.
-  expect(emitTokensCss(build(demo).themes)).toMatch(/^\[data-unison-theme="brand"\][,{ ]/m);
+  // The todo's `[data-unison-theme="brand"] {` is now inside :where(), after the compounds
+  // (ADR 0018), so a brand scope wins over its ancestors.
+  const css = emitTokensCss(build(demo).themes);
+  expect(css).toMatch(
+    /^\[data-unison-theme="brand"\]\[data-theme="light"\], :where\(\[data-unison-theme="brand"\][,)]/m,
+  );
+  expect(css).toMatch(/^\[data-unison-theme="brand"\]\[data-theme="dark"\], :where\(/m);
 });
 
 it("puts brand.light and brand.dark into the native theme", async () => {

@@ -12,9 +12,18 @@ const def = buildTheme({
 });
 const css = emitTokensCss([def]);
 
-const LIGHT = ':root, [data-unison-theme="default"], [data-theme="light"]';
-const DARK =
-  '[data-theme="dark"], [data-theme="dark"] [data-unison-theme="default"], [data-unison-theme="default"][data-theme="dark"]';
+/** A theme's selector list for one scheme (ADR 0018); the first theme also owns the base shapes. */
+const list = (theme: string, scheme: "light" | "dark", first: boolean) => {
+  const s = `[data-unison-theme="${theme}"]`;
+  const a = `[data-theme="${scheme}"]`;
+  const base = first ? (scheme === "light" ? [":root", a] : [a]) : [];
+  const own = scheme === "light" ? s : `:root${a} ${s}`;
+  return `${s}${a}, :where(${[...base, own, `:root${s} ${a}`].join(", ")}), :where(:not(:root)${a}) ${s}, :where(:not(:root)${s}) ${a}`;
+};
+const LIGHT = list("default", "light", true);
+const DARK = list("default", "dark", true);
+const OCEAN_LIGHT = list("ocean", "light", false);
+const OCEAN_DARK = list("ocean", "dark", false);
 
 it("emits semantic tokens as references", () => {
   expect(css).toContain("--unison-color-accent: var(--unison-color-accent-600);");
@@ -34,8 +43,8 @@ it("emits hex first and oklch under @supports", () => {
   expect(css.indexOf("--unison-color-accent-600: #535cda;")).toBeLessThan(
     css.indexOf("@supports (color: oklch(0 0 0))"),
   );
-  expect(css).toMatch(
-    /@supports \(color: oklch\(0 0 0\)\) \{\n {2}:root, \[data-unison-theme="default"\], \[data-theme="light"\] \{\n {4}--unison-color-accent-50: oklch\(/,
+  expect(css).toContain(
+    `@supports (color: oklch(0 0 0)) {\n  ${LIGHT} {\n    --unison-color-accent-50: oklch(`,
   );
 });
 it("emits typography and shadows", () => {
@@ -46,9 +55,23 @@ it("emits typography and shadows", () => {
 it("is deterministic", () => expect(emitTokensCss([def])).toBe(css));
 it("stays under 8 KB gzipped", () => expect(gzipSync(css).length).toBeLessThan(8 * 1024));
 
-describe("selectors (OQ-8)", () => {
-  it("light list includes [data-theme=light]", () => {
+describe("selectors (OQ-8, ADR 0018)", () => {
+  it("light list includes :root and [data-theme=light]", () => {
     expect(css).toContain(`${LIGHT} {`);
+    expect(LIGHT).toContain(':where(:root, [data-theme="light"], [data-unison-theme="default"]');
+  });
+  it("the compound on the element is the only selector that isn't inside :where()", () => {
+    // [theme][scheme] weighs (0,2,0); one attribute with the other on a non-root ancestor (0,1,0);
+    // everything else 0. So a scope's compound beats any rule an ancestor makes match.
+    expect(LIGHT.startsWith('[data-unison-theme="default"][data-theme="light"], :where(')).toBe(
+      true,
+    );
+    expect(DARK.startsWith('[data-unison-theme="default"][data-theme="dark"], :where(')).toBe(true);
+    for (const sel of [LIGHT, DARK]) {
+      const outside = sel.replace(/:where\((?:[^()]|\([^()]*\))*\)/g, "");
+      expect(outside).not.toContain(":root");
+      expect(outside).not.toMatch(/\] \[/); // no descendant pair outside :where()
+    }
   });
   it("the default light block declares every token, so a light scope resets a dark ancestor", () => {
     const light = css.split(`${LIGHT} {`)[1]?.split("}")[0] ?? "";
@@ -58,9 +81,9 @@ describe("selectors (OQ-8)", () => {
   it("dark list includes the compound theme + dark selector", () => {
     expect(css).toContain(`${DARK} {`);
   });
-  it("media block keeps :root:not([data-theme=light]) and scopes the default theme", () => {
+  it("media block keeps :root:not([data-theme=light]) and scopes the default theme where nothing sets a scheme", () => {
     expect(css).toContain(
-      '@media (prefers-color-scheme: dark) {\n  :root:not([data-theme="light"]), :root:not([data-theme="light"]) [data-unison-theme="default"]:not([data-theme="light"]) {',
+      '@media (prefers-color-scheme: dark) {\n  :where(:root:not([data-theme="light"]), [data-unison-theme="default"]:not([data-theme]):not([data-theme] *)) {',
     );
   });
 });
@@ -76,6 +99,7 @@ describe("everything the earlier tasks emitted", () => {
     const fallback =
       css.split("@supports not (transition-timing-function: linear(0, 1)) {")[1] ?? "";
     const block = fallback.split("}")[0] ?? "";
+    expect(block).toContain(`  ${LIGHT} {`);
     expect(block).toContain("--unison-spring-snappy: cubic-bezier(0.2, 0, 0, 1);");
     expect(block).not.toContain("-duration");
   });
@@ -122,18 +146,14 @@ describe("several themes", () => {
   const both = emitTokensCss([def, other]);
   const body = (selector: string) => both.split(`${selector} {\n`)[1]?.split("\n  }")[0] ?? "";
 
-  it("scopes the other theme and declares only what differs from default", () => {
-    const light = body(
-      '[data-unison-theme="ocean"], [data-unison-theme="ocean"][data-theme="light"]',
-    );
+  it("scopes the other theme and declares only what varies across themes and schemes", () => {
+    const light = body(OCEAN_LIGHT);
     expect(light).toMatch(/--unison-color-accent-600: #[0-9a-f]{6};/);
     expect(light).not.toContain("--unison-space-4:");
     expect(light).not.toContain(":root");
   });
   it("re-declares aliases whose text is unchanged but whose value differs", () => {
-    const light = body(
-      '[data-unison-theme="ocean"], [data-unison-theme="ocean"][data-theme="light"]',
-    );
+    const light = body(OCEAN_LIGHT);
     // color.accent -> accent-600 in both themes, but accent-600 resolves differently.
     expect(light).toContain("--unison-color-accent: var(--unison-color-accent-600);");
     expect(light).toContain("--unison-color-ring: var(--unison-color-accent-600);");
@@ -141,24 +161,16 @@ describe("several themes", () => {
   it("re-declares tokens equal to default-light but different in default-dark", () => {
     // color.fg is the same in default-light and ocean-light, but default-dark differs; under a
     // dark ancestor an ocean light scope would otherwise inherit the dark value.
-    const light = body(
-      '[data-unison-theme="ocean"], [data-unison-theme="ocean"][data-theme="light"]',
-    );
+    const light = body(OCEAN_LIGHT);
     expect(light).toContain("--unison-color-fg: var(--unison-color-gray-950);");
     expect(light).not.toContain("--unison-space-4:");
   });
   it("declares in the dark block what equals default-dark but not the theme's light", () => {
-    const dark = body(
-      '[data-theme="dark"] [data-unison-theme="ocean"], [data-unison-theme="ocean"][data-theme="dark"]',
-    );
+    const dark = body(OCEAN_DARK);
     expect(dark).toContain("--unison-color-fg: var(--unison-color-gray-950);");
   });
   it("the @supports block holds exactly the colour primitives of its block", () => {
-    for (const sel of [
-      LIGHT,
-      '[data-unison-theme="ocean"], [data-unison-theme="ocean"][data-theme="light"]',
-      '[data-theme="dark"] [data-unison-theme="ocean"], [data-unison-theme="ocean"][data-theme="dark"]',
-    ]) {
+    for (const sel of [LIGHT, OCEAN_LIGHT, OCEAN_DARK]) {
       const hex = body(sel);
       const wide =
         both.split(`@supports (color: oklch(0 0 0)) {\n  ${sel} {\n`)[1]?.split("\n  }")[0] ?? "";
@@ -171,15 +183,20 @@ describe("several themes", () => {
     }
   });
   it("dark block of the other theme is scoped under data-theme=dark", () => {
-    const dark = body(
-      '[data-theme="dark"] [data-unison-theme="ocean"], [data-unison-theme="ocean"][data-theme="dark"]',
-    );
+    const dark = body(OCEAN_DARK);
     expect(dark).toMatch(/--unison-color-accent-500: #[0-9a-f]{6};/);
   });
-  it("media block applies to the other theme unless it is forced light", () => {
+  it("media block applies to the other theme where nothing sets a scheme", () => {
     expect(both).toContain(
-      ':root:not([data-theme="light"]) [data-unison-theme="ocean"]:not([data-theme="light"]) {',
+      ':where([data-unison-theme="ocean"]:not([data-theme]):not([data-theme] *)) {',
     );
+  });
+  it("the default theme's scopes re-declare what another theme changes", () => {
+    // A default scope can sit inside an ocean subtree, so default light and dark both carry the
+    // accent ramp, which only ocean changes in light.
+    for (const sel of [DARK, `${LIGHT}`]) {
+      expect(body(sel)).toMatch(/--unison-color-accent-600: #[0-9a-f]{6};/);
+    }
   });
   it("puts themes in config order", () => {
     expect(both.indexOf('[data-unison-theme="default"]')).toBeLessThan(
