@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { watch } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, watch } from "node:fs";
+import { basename, dirname, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { createJiti } from "jiti";
 import { build, writeOutputs } from "./build";
@@ -42,6 +42,10 @@ async function loadConfig(): Promise<UnisonConfig> {
 
 /** One build; returns false (after printing why) when it fails. */
 async function run(): Promise<boolean> {
+  if (configPath && !existsSync(configPath)) {
+    console.error(`config not found: ${configPath}`);
+    return false;
+  }
   try {
     const result = build(await loadConfig());
     for (const warning of result.warnings) console.error(`warning: ${warning}`);
@@ -60,10 +64,19 @@ if (!configPath) {
   process.exit(1);
 }
 
-// A failing rebuild prints its error and keeps watching.
+// Watch the folder, not the file: editors that save by writing a temp file and renaming it over
+// the config replace the inode, and a watcher on the old one gets no more events. A failing
+// rebuild (or a missing config) prints its error and keeps watching.
+const name = basename(configPath);
 let timer: NodeJS.Timeout | undefined;
-watch(configPath, () => {
-  clearTimeout(timer);
-  timer = setTimeout(() => void run(), 50);
-});
+try {
+  watch(dirname(configPath), (_event, file) => {
+    if (file !== null && String(file) !== name) return;
+    clearTimeout(timer);
+    timer = setTimeout(() => void run(), 50);
+  }).on("error", (error) => console.error(`watch error: ${error.message}`));
+} catch (error) {
+  console.error(`can't watch ${dirname(configPath)}: ${(error as Error).message}`);
+  process.exit(1);
+}
 console.error(`watching ${configPath}`);
