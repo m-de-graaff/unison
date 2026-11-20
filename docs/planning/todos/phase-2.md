@@ -302,7 +302,7 @@ The phase 0 boundary checker forbids `react-native` in `core`. Teach it to skip 
 
 Clone into a new folder and go through the list in order, without editing any file.
 
-- [ ] `pnpm install`, `pnpm doctor`, `pnpm check` and `pnpm check:packages` pass
+- [ ] `pnpm install`, `pnpm run doctor`, `pnpm check` and `pnpm check:packages` pass
 - [ ] `pnpm test:parity` passes on all four platforms for every phase 1 and phase 2 fixture
 - [ ] **The roadmap gate:** `tooling/scripts/cli-e2e.ts` passes for Next.js, Vite and Expo against the published `0.2.0`, each under 120 seconds from `init` to a successful build
 - [ ] On web, `className` overrides beat engine styles with no `!important`, whatever the CSS import order

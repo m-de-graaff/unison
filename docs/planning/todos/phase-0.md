@@ -881,7 +881,7 @@ pre-push:
   - `maestro --version` works
   - Ports 3000, 5173, 8081 and 4545 are free
 - [ ] `CONTRIBUTING.md`, in this order:
-  1. Prerequisites (copy from section 0), then `pnpm install && pnpm doctor`
+  1. Prerequisites (copy from section 0), then `pnpm install && pnpm run doctor`
   2. Running things: `pnpm dev`, `pnpm dev:web`, `pnpm dev:mobile`; `npx expo run:ios` / `run:android` for the first native build
   3. The exact parity devices: simulator name and emulator profile (from step 21)
   4. Tests: `pnpm test`, `pnpm test:parity`, `pnpm test:parity --update`, and when updating baselines is allowed (only for intended visual changes, explained in the PR)
@@ -891,7 +891,7 @@ pre-push:
 - [ ] `.github/ISSUE_TEMPLATE/`: `bug.yml` (platform dropdown: web / iOS / Android, package version, reproduction) and `feature.yml`.
 - [ ] GitHub labels: `web`, `native`, `motion`, `a11y`, `tokens`, `parity`, `snapshot`.
 
-**Done when:** a teammate (or you, on a fresh clone in a new folder) gets from zero to `pnpm dev` using only `CONTRIBUTING.md`, and `pnpm doctor` shows all ✓. Commit: `docs: contributing guide and doctor`.
+**Done when:** a teammate (or you, on a fresh clone in a new folder) gets from zero to `pnpm dev` using only `CONTRIBUTING.md`, and `pnpm run doctor` shows all ✓. Commit: `docs: contributing guide and doctor`.
 
 ### Step 27 — Architecture doc and ADRs
 
@@ -931,7 +931,7 @@ pre-push:
 
 Clone the repo into a new folder (not your working copy) and go through this list in order. Phase 0 is done only when every item passes without editing any file.
 
-- [ ] `pnpm install` finishes with no errors, and `pnpm doctor` is all ✓
+- [ ] `pnpm install` finishes with no errors, and `pnpm run doctor` is all ✓
 - [ ] `pnpm check` (lint, typecheck, test, build) passes
 - [ ] `pnpm check:packages` reports no publint or attw problems
 - [ ] `pnpm dev` starts the Next.js app (port 3000), the Vite app (port 5173) and Metro; the iOS and Android dev builds connect
