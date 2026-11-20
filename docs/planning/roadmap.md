@@ -23,10 +23,10 @@ Each phase is done when its gate passes, not when its checklist is ticked.
 
 ### Phase 0 — Setup
 
-- [ ] Monorepo (pnpm + Turborepo): `packages/tokens`, `core`, `motion`, `react`, `native`, `ui`, `cli`, plus private `demo-content` and `parity`; `apps/web-next` (Next.js), `apps/web-vite` (Vite), `apps/mobile` (Expo)
+- [x] Monorepo (pnpm + Turborepo): `packages/tokens`, `core`, `motion`, `react`, `native`, `ui`, `cli`, plus private `demo-content` and `parity`; `apps/web-next` (Next.js), `apps/web-vite` (Vite), `apps/mobile` (Expo)
 - [ ] CI: typecheck, lint, unit tests, changesets for releases
-- [ ] Parity test harness: render a component on both platforms with the same props and compare screenshots (Playwright + Maestro)
-- [ ] Settle the decisions listed at the end of this doc
+- [x] Parity test harness: render a component on both platforms with the same props and compare screenshots (Playwright + Maestro)
+- [x] Settle the decisions listed at the end of this doc
 
 **Gate:** all three demo apps build and run from one `pnpm dev`.
 
@@ -111,6 +111,6 @@ Later, with the components: screen templates and blocks, an `Icon` component, a 
 - [x] **Name and npm scope.** Decided: Unison, npm scope @unison-ui. Still to do: claim the npm org and the GitHub org.
 - [x] **Native styling engine.** Decided: Uniwind for Tailwind classes in native app code, with NativeWind as the fallback, settled by the spike in phase 0 (step 17.5). Unison's own components don't depend on either: `defineStyles` compiles to layered CSS on web and runs through its own runtime resolver on native, and native components take `style` / `styles` props (phase 2, steps 1–3).
 - [x] **Web motion engine.** Decided: CSS plus the Web Animations API, no Motion dependency; springs become `linear()` easings with velocity (phase 4, ADR closing 0006).
-- [ ] **Native support.** Expo only, or bare React Native too?
-- [ ] **Minimum versions.** React 19 and the React Native New Architecture only (recommended: it simplifies a lot)?
-- [ ] **License.** MIT is the norm for this space.
+- [x] **Native support.** Decided: Expo only for v1; bare React Native is not tested ([ADR 0003](../adr/0003-expo-only-native.md)).
+- [x] **Minimum versions.** Decided: React 19 and the React Native New Architecture only ([ADR 0004](../adr/0004-react-19-new-architecture.md)).
+- [x] **License.** Decided: MIT ([ADR 0010](../adr/0010-mit-license.md)).
