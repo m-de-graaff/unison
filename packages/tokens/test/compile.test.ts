@@ -26,6 +26,8 @@ it("compiles the token source to css, tailwind and native outputs", async () => 
     "dist/web/theme-strict.css",
     "dist/native/theme.css",
     "dist/native/theme.js",
+    "dist/native/theme.d.ts",
+    "dist/types.d.ts",
   ]) {
     expect(readFileSync(join(dir, file), "utf8")).toMatchSnapshot(file);
   }

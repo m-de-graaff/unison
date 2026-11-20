@@ -8,7 +8,13 @@ import { cssVar } from "../src/css-var";
 it("matches the variable names the token compiler emits", () => {
   const tokensCss = createRequire(import.meta.url).resolve("@unison-ui/tokens/tokens.css");
   const css = readFileSync(tokensCss, "utf8");
-  for (const path of ["color.accent", "color.surface", "color.border", "radius.md", "size.box"]) {
+  for (const path of [
+    "color.accent",
+    "color.surface",
+    "color.border",
+    "radius.card",
+    "size.demo-box",
+  ] as const) {
     expect(cssVar(path)).toBe(`var(${cssVarName(path)})`);
     expect(css).toContain(`${cssVarName(path)}:`);
   }

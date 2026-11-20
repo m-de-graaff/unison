@@ -261,253 +261,197 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
 "
 `;
 
+exports[`compiles the token source to css, tailwind and native outputs > dist/native/theme.d.ts 1`] = `
+"import type { UnisonTheme } from "../types.js";
+
+export declare const themes: {
+  readonly "default": { readonly light: UnisonTheme; readonly dark: UnisonTheme };
+};
+"
+`;
+
 exports[`compiles the token source to css, tailwind and native outputs > dist/native/theme.js 1`] = `
 "export const themes = {
-  "light": {
-    "color": {
-      "accent": "#535cda",
-      "surface": "#ffffff",
-      "fg": "#212124",
-      "border": "#e6e7eb",
-      "accent-active": "#353b91",
-      "accent-fg": "#464dbb",
-      "accent-hover": "#464dbb",
-      "accent-subtle": "#ecf3ff",
-      "border-strong": "#90929a",
-      "canvas": "#fafafb",
-      "danger": "#c52b30",
-      "danger-border": "#ffbeb7",
-      "danger-fg": "#a92227",
-      "danger-subtle": "#ffebe7",
-      "fg-muted": "#5c5d64",
-      "fg-subtle": "#90929a",
-      "info": "#0076b8",
-      "info-border": "#9bdeff",
-      "info-fg": "#00649d",
-      "info-subtle": "#def8ff",
-      "muted": "#e6e7eb",
-      "on-accent": "#ffffff",
-      "on-danger": "#ffffff",
-      "on-info": "#ffffff",
-      "on-success": "#ffffff",
-      "on-warning": "#000000",
-      "overlay": "#00000080",
-      "ring": "#535cda",
-      "subtle": "#f3f4f6",
-      "success": "#008736",
-      "success-border": "#9aebab",
-      "success-fg": "#00732c",
-      "success-subtle": "#e1fde5",
-      "surface-raised": "#ffffff",
-      "warning": "#eea628",
-      "warning-border": "#ffca78",
-      "warning-fg": "#845100",
-      "warning-subtle": "#fff1d5"
-    },
-    "space": {
-      "0": 0,
-      "1": 4,
-      "2": 8,
-      "3": 12,
-      "4": 16,
-      "5": 20,
-      "6": 24,
-      "8": 32,
-      "10": 40,
-      "12": 48,
-      "16": 64,
-      "20": 80,
-      "24": 96,
-      "0.5": 2,
-      "1.5": 6
-    },
-    "radius": {
-      "md": 6,
-      "2xl": 16,
-      "card": 8,
-      "control": 6,
-      "full": 9999,
-      "lg": 8,
-      "none": 0,
-      "overlay": 12,
-      "pill": 9999,
-      "sm": 4,
-      "xl": 12,
-      "xs": 2
-    },
-    "size": {
-      "box": 96,
-      "control-lg": 48,
-      "control-md": 40,
-      "control-sm": 32,
-      "icon-lg": 24,
-      "icon-md": 20,
-      "icon-sm": 16,
-      "touch-target": 44
-    },
-    "spring": {
-      "snappy": {
-        "stiffness": 400,
-        "damping": 30,
-        "mass": 1
+  "default": {
+    "light": {
+      "borderWidth": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "default": 1,
+        "ring": 2
       },
-      "smooth": {
-        "stiffness": 300,
-        "damping": 35,
-        "mass": 1
+      "breakpoint": {
+        "2xl": 1536,
+        "lg": 1024,
+        "md": 768,
+        "sm": 640,
+        "xl": 1280
       },
-      "bouncy": {
-        "stiffness": 300,
-        "damping": 15,
-        "mass": 1
-      }
-    },
-    "border-width": {
-      "0": 0,
-      "1": 1,
-      "2": 2,
-      "default": 1,
-      "ring": 2
-    },
-    "breakpoint": {
-      "2xl": 1536,
-      "lg": 1024,
-      "md": 768,
-      "sm": 640,
-      "xl": 1280
-    },
-    "duration": {
-      "0": 0,
-      "50": 50,
-      "80": 80,
-      "120": 120,
-      "140": 140,
-      "160": 160,
-      "200": 200,
-      "240": 240,
-      "320": 320,
-      "400": 400,
-      "500": 500
-    },
-    "easing": {
-      "enter": [
-        0.05,
-        0.7,
-        0.1,
-        1
-      ],
-      "exit": [
-        0.3,
-        0,
-        0.8,
-        0.15
-      ],
-      "linear": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "standard": [
-        0.2,
-        0,
-        0,
-        1
-      ]
-    },
-    "motion": {
-      "duration": {
-        "base-enter": 200,
-        "base-exit": 140,
-        "fast-enter": 120,
-        "fast-exit": 80,
-        "slow-enter": 320,
-        "slow-exit": 240
-      }
-    },
-    "ring-offset": {
-      "2": 2,
-      "default": 2
-    },
-    "text": {
-      "caption": {
-        "fontFamily": "Inter_400Regular",
-        "fontSize": 12,
-        "lineHeight": 16,
-        "letterSpacing": 0
+      "color": {
+        "accent": "#535cda",
+        "accent-active": "#353b91",
+        "accent-fg": "#464dbb",
+        "accent-hover": "#464dbb",
+        "accent-subtle": "#ecf3ff",
+        "accent-100": "#ecf3ff",
+        "accent-200": "#dce5ff",
+        "accent-300": "#c4d1ff",
+        "accent-400": "#9daeff",
+        "accent-50": "#f5f9ff",
+        "accent-500": "#7281ff",
+        "accent-600": "#535cda",
+        "accent-700": "#464dbb",
+        "accent-800": "#353b91",
+        "accent-900": "#272c6c",
+        "accent-950": "#171a4c",
+        "black": "#000000",
+        "border": "#e6e7eb",
+        "border-strong": "#90929a",
+        "canvas": "#fafafb",
+        "danger": "#c52b30",
+        "danger-border": "#ffbeb7",
+        "danger-fg": "#a92227",
+        "danger-subtle": "#ffebe7",
+        "danger-100": "#ffebe7",
+        "danger-200": "#ffd9d4",
+        "danger-300": "#ffbeb7",
+        "danger-400": "#ff8a82",
+        "danger-50": "#fff4f2",
+        "danger-500": "#f4514f",
+        "danger-600": "#c52b30",
+        "danger-700": "#a92227",
+        "danger-800": "#831a1d",
+        "danger-900": "#621516",
+        "danger-950": "#430709",
+        "fg": "#212124",
+        "fg-muted": "#5c5d64",
+        "fg-subtle": "#90929a",
+        "gray-100": "#f3f4f6",
+        "gray-200": "#e6e7eb",
+        "gray-300": "#d3d4da",
+        "gray-400": "#b3b5bd",
+        "gray-50": "#fafafb",
+        "gray-500": "#90929a",
+        "gray-600": "#6c6e75",
+        "gray-700": "#5c5d64",
+        "gray-800": "#46474c",
+        "gray-900": "#343539",
+        "gray-950": "#212124",
+        "info": "#0076b8",
+        "info-border": "#9bdeff",
+        "info-fg": "#00649d",
+        "info-subtle": "#def8ff",
+        "info-100": "#def8ff",
+        "info-200": "#c2eeff",
+        "info-300": "#9bdeff",
+        "info-400": "#59c0ff",
+        "info-50": "#f0fcff",
+        "info-500": "#069ce4",
+        "info-600": "#0076b8",
+        "info-700": "#00649d",
+        "info-800": "#004d7a",
+        "info-900": "#00395b",
+        "info-950": "#00253e",
+        "muted": "#e6e7eb",
+        "on-accent": "#ffffff",
+        "on-danger": "#ffffff",
+        "on-info": "#ffffff",
+        "on-success": "#ffffff",
+        "on-warning": "#000000",
+        "overlay": "#00000080",
+        "ring": "#535cda",
+        "subtle": "#f3f4f6",
+        "success": "#008736",
+        "success-border": "#9aebab",
+        "success-fg": "#00732c",
+        "success-subtle": "#e1fde5",
+        "success-100": "#e1fde5",
+        "success-200": "#c4f6cd",
+        "success-300": "#9aebab",
+        "success-400": "#63d180",
+        "success-50": "#f1fef3",
+        "success-500": "#24ae56",
+        "success-600": "#008736",
+        "success-700": "#00732c",
+        "success-800": "#005821",
+        "success-900": "#004219",
+        "success-950": "#002b0b",
+        "surface": "#ffffff",
+        "surface-raised": "#ffffff",
+        "warning": "#eea628",
+        "warning-border": "#ffca78",
+        "warning-fg": "#845100",
+        "warning-subtle": "#fff1d5",
+        "warning-100": "#fff1d5",
+        "warning-200": "#ffe1af",
+        "warning-300": "#ffca78",
+        "warning-400": "#eea628",
+        "warning-50": "#fff9eb",
+        "warning-500": "#c98000",
+        "warning-600": "#9b6000",
+        "warning-700": "#845100",
+        "warning-800": "#673d00",
+        "warning-900": "#4f2c00",
+        "warning-950": "#351b00",
+        "white": "#ffffff"
       },
-      "label": {
-        "fontFamily": "Inter_500Medium",
-        "fontSize": 13,
-        "lineHeight": 18,
-        "letterSpacing": 0
-      },
-      "body-sm": {
-        "fontFamily": "Inter_400Regular",
-        "fontSize": 14,
-        "lineHeight": 20,
-        "letterSpacing": 0
-      },
-      "body": {
-        "fontFamily": "Inter_400Regular",
-        "fontSize": 16,
-        "lineHeight": 24,
-        "letterSpacing": -0.18
-      },
-      "body-lg": {
-        "fontFamily": "Inter_400Regular",
-        "fontSize": 18,
-        "lineHeight": 28,
-        "letterSpacing": -0.2
-      },
-      "title-sm": {
-        "fontFamily": "Inter_600SemiBold",
-        "fontSize": 16,
-        "lineHeight": 24,
-        "letterSpacing": -0.18
-      },
-      "title": {
-        "fontFamily": "Inter_600SemiBold",
-        "fontSize": 20,
-        "lineHeight": 28,
-        "letterSpacing": -0.22
-      },
-      "title-lg": {
-        "fontFamily": "Inter_600SemiBold",
-        "fontSize": 24,
-        "lineHeight": 32,
-        "letterSpacing": -0.48
-      },
-      "display": {
-        "fontFamily": "Inter_700Bold",
-        "fontSize": 36,
-        "lineHeight": 40,
-        "letterSpacing": -0.72
-      },
-      "code": {
-        "fontFamily": "JetBrainsMono_400Regular",
-        "fontSize": 13,
-        "lineHeight": 20,
-        "letterSpacing": 0
-      }
-    },
-    "shadow": {
-      "lg": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
-      "md": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
-      "sm": "0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
-      "xl": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
-      "xs": "0 1px 2px rgb(0 0 0 / 0.05)"
-    },
-    "motionPresets": {
-      "fade": {
-        "enter": {
-          "from": {
-            "opacity": 0
+      "motion": {
+        "duration": {
+          "0": 0,
+          "50": 50,
+          "80": 80,
+          "120": 120,
+          "140": 140,
+          "160": 160,
+          "200": 200,
+          "240": 240,
+          "320": 320,
+          "400": 400,
+          "500": 500,
+          "base-enter": 200,
+          "base-exit": 140,
+          "fast-enter": 120,
+          "fast-exit": 80,
+          "slow-enter": 320,
+          "slow-exit": 240
+        },
+        "easing": {
+          "enter": [
+            0.05,
+            0.7,
+            0.1,
+            1
+          ],
+          "exit": [
+            0.3,
+            0,
+            0.8,
+            0.15
+          ],
+          "linear": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "standard": [
+            0.2,
+            0,
+            0,
+            1
+          ]
+        },
+        "transition": {
+          "emphasis": {
+            "type": "spring",
+            "config": {
+              "stiffness": 400,
+              "damping": 30,
+              "mass": 1
+            }
           },
-          "to": {
-            "opacity": 1
-          },
-          "transition": {
+          "enter": {
             "type": "timing",
             "duration": 200,
             "easing": [
@@ -516,16 +460,8 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
               0.1,
               1
             ]
-          }
-        },
-        "exit": {
-          "from": {
-            "opacity": 1
           },
-          "to": {
-            "opacity": 0
-          },
-          "transition": {
+          "exit": {
             "type": "timing",
             "duration": 140,
             "easing": [
@@ -536,633 +472,768 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
             ]
           }
         },
-        "reduced": {
-          "enter": {
-            "from": {
-              "opacity": 0
+        "presets": {
+          "fade": {
+            "enter": {
+              "from": {
+                "opacity": 0
+              },
+              "to": {
+                "opacity": 1
+              },
+              "transition": {
+                "type": "timing",
+                "duration": 200,
+                "easing": [
+                  0.05,
+                  0.7,
+                  0.1,
+                  1
+                ]
+              }
             },
-            "to": {
-              "opacity": 1
+            "exit": {
+              "from": {
+                "opacity": 1
+              },
+              "to": {
+                "opacity": 0
+              },
+              "transition": {
+                "type": "timing",
+                "duration": 140,
+                "easing": [
+                  0.3,
+                  0,
+                  0.8,
+                  0.15
+                ]
+              }
             },
-            "transition": {
-              "type": "timing",
-              "duration": 120,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
+            "reduced": {
+              "enter": {
+                "from": {
+                  "opacity": 0
+                },
+                "to": {
+                  "opacity": 1
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 120,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              },
+              "exit": {
+                "from": {
+                  "opacity": 1
+                },
+                "to": {
+                  "opacity": 0
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 80,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              }
             }
           },
-          "exit": {
-            "from": {
-              "opacity": 1
+          "pop": {
+            "enter": {
+              "from": {
+                "scale": 0.9
+              },
+              "to": {
+                "scale": 1
+              },
+              "transition": {
+                "type": "spring",
+                "config": {
+                  "stiffness": 300,
+                  "damping": 15,
+                  "mass": 1
+                }
+              }
             },
-            "to": {
-              "opacity": 0
+            "exit": {
+              "from": {
+                "scale": 1
+              },
+              "to": {
+                "opacity": 0
+              },
+              "transition": {
+                "type": "timing",
+                "duration": 80,
+                "easing": [
+                  0.3,
+                  0,
+                  0.8,
+                  0.15
+                ]
+              }
             },
-            "transition": {
-              "type": "timing",
-              "duration": 80,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
+            "reduced": {
+              "enter": {
+                "from": {
+                  "opacity": 0
+                },
+                "to": {
+                  "opacity": 1
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 120,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              },
+              "exit": {
+                "from": {
+                  "opacity": 1
+                },
+                "to": {
+                  "opacity": 0
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 80,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              }
             }
+          },
+          "press": {
+            "enter": {
+              "from": {
+                "scale": 1
+              },
+              "to": {
+                "scale": 0.97
+              },
+              "transition": {
+                "type": "timing",
+                "duration": 80,
+                "easing": [
+                  0.2,
+                  0,
+                  0,
+                  1
+                ]
+              }
+            },
+            "exit": {
+              "from": {
+                "scale": 0.97
+              },
+              "to": {
+                "scale": 1
+              },
+              "transition": {
+                "type": "spring",
+                "config": {
+                  "stiffness": 400,
+                  "damping": 30,
+                  "mass": 1
+                }
+              }
+            },
+            "reduced": null
+          },
+          "scale-in": {
+            "enter": {
+              "from": {
+                "opacity": 0,
+                "scale": 0.96
+              },
+              "to": {
+                "opacity": 1,
+                "scale": 1
+              },
+              "transition": {
+                "type": "spring",
+                "config": {
+                  "stiffness": 400,
+                  "damping": 30,
+                  "mass": 1
+                }
+              }
+            },
+            "exit": {
+              "from": {
+                "opacity": 1,
+                "scale": 1
+              },
+              "to": {
+                "opacity": 0,
+                "scale": 0.98
+              },
+              "transition": {
+                "type": "timing",
+                "duration": 80,
+                "easing": [
+                  0.3,
+                  0,
+                  0.8,
+                  0.15
+                ]
+              }
+            },
+            "reduced": {
+              "enter": {
+                "from": {
+                  "opacity": 0
+                },
+                "to": {
+                  "opacity": 1
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 120,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              },
+              "exit": {
+                "from": {
+                  "opacity": 1
+                },
+                "to": {
+                  "opacity": 0
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 80,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              }
+            }
+          },
+          "sheet": {
+            "enter": {
+              "from": {
+                "translateY": "100%"
+              },
+              "to": {
+                "translateY": 0
+              },
+              "transition": {
+                "type": "spring",
+                "config": {
+                  "stiffness": 300,
+                  "damping": 35,
+                  "mass": 1
+                }
+              }
+            },
+            "exit": {
+              "from": {
+                "translateY": 0
+              },
+              "to": {
+                "translateY": "100%"
+              },
+              "transition": {
+                "type": "timing",
+                "duration": 240,
+                "easing": [
+                  0.3,
+                  0,
+                  0.8,
+                  0.15
+                ]
+              }
+            },
+            "reduced": {
+              "enter": {
+                "from": {
+                  "opacity": 0
+                },
+                "to": {
+                  "opacity": 1
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 120,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              },
+              "exit": {
+                "from": {
+                  "opacity": 1
+                },
+                "to": {
+                  "opacity": 0
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 80,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              }
+            }
+          },
+          "slide-up": {
+            "enter": {
+              "from": {
+                "opacity": 0,
+                "translateY": 8
+              },
+              "to": {
+                "opacity": 1,
+                "translateY": 0
+              },
+              "transition": {
+                "type": "spring",
+                "config": {
+                  "stiffness": 400,
+                  "damping": 30,
+                  "mass": 1
+                }
+              }
+            },
+            "exit": {
+              "from": {
+                "opacity": 1,
+                "translateY": 0
+              },
+              "to": {
+                "opacity": 0,
+                "translateY": 4
+              },
+              "transition": {
+                "type": "timing",
+                "duration": 80,
+                "easing": [
+                  0.3,
+                  0,
+                  0.8,
+                  0.15
+                ]
+              }
+            },
+            "reduced": {
+              "enter": {
+                "from": {
+                  "opacity": 0
+                },
+                "to": {
+                  "opacity": 1
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 120,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              },
+              "exit": {
+                "from": {
+                  "opacity": 1
+                },
+                "to": {
+                  "opacity": 0
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 80,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "spring": {
+          "bouncy": {
+            "stiffness": 300,
+            "damping": 15,
+            "mass": 1
+          },
+          "smooth": {
+            "stiffness": 300,
+            "damping": 35,
+            "mass": 1
+          },
+          "snappy": {
+            "stiffness": 400,
+            "damping": 30,
+            "mass": 1
           }
         }
       },
-      "scale-in": {
-        "enter": {
-          "from": {
-            "opacity": 0,
-            "scale": 0.96
-          },
-          "to": {
-            "opacity": 1,
-            "scale": 1
-          },
-          "transition": {
+      "elevation": {
+        "overlay": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+        "popover": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "raised": "0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)"
+      },
+      "fontFamily": {
+        "mono": "JetBrainsMono_400Regular",
+        "sans": "Inter_400Regular"
+      },
+      "fontWeight": {
+        "bold": 700,
+        "medium": 500,
+        "regular": 400,
+        "semibold": 600
+      },
+      "opacity": {
+        "50": 0.5,
+        "disabled": 0.5
+      },
+      "radius": {
+        "2xl": 16,
+        "card": 8,
+        "control": 6,
+        "full": 9999,
+        "lg": 8,
+        "md": 6,
+        "none": 0,
+        "overlay": 12,
+        "pill": 9999,
+        "sm": 4,
+        "xl": 12,
+        "xs": 2
+      },
+      "ringOffset": {
+        "2": 2,
+        "default": 2
+      },
+      "shadow": {
+        "lg": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "md": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+        "sm": "0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+        "xl": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+        "xs": "0 1px 2px rgb(0 0 0 / 0.05)"
+      },
+      "size": {
+        "control-lg": 48,
+        "control-md": 40,
+        "control-sm": 32,
+        "demo-box": 96,
+        "icon-lg": 24,
+        "icon-md": 20,
+        "icon-sm": 16,
+        "touch-target": 44
+      },
+      "space": {
+        "0": 0,
+        "1": 4,
+        "2": 8,
+        "3": 12,
+        "4": 16,
+        "5": 20,
+        "6": 24,
+        "8": 32,
+        "10": 40,
+        "12": 48,
+        "16": 64,
+        "20": 80,
+        "24": 96,
+        "0-5": 2,
+        "1-5": 6
+      },
+      "text": {
+        "body": {
+          "fontFamily": "Inter_400Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+          "letterSpacing": -0.18
+        },
+        "body-lg": {
+          "fontFamily": "Inter_400Regular",
+          "fontSize": 18,
+          "lineHeight": 28,
+          "letterSpacing": -0.2
+        },
+        "body-sm": {
+          "fontFamily": "Inter_400Regular",
+          "fontSize": 14,
+          "lineHeight": 20,
+          "letterSpacing": 0
+        },
+        "caption": {
+          "fontFamily": "Inter_400Regular",
+          "fontSize": 12,
+          "lineHeight": 16,
+          "letterSpacing": 0
+        },
+        "code": {
+          "fontFamily": "JetBrainsMono_400Regular",
+          "fontSize": 13,
+          "lineHeight": 20,
+          "letterSpacing": 0
+        },
+        "display": {
+          "fontFamily": "Inter_700Bold",
+          "fontSize": 36,
+          "lineHeight": 40,
+          "letterSpacing": -0.72
+        },
+        "label": {
+          "fontFamily": "Inter_500Medium",
+          "fontSize": 13,
+          "lineHeight": 18,
+          "letterSpacing": 0
+        },
+        "max-scale": 1.5,
+        "title": {
+          "fontFamily": "Inter_600SemiBold",
+          "fontSize": 20,
+          "lineHeight": 28,
+          "letterSpacing": -0.22
+        },
+        "title-lg": {
+          "fontFamily": "Inter_600SemiBold",
+          "fontSize": 24,
+          "lineHeight": 32,
+          "letterSpacing": -0.48
+        },
+        "title-sm": {
+          "fontFamily": "Inter_600SemiBold",
+          "fontSize": 16,
+          "lineHeight": 24,
+          "letterSpacing": -0.18
+        }
+      },
+      "zIndex": {
+        "base": 0,
+        "dropdown": 1000,
+        "modal": 1400,
+        "overlay": 1300,
+        "popover": 1500,
+        "raised": 10,
+        "sticky": 1100,
+        "toast": 1700,
+        "tooltip": 1800
+      }
+    },
+    "dark": {
+      "borderWidth": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "default": 1,
+        "ring": 2
+      },
+      "breakpoint": {
+        "2xl": 1536,
+        "lg": 1024,
+        "md": 768,
+        "sm": 640,
+        "xl": 1280
+      },
+      "color": {
+        "accent": "#545ed5",
+        "accent-active": "#242671",
+        "accent-fg": "#d0dbff",
+        "accent-hover": "#33369c",
+        "accent-subtle": "#1a1e4a",
+        "accent-100": "#12162d",
+        "accent-200": "#1a1e4a",
+        "accent-300": "#242671",
+        "accent-400": "#33369c",
+        "accent-50": "#0d0f19",
+        "accent-500": "#545ed5",
+        "accent-600": "#6572e4",
+        "accent-700": "#8494fc",
+        "accent-800": "#a7b7ff",
+        "accent-900": "#d0dbff",
+        "accent-950": "#eaf0ff",
+        "black": "#000000",
+        "border": "#323337",
+        "border-strong": "#6d6e75",
+        "canvas": "#0f0f10",
+        "danger": "#c13234",
+        "danger-border": "#8a0013",
+        "danger-fg": "#ffccc5",
+        "danger-subtle": "#430f0e",
+        "danger-100": "#2a0f0d",
+        "danger-200": "#430f0e",
+        "danger-300": "#64040c",
+        "danger-400": "#8a0013",
+        "danger-50": "#180c0b",
+        "danger-500": "#c13234",
+        "danger-600": "#d34c49",
+        "danger-700": "#ee746d",
+        "danger-800": "#ff9c94",
+        "danger-900": "#ffccc5",
+        "danger-950": "#ffe8e4",
+        "fg": "#f1f2f5",
+        "fg-muted": "#9c9ea4",
+        "fg-subtle": "#7e8086",
+        "gray-100": "#18181a",
+        "gray-200": "#232426",
+        "gray-300": "#323337",
+        "gray-400": "#46474d",
+        "gray-50": "#0f0f10",
+        "gray-500": "#6d6e75",
+        "gray-600": "#7e8086",
+        "gray-700": "#9c9ea4",
+        "gray-800": "#bcbdc3",
+        "gray-900": "#dddee2",
+        "gray-950": "#f1f2f5",
+        "info": "#0076b4",
+        "info-border": "#004d80",
+        "info-fg": "#b2e5ff",
+        "info-subtle": "#00273e",
+        "info-100": "#081a26",
+        "info-200": "#00273e",
+        "info-300": "#00375d",
+        "info-400": "#004d80",
+        "info-50": "#091016",
+        "info-500": "#0076b4",
+        "info-600": "#1d89c4",
+        "info-700": "#54a7de",
+        "info-800": "#84c6f5",
+        "info-900": "#b2e5ff",
+        "info-950": "#d8f7ff",
+        "muted": "#323337",
+        "on-accent": "#ffffff",
+        "on-danger": "#ffffff",
+        "on-info": "#ffffff",
+        "on-success": "#ffffff",
+        "on-warning": "#000000",
+        "overlay": "#00000099",
+        "ring": "#6572e4",
+        "subtle": "#232426",
+        "success": "#00863a",
+        "success-border": "#005a18",
+        "success-fg": "#b7eec1",
+        "success-subtle": "#022d10",
+        "success-100": "#0a1d0f",
+        "success-200": "#022d10",
+        "success-300": "#004110",
+        "success-400": "#005a18",
+        "success-50": "#0a120b",
+        "success-500": "#00863a",
+        "success-600": "#2b974e",
+        "success-700": "#5cb572",
+        "success-800": "#8ad199",
+        "success-900": "#b7eec1",
+        "success-950": "#d2ffda",
+        "surface": "#18181a",
+        "surface-raised": "#232426",
+        "warning": "#cd9130",
+        "warning-border": "#673d00",
+        "warning-fg": "#ffd79f",
+        "warning-subtle": "#371e00",
+        "warning-100": "#221503",
+        "warning-200": "#371e00",
+        "warning-300": "#4c2a00",
+        "warning-400": "#673d00",
+        "warning-50": "#140e07",
+        "warning-500": "#9b6000",
+        "warning-600": "#b17000",
+        "warning-700": "#cd9130",
+        "warning-800": "#e6b46c",
+        "warning-900": "#ffd79f",
+        "warning-950": "#ffecc0",
+        "white": "#ffffff"
+      },
+      "motion": {
+        "duration": {
+          "0": 0,
+          "50": 50,
+          "80": 80,
+          "120": 120,
+          "140": 140,
+          "160": 160,
+          "200": 200,
+          "240": 240,
+          "320": 320,
+          "400": 400,
+          "500": 500,
+          "base-enter": 200,
+          "base-exit": 140,
+          "fast-enter": 120,
+          "fast-exit": 80,
+          "slow-enter": 320,
+          "slow-exit": 240
+        },
+        "easing": {
+          "enter": [
+            0.05,
+            0.7,
+            0.1,
+            1
+          ],
+          "exit": [
+            0.3,
+            0,
+            0.8,
+            0.15
+          ],
+          "linear": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "standard": [
+            0.2,
+            0,
+            0,
+            1
+          ]
+        },
+        "transition": {
+          "emphasis": {
             "type": "spring",
             "config": {
               "stiffness": 400,
               "damping": 30,
               "mass": 1
             }
-          }
-        },
-        "exit": {
-          "from": {
-            "opacity": 1,
-            "scale": 1
           },
-          "to": {
-            "opacity": 0,
-            "scale": 0.98
-          },
-          "transition": {
-            "type": "timing",
-            "duration": 80,
-            "easing": [
-              0.3,
-              0,
-              0.8,
-              0.15
-            ]
-          }
-        },
-        "reduced": {
           "enter": {
-            "from": {
-              "opacity": 0
-            },
-            "to": {
-              "opacity": 1
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 120,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          },
-          "exit": {
-            "from": {
-              "opacity": 1
-            },
-            "to": {
-              "opacity": 0
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 80,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          }
-        }
-      },
-      "slide-up": {
-        "enter": {
-          "from": {
-            "opacity": 0,
-            "translateY": 8
-          },
-          "to": {
-            "opacity": 1,
-            "translateY": 0
-          },
-          "transition": {
-            "type": "spring",
-            "config": {
-              "stiffness": 400,
-              "damping": 30,
-              "mass": 1
-            }
-          }
-        },
-        "exit": {
-          "from": {
-            "opacity": 1,
-            "translateY": 0
-          },
-          "to": {
-            "opacity": 0,
-            "translateY": 4
-          },
-          "transition": {
-            "type": "timing",
-            "duration": 80,
-            "easing": [
-              0.3,
-              0,
-              0.8,
-              0.15
-            ]
-          }
-        },
-        "reduced": {
-          "enter": {
-            "from": {
-              "opacity": 0
-            },
-            "to": {
-              "opacity": 1
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 120,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          },
-          "exit": {
-            "from": {
-              "opacity": 1
-            },
-            "to": {
-              "opacity": 0
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 80,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          }
-        }
-      },
-      "sheet": {
-        "enter": {
-          "from": {
-            "translateY": "100%"
-          },
-          "to": {
-            "translateY": 0
-          },
-          "transition": {
-            "type": "spring",
-            "config": {
-              "stiffness": 300,
-              "damping": 35,
-              "mass": 1
-            }
-          }
-        },
-        "exit": {
-          "from": {
-            "translateY": 0
-          },
-          "to": {
-            "translateY": "100%"
-          },
-          "transition": {
-            "type": "timing",
-            "duration": 240,
-            "easing": [
-              0.3,
-              0,
-              0.8,
-              0.15
-            ]
-          }
-        },
-        "reduced": {
-          "enter": {
-            "from": {
-              "opacity": 0
-            },
-            "to": {
-              "opacity": 1
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 120,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          },
-          "exit": {
-            "from": {
-              "opacity": 1
-            },
-            "to": {
-              "opacity": 0
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 80,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          }
-        }
-      },
-      "pop": {
-        "enter": {
-          "from": {
-            "scale": 0.9
-          },
-          "to": {
-            "scale": 1
-          },
-          "transition": {
-            "type": "spring",
-            "config": {
-              "stiffness": 300,
-              "damping": 15,
-              "mass": 1
-            }
-          }
-        },
-        "exit": {
-          "from": {
-            "scale": 1
-          },
-          "to": {
-            "opacity": 0
-          },
-          "transition": {
-            "type": "timing",
-            "duration": 80,
-            "easing": [
-              0.3,
-              0,
-              0.8,
-              0.15
-            ]
-          }
-        },
-        "reduced": {
-          "enter": {
-            "from": {
-              "opacity": 0
-            },
-            "to": {
-              "opacity": 1
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 120,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          },
-          "exit": {
-            "from": {
-              "opacity": 1
-            },
-            "to": {
-              "opacity": 0
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 80,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          }
-        }
-      },
-      "press": {
-        "enter": {
-          "from": {
-            "scale": 1
-          },
-          "to": {
-            "scale": 0.97
-          },
-          "transition": {
-            "type": "timing",
-            "duration": 80,
-            "easing": [
-              0.2,
-              0,
-              0,
-              1
-            ]
-          }
-        },
-        "exit": {
-          "from": {
-            "scale": 0.97
-          },
-          "to": {
-            "scale": 1
-          },
-          "transition": {
-            "type": "spring",
-            "config": {
-              "stiffness": 400,
-              "damping": 30,
-              "mass": 1
-            }
-          }
-        },
-        "reduced": null
-      }
-    }
-  },
-  "dark": {
-    "color": {
-      "accent": "#545ed5",
-      "surface": "#18181a",
-      "fg": "#f1f2f5",
-      "border": "#323337",
-      "accent-active": "#242671",
-      "accent-fg": "#d0dbff",
-      "accent-hover": "#33369c",
-      "accent-subtle": "#1a1e4a",
-      "border-strong": "#6d6e75",
-      "canvas": "#0f0f10",
-      "danger": "#c13234",
-      "danger-border": "#8a0013",
-      "danger-fg": "#ffccc5",
-      "danger-subtle": "#430f0e",
-      "fg-muted": "#9c9ea4",
-      "fg-subtle": "#7e8086",
-      "info": "#0076b4",
-      "info-border": "#004d80",
-      "info-fg": "#b2e5ff",
-      "info-subtle": "#00273e",
-      "muted": "#323337",
-      "on-accent": "#ffffff",
-      "on-danger": "#ffffff",
-      "on-info": "#ffffff",
-      "on-success": "#ffffff",
-      "on-warning": "#000000",
-      "overlay": "#00000099",
-      "ring": "#6572e4",
-      "subtle": "#232426",
-      "success": "#00863a",
-      "success-border": "#005a18",
-      "success-fg": "#b7eec1",
-      "success-subtle": "#022d10",
-      "surface-raised": "#232426",
-      "warning": "#cd9130",
-      "warning-border": "#673d00",
-      "warning-fg": "#ffd79f",
-      "warning-subtle": "#371e00"
-    },
-    "space": {
-      "0": 0,
-      "1": 4,
-      "2": 8,
-      "3": 12,
-      "4": 16,
-      "5": 20,
-      "6": 24,
-      "8": 32,
-      "10": 40,
-      "12": 48,
-      "16": 64,
-      "20": 80,
-      "24": 96,
-      "0.5": 2,
-      "1.5": 6
-    },
-    "radius": {
-      "md": 6,
-      "2xl": 16,
-      "card": 8,
-      "control": 6,
-      "full": 9999,
-      "lg": 8,
-      "none": 0,
-      "overlay": 12,
-      "pill": 9999,
-      "sm": 4,
-      "xl": 12,
-      "xs": 2
-    },
-    "size": {
-      "box": 96,
-      "control-lg": 48,
-      "control-md": 40,
-      "control-sm": 32,
-      "icon-lg": 24,
-      "icon-md": 20,
-      "icon-sm": 16,
-      "touch-target": 44
-    },
-    "spring": {
-      "snappy": {
-        "stiffness": 400,
-        "damping": 30,
-        "mass": 1
-      },
-      "smooth": {
-        "stiffness": 300,
-        "damping": 35,
-        "mass": 1
-      },
-      "bouncy": {
-        "stiffness": 300,
-        "damping": 15,
-        "mass": 1
-      }
-    },
-    "border-width": {
-      "0": 0,
-      "1": 1,
-      "2": 2,
-      "default": 1,
-      "ring": 2
-    },
-    "breakpoint": {
-      "2xl": 1536,
-      "lg": 1024,
-      "md": 768,
-      "sm": 640,
-      "xl": 1280
-    },
-    "duration": {
-      "0": 0,
-      "50": 50,
-      "80": 80,
-      "120": 120,
-      "140": 140,
-      "160": 160,
-      "200": 200,
-      "240": 240,
-      "320": 320,
-      "400": 400,
-      "500": 500
-    },
-    "easing": {
-      "enter": [
-        0.05,
-        0.7,
-        0.1,
-        1
-      ],
-      "exit": [
-        0.3,
-        0,
-        0.8,
-        0.15
-      ],
-      "linear": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "standard": [
-        0.2,
-        0,
-        0,
-        1
-      ]
-    },
-    "motion": {
-      "duration": {
-        "base-enter": 200,
-        "base-exit": 140,
-        "fast-enter": 120,
-        "fast-exit": 80,
-        "slow-enter": 320,
-        "slow-exit": 240
-      }
-    },
-    "ring-offset": {
-      "2": 2,
-      "default": 2
-    },
-    "text": {
-      "caption": {
-        "fontFamily": "Inter_400Regular",
-        "fontSize": 12,
-        "lineHeight": 16,
-        "letterSpacing": 0
-      },
-      "label": {
-        "fontFamily": "Inter_500Medium",
-        "fontSize": 13,
-        "lineHeight": 18,
-        "letterSpacing": 0
-      },
-      "body-sm": {
-        "fontFamily": "Inter_400Regular",
-        "fontSize": 14,
-        "lineHeight": 20,
-        "letterSpacing": 0
-      },
-      "body": {
-        "fontFamily": "Inter_400Regular",
-        "fontSize": 16,
-        "lineHeight": 24,
-        "letterSpacing": -0.18
-      },
-      "body-lg": {
-        "fontFamily": "Inter_400Regular",
-        "fontSize": 18,
-        "lineHeight": 28,
-        "letterSpacing": -0.2
-      },
-      "title-sm": {
-        "fontFamily": "Inter_600SemiBold",
-        "fontSize": 16,
-        "lineHeight": 24,
-        "letterSpacing": -0.18
-      },
-      "title": {
-        "fontFamily": "Inter_600SemiBold",
-        "fontSize": 20,
-        "lineHeight": 28,
-        "letterSpacing": -0.22
-      },
-      "title-lg": {
-        "fontFamily": "Inter_600SemiBold",
-        "fontSize": 24,
-        "lineHeight": 32,
-        "letterSpacing": -0.48
-      },
-      "display": {
-        "fontFamily": "Inter_700Bold",
-        "fontSize": 36,
-        "lineHeight": 40,
-        "letterSpacing": -0.72
-      },
-      "code": {
-        "fontFamily": "JetBrainsMono_400Regular",
-        "fontSize": 13,
-        "lineHeight": 20,
-        "letterSpacing": 0
-      }
-    },
-    "shadow": {
-      "lg": "0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -4px rgb(0 0 0 / 0.25)",
-      "md": "0 4px 6px -1px rgb(0 0 0 / 0.25), 0 2px 4px -2px rgb(0 0 0 / 0.25)",
-      "sm": "0 1px 3px rgb(0 0 0 / 0.25), 0 1px 2px -1px rgb(0 0 0 / 0.25)",
-      "xl": "0 20px 25px -5px rgb(0 0 0 / 0.25), 0 8px 10px -6px rgb(0 0 0 / 0.25)",
-      "xs": "0 1px 2px rgb(0 0 0 / 0.13)"
-    },
-    "motionPresets": {
-      "fade": {
-        "enter": {
-          "from": {
-            "opacity": 0
-          },
-          "to": {
-            "opacity": 1
-          },
-          "transition": {
             "type": "timing",
             "duration": 200,
             "easing": [
@@ -1171,16 +1242,8 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
               0.1,
               1
             ]
-          }
-        },
-        "exit": {
-          "from": {
-            "opacity": 1
           },
-          "to": {
-            "opacity": 0
-          },
-          "transition": {
+          "exit": {
             "type": "timing",
             "duration": 140,
             "easing": [
@@ -1191,389 +1254,959 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
             ]
           }
         },
-        "reduced": {
-          "enter": {
-            "from": {
-              "opacity": 0
+        "presets": {
+          "fade": {
+            "enter": {
+              "from": {
+                "opacity": 0
+              },
+              "to": {
+                "opacity": 1
+              },
+              "transition": {
+                "type": "timing",
+                "duration": 200,
+                "easing": [
+                  0.05,
+                  0.7,
+                  0.1,
+                  1
+                ]
+              }
             },
-            "to": {
-              "opacity": 1
+            "exit": {
+              "from": {
+                "opacity": 1
+              },
+              "to": {
+                "opacity": 0
+              },
+              "transition": {
+                "type": "timing",
+                "duration": 140,
+                "easing": [
+                  0.3,
+                  0,
+                  0.8,
+                  0.15
+                ]
+              }
             },
-            "transition": {
-              "type": "timing",
-              "duration": 120,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
+            "reduced": {
+              "enter": {
+                "from": {
+                  "opacity": 0
+                },
+                "to": {
+                  "opacity": 1
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 120,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              },
+              "exit": {
+                "from": {
+                  "opacity": 1
+                },
+                "to": {
+                  "opacity": 0
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 80,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              }
             }
           },
-          "exit": {
-            "from": {
-              "opacity": 1
+          "pop": {
+            "enter": {
+              "from": {
+                "scale": 0.9
+              },
+              "to": {
+                "scale": 1
+              },
+              "transition": {
+                "type": "spring",
+                "config": {
+                  "stiffness": 300,
+                  "damping": 15,
+                  "mass": 1
+                }
+              }
             },
-            "to": {
-              "opacity": 0
+            "exit": {
+              "from": {
+                "scale": 1
+              },
+              "to": {
+                "opacity": 0
+              },
+              "transition": {
+                "type": "timing",
+                "duration": 80,
+                "easing": [
+                  0.3,
+                  0,
+                  0.8,
+                  0.15
+                ]
+              }
             },
-            "transition": {
-              "type": "timing",
-              "duration": 80,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
+            "reduced": {
+              "enter": {
+                "from": {
+                  "opacity": 0
+                },
+                "to": {
+                  "opacity": 1
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 120,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              },
+              "exit": {
+                "from": {
+                  "opacity": 1
+                },
+                "to": {
+                  "opacity": 0
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 80,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              }
             }
+          },
+          "press": {
+            "enter": {
+              "from": {
+                "scale": 1
+              },
+              "to": {
+                "scale": 0.97
+              },
+              "transition": {
+                "type": "timing",
+                "duration": 80,
+                "easing": [
+                  0.2,
+                  0,
+                  0,
+                  1
+                ]
+              }
+            },
+            "exit": {
+              "from": {
+                "scale": 0.97
+              },
+              "to": {
+                "scale": 1
+              },
+              "transition": {
+                "type": "spring",
+                "config": {
+                  "stiffness": 400,
+                  "damping": 30,
+                  "mass": 1
+                }
+              }
+            },
+            "reduced": null
+          },
+          "scale-in": {
+            "enter": {
+              "from": {
+                "opacity": 0,
+                "scale": 0.96
+              },
+              "to": {
+                "opacity": 1,
+                "scale": 1
+              },
+              "transition": {
+                "type": "spring",
+                "config": {
+                  "stiffness": 400,
+                  "damping": 30,
+                  "mass": 1
+                }
+              }
+            },
+            "exit": {
+              "from": {
+                "opacity": 1,
+                "scale": 1
+              },
+              "to": {
+                "opacity": 0,
+                "scale": 0.98
+              },
+              "transition": {
+                "type": "timing",
+                "duration": 80,
+                "easing": [
+                  0.3,
+                  0,
+                  0.8,
+                  0.15
+                ]
+              }
+            },
+            "reduced": {
+              "enter": {
+                "from": {
+                  "opacity": 0
+                },
+                "to": {
+                  "opacity": 1
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 120,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              },
+              "exit": {
+                "from": {
+                  "opacity": 1
+                },
+                "to": {
+                  "opacity": 0
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 80,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              }
+            }
+          },
+          "sheet": {
+            "enter": {
+              "from": {
+                "translateY": "100%"
+              },
+              "to": {
+                "translateY": 0
+              },
+              "transition": {
+                "type": "spring",
+                "config": {
+                  "stiffness": 300,
+                  "damping": 35,
+                  "mass": 1
+                }
+              }
+            },
+            "exit": {
+              "from": {
+                "translateY": 0
+              },
+              "to": {
+                "translateY": "100%"
+              },
+              "transition": {
+                "type": "timing",
+                "duration": 240,
+                "easing": [
+                  0.3,
+                  0,
+                  0.8,
+                  0.15
+                ]
+              }
+            },
+            "reduced": {
+              "enter": {
+                "from": {
+                  "opacity": 0
+                },
+                "to": {
+                  "opacity": 1
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 120,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              },
+              "exit": {
+                "from": {
+                  "opacity": 1
+                },
+                "to": {
+                  "opacity": 0
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 80,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              }
+            }
+          },
+          "slide-up": {
+            "enter": {
+              "from": {
+                "opacity": 0,
+                "translateY": 8
+              },
+              "to": {
+                "opacity": 1,
+                "translateY": 0
+              },
+              "transition": {
+                "type": "spring",
+                "config": {
+                  "stiffness": 400,
+                  "damping": 30,
+                  "mass": 1
+                }
+              }
+            },
+            "exit": {
+              "from": {
+                "opacity": 1,
+                "translateY": 0
+              },
+              "to": {
+                "opacity": 0,
+                "translateY": 4
+              },
+              "transition": {
+                "type": "timing",
+                "duration": 80,
+                "easing": [
+                  0.3,
+                  0,
+                  0.8,
+                  0.15
+                ]
+              }
+            },
+            "reduced": {
+              "enter": {
+                "from": {
+                  "opacity": 0
+                },
+                "to": {
+                  "opacity": 1
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 120,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              },
+              "exit": {
+                "from": {
+                  "opacity": 1
+                },
+                "to": {
+                  "opacity": 0
+                },
+                "transition": {
+                  "type": "timing",
+                  "duration": 80,
+                  "easing": [
+                    0,
+                    0,
+                    1,
+                    1
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "spring": {
+          "bouncy": {
+            "stiffness": 300,
+            "damping": 15,
+            "mass": 1
+          },
+          "smooth": {
+            "stiffness": 300,
+            "damping": 35,
+            "mass": 1
+          },
+          "snappy": {
+            "stiffness": 400,
+            "damping": 30,
+            "mass": 1
           }
         }
       },
-      "scale-in": {
-        "enter": {
-          "from": {
-            "opacity": 0,
-            "scale": 0.96
-          },
-          "to": {
-            "opacity": 1,
-            "scale": 1
-          },
-          "transition": {
-            "type": "spring",
-            "config": {
-              "stiffness": 400,
-              "damping": 30,
-              "mass": 1
-            }
-          }
+      "elevation": {
+        "overlay": "0 20px 25px -5px rgb(0 0 0 / 0.25), 0 8px 10px -6px rgb(0 0 0 / 0.25)",
+        "popover": "0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -4px rgb(0 0 0 / 0.25)",
+        "raised": "0 1px 3px rgb(0 0 0 / 0.25), 0 1px 2px -1px rgb(0 0 0 / 0.25)"
+      },
+      "fontFamily": {
+        "mono": "JetBrainsMono_400Regular",
+        "sans": "Inter_400Regular"
+      },
+      "fontWeight": {
+        "bold": 700,
+        "medium": 500,
+        "regular": 400,
+        "semibold": 600
+      },
+      "opacity": {
+        "50": 0.5,
+        "disabled": 0.5
+      },
+      "radius": {
+        "2xl": 16,
+        "card": 8,
+        "control": 6,
+        "full": 9999,
+        "lg": 8,
+        "md": 6,
+        "none": 0,
+        "overlay": 12,
+        "pill": 9999,
+        "sm": 4,
+        "xl": 12,
+        "xs": 2
+      },
+      "ringOffset": {
+        "2": 2,
+        "default": 2
+      },
+      "shadow": {
+        "lg": "0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -4px rgb(0 0 0 / 0.25)",
+        "md": "0 4px 6px -1px rgb(0 0 0 / 0.25), 0 2px 4px -2px rgb(0 0 0 / 0.25)",
+        "sm": "0 1px 3px rgb(0 0 0 / 0.25), 0 1px 2px -1px rgb(0 0 0 / 0.25)",
+        "xl": "0 20px 25px -5px rgb(0 0 0 / 0.25), 0 8px 10px -6px rgb(0 0 0 / 0.25)",
+        "xs": "0 1px 2px rgb(0 0 0 / 0.13)"
+      },
+      "size": {
+        "control-lg": 48,
+        "control-md": 40,
+        "control-sm": 32,
+        "demo-box": 96,
+        "icon-lg": 24,
+        "icon-md": 20,
+        "icon-sm": 16,
+        "touch-target": 44
+      },
+      "space": {
+        "0": 0,
+        "1": 4,
+        "2": 8,
+        "3": 12,
+        "4": 16,
+        "5": 20,
+        "6": 24,
+        "8": 32,
+        "10": 40,
+        "12": 48,
+        "16": 64,
+        "20": 80,
+        "24": 96,
+        "0-5": 2,
+        "1-5": 6
+      },
+      "text": {
+        "body": {
+          "fontFamily": "Inter_400Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+          "letterSpacing": -0.18
         },
-        "exit": {
-          "from": {
-            "opacity": 1,
-            "scale": 1
-          },
-          "to": {
-            "opacity": 0,
-            "scale": 0.98
-          },
-          "transition": {
-            "type": "timing",
-            "duration": 80,
-            "easing": [
-              0.3,
-              0,
-              0.8,
-              0.15
-            ]
-          }
+        "body-lg": {
+          "fontFamily": "Inter_400Regular",
+          "fontSize": 18,
+          "lineHeight": 28,
+          "letterSpacing": -0.2
         },
-        "reduced": {
-          "enter": {
-            "from": {
-              "opacity": 0
-            },
-            "to": {
-              "opacity": 1
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 120,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          },
-          "exit": {
-            "from": {
-              "opacity": 1
-            },
-            "to": {
-              "opacity": 0
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 80,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          }
+        "body-sm": {
+          "fontFamily": "Inter_400Regular",
+          "fontSize": 14,
+          "lineHeight": 20,
+          "letterSpacing": 0
+        },
+        "caption": {
+          "fontFamily": "Inter_400Regular",
+          "fontSize": 12,
+          "lineHeight": 16,
+          "letterSpacing": 0
+        },
+        "code": {
+          "fontFamily": "JetBrainsMono_400Regular",
+          "fontSize": 13,
+          "lineHeight": 20,
+          "letterSpacing": 0
+        },
+        "display": {
+          "fontFamily": "Inter_700Bold",
+          "fontSize": 36,
+          "lineHeight": 40,
+          "letterSpacing": -0.72
+        },
+        "label": {
+          "fontFamily": "Inter_500Medium",
+          "fontSize": 13,
+          "lineHeight": 18,
+          "letterSpacing": 0
+        },
+        "max-scale": 1.5,
+        "title": {
+          "fontFamily": "Inter_600SemiBold",
+          "fontSize": 20,
+          "lineHeight": 28,
+          "letterSpacing": -0.22
+        },
+        "title-lg": {
+          "fontFamily": "Inter_600SemiBold",
+          "fontSize": 24,
+          "lineHeight": 32,
+          "letterSpacing": -0.48
+        },
+        "title-sm": {
+          "fontFamily": "Inter_600SemiBold",
+          "fontSize": 16,
+          "lineHeight": 24,
+          "letterSpacing": -0.18
         }
       },
-      "slide-up": {
-        "enter": {
-          "from": {
-            "opacity": 0,
-            "translateY": 8
-          },
-          "to": {
-            "opacity": 1,
-            "translateY": 0
-          },
-          "transition": {
-            "type": "spring",
-            "config": {
-              "stiffness": 400,
-              "damping": 30,
-              "mass": 1
-            }
-          }
-        },
-        "exit": {
-          "from": {
-            "opacity": 1,
-            "translateY": 0
-          },
-          "to": {
-            "opacity": 0,
-            "translateY": 4
-          },
-          "transition": {
-            "type": "timing",
-            "duration": 80,
-            "easing": [
-              0.3,
-              0,
-              0.8,
-              0.15
-            ]
-          }
-        },
-        "reduced": {
-          "enter": {
-            "from": {
-              "opacity": 0
-            },
-            "to": {
-              "opacity": 1
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 120,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          },
-          "exit": {
-            "from": {
-              "opacity": 1
-            },
-            "to": {
-              "opacity": 0
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 80,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          }
-        }
-      },
-      "sheet": {
-        "enter": {
-          "from": {
-            "translateY": "100%"
-          },
-          "to": {
-            "translateY": 0
-          },
-          "transition": {
-            "type": "spring",
-            "config": {
-              "stiffness": 300,
-              "damping": 35,
-              "mass": 1
-            }
-          }
-        },
-        "exit": {
-          "from": {
-            "translateY": 0
-          },
-          "to": {
-            "translateY": "100%"
-          },
-          "transition": {
-            "type": "timing",
-            "duration": 240,
-            "easing": [
-              0.3,
-              0,
-              0.8,
-              0.15
-            ]
-          }
-        },
-        "reduced": {
-          "enter": {
-            "from": {
-              "opacity": 0
-            },
-            "to": {
-              "opacity": 1
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 120,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          },
-          "exit": {
-            "from": {
-              "opacity": 1
-            },
-            "to": {
-              "opacity": 0
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 80,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          }
-        }
-      },
-      "pop": {
-        "enter": {
-          "from": {
-            "scale": 0.9
-          },
-          "to": {
-            "scale": 1
-          },
-          "transition": {
-            "type": "spring",
-            "config": {
-              "stiffness": 300,
-              "damping": 15,
-              "mass": 1
-            }
-          }
-        },
-        "exit": {
-          "from": {
-            "scale": 1
-          },
-          "to": {
-            "opacity": 0
-          },
-          "transition": {
-            "type": "timing",
-            "duration": 80,
-            "easing": [
-              0.3,
-              0,
-              0.8,
-              0.15
-            ]
-          }
-        },
-        "reduced": {
-          "enter": {
-            "from": {
-              "opacity": 0
-            },
-            "to": {
-              "opacity": 1
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 120,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          },
-          "exit": {
-            "from": {
-              "opacity": 1
-            },
-            "to": {
-              "opacity": 0
-            },
-            "transition": {
-              "type": "timing",
-              "duration": 80,
-              "easing": [
-                0,
-                0,
-                1,
-                1
-              ]
-            }
-          }
-        }
-      },
-      "press": {
-        "enter": {
-          "from": {
-            "scale": 1
-          },
-          "to": {
-            "scale": 0.97
-          },
-          "transition": {
-            "type": "timing",
-            "duration": 80,
-            "easing": [
-              0.2,
-              0,
-              0,
-              1
-            ]
-          }
-        },
-        "exit": {
-          "from": {
-            "scale": 0.97
-          },
-          "to": {
-            "scale": 1
-          },
-          "transition": {
-            "type": "spring",
-            "config": {
-              "stiffness": 400,
-              "damping": 30,
-              "mass": 1
-            }
-          }
-        },
-        "reduced": null
+      "zIndex": {
+        "base": 0,
+        "dropdown": 1000,
+        "modal": 1400,
+        "overlay": 1300,
+        "popover": 1500,
+        "raised": 10,
+        "sticky": 1100,
+        "toast": 1700,
+        "tooltip": 1800
       }
     }
   }
 };
+"
+`;
+
+exports[`compiles the token source to css, tailwind and native outputs > dist/types.d.ts 1`] = `
+"// Generated by @unison-ui/tokens. Do not edit.
+import type { MotionPresetValue, ResolvedTransition } from "@unison-ui/tokens/motion";
+
+/** A text style as React Native takes it; no \`fontWeight\`, the face carries the weight. */
+export interface NativeTextStyle {
+  readonly fontFamily: string;
+  readonly fontSize: number;
+  readonly lineHeight: number;
+  readonly letterSpacing: number;
+}
+
+export interface UnisonTheme {
+  readonly "borderWidth": {
+    readonly "0": number;
+    readonly "1": number;
+    readonly "2": number;
+    readonly "default": number;
+    readonly "ring": number;
+  };
+  readonly "breakpoint": {
+    readonly "2xl": number;
+    readonly "lg": number;
+    readonly "md": number;
+    readonly "sm": number;
+    readonly "xl": number;
+  };
+  readonly "color": {
+    readonly "accent": string;
+    readonly "accent-active": string;
+    readonly "accent-fg": string;
+    readonly "accent-hover": string;
+    readonly "accent-subtle": string;
+    readonly "accent-100": string;
+    readonly "accent-200": string;
+    readonly "accent-300": string;
+    readonly "accent-400": string;
+    readonly "accent-50": string;
+    readonly "accent-500": string;
+    readonly "accent-600": string;
+    readonly "accent-700": string;
+    readonly "accent-800": string;
+    readonly "accent-900": string;
+    readonly "accent-950": string;
+    readonly "black": string;
+    readonly "border": string;
+    readonly "border-strong": string;
+    readonly "canvas": string;
+    readonly "danger": string;
+    readonly "danger-border": string;
+    readonly "danger-fg": string;
+    readonly "danger-subtle": string;
+    readonly "danger-100": string;
+    readonly "danger-200": string;
+    readonly "danger-300": string;
+    readonly "danger-400": string;
+    readonly "danger-50": string;
+    readonly "danger-500": string;
+    readonly "danger-600": string;
+    readonly "danger-700": string;
+    readonly "danger-800": string;
+    readonly "danger-900": string;
+    readonly "danger-950": string;
+    readonly "fg": string;
+    readonly "fg-muted": string;
+    readonly "fg-subtle": string;
+    readonly "gray-100": string;
+    readonly "gray-200": string;
+    readonly "gray-300": string;
+    readonly "gray-400": string;
+    readonly "gray-50": string;
+    readonly "gray-500": string;
+    readonly "gray-600": string;
+    readonly "gray-700": string;
+    readonly "gray-800": string;
+    readonly "gray-900": string;
+    readonly "gray-950": string;
+    readonly "info": string;
+    readonly "info-border": string;
+    readonly "info-fg": string;
+    readonly "info-subtle": string;
+    readonly "info-100": string;
+    readonly "info-200": string;
+    readonly "info-300": string;
+    readonly "info-400": string;
+    readonly "info-50": string;
+    readonly "info-500": string;
+    readonly "info-600": string;
+    readonly "info-700": string;
+    readonly "info-800": string;
+    readonly "info-900": string;
+    readonly "info-950": string;
+    readonly "muted": string;
+    readonly "on-accent": string;
+    readonly "on-danger": string;
+    readonly "on-info": string;
+    readonly "on-success": string;
+    readonly "on-warning": string;
+    readonly "overlay": string;
+    readonly "ring": string;
+    readonly "subtle": string;
+    readonly "success": string;
+    readonly "success-border": string;
+    readonly "success-fg": string;
+    readonly "success-subtle": string;
+    readonly "success-100": string;
+    readonly "success-200": string;
+    readonly "success-300": string;
+    readonly "success-400": string;
+    readonly "success-50": string;
+    readonly "success-500": string;
+    readonly "success-600": string;
+    readonly "success-700": string;
+    readonly "success-800": string;
+    readonly "success-900": string;
+    readonly "success-950": string;
+    readonly "surface": string;
+    readonly "surface-raised": string;
+    readonly "warning": string;
+    readonly "warning-border": string;
+    readonly "warning-fg": string;
+    readonly "warning-subtle": string;
+    readonly "warning-100": string;
+    readonly "warning-200": string;
+    readonly "warning-300": string;
+    readonly "warning-400": string;
+    readonly "warning-50": string;
+    readonly "warning-500": string;
+    readonly "warning-600": string;
+    readonly "warning-700": string;
+    readonly "warning-800": string;
+    readonly "warning-900": string;
+    readonly "warning-950": string;
+    readonly "white": string;
+  };
+  readonly "motion": {
+    readonly "duration": {
+      readonly "0": number;
+      readonly "50": number;
+      readonly "80": number;
+      readonly "120": number;
+      readonly "140": number;
+      readonly "160": number;
+      readonly "200": number;
+      readonly "240": number;
+      readonly "320": number;
+      readonly "400": number;
+      readonly "500": number;
+      readonly "base-enter": number;
+      readonly "base-exit": number;
+      readonly "fast-enter": number;
+      readonly "fast-exit": number;
+      readonly "slow-enter": number;
+      readonly "slow-exit": number;
+    };
+    readonly "easing": {
+      readonly "enter": readonly [number, number, number, number];
+      readonly "exit": readonly [number, number, number, number];
+      readonly "linear": readonly [number, number, number, number];
+      readonly "standard": readonly [number, number, number, number];
+    };
+    readonly "transition": {
+      readonly "emphasis": ResolvedTransition;
+      readonly "enter": ResolvedTransition;
+      readonly "exit": ResolvedTransition;
+    };
+    readonly "presets": {
+      readonly "fade": MotionPresetValue;
+      readonly "pop": MotionPresetValue;
+      readonly "press": MotionPresetValue;
+      readonly "scale-in": MotionPresetValue;
+      readonly "sheet": MotionPresetValue;
+      readonly "slide-up": MotionPresetValue;
+    };
+    readonly "spring": {
+      readonly "bouncy": { readonly stiffness: number; readonly damping: number; readonly mass: number };
+      readonly "smooth": { readonly stiffness: number; readonly damping: number; readonly mass: number };
+      readonly "snappy": { readonly stiffness: number; readonly damping: number; readonly mass: number };
+    };
+  };
+  readonly "elevation": {
+    readonly "overlay": string;
+    readonly "popover": string;
+    readonly "raised": string;
+  };
+  readonly "fontFamily": {
+    readonly "mono": string;
+    readonly "sans": string;
+  };
+  readonly "fontWeight": {
+    readonly "bold": number;
+    readonly "medium": number;
+    readonly "regular": number;
+    readonly "semibold": number;
+  };
+  readonly "opacity": {
+    readonly "50": number;
+    readonly "disabled": number;
+  };
+  readonly "radius": {
+    readonly "2xl": number;
+    readonly "card": number;
+    readonly "control": number;
+    readonly "full": number;
+    readonly "lg": number;
+    readonly "md": number;
+    readonly "none": number;
+    readonly "overlay": number;
+    readonly "pill": number;
+    readonly "sm": number;
+    readonly "xl": number;
+    readonly "xs": number;
+  };
+  readonly "ringOffset": {
+    readonly "2": number;
+    readonly "default": number;
+  };
+  readonly "shadow": {
+    readonly "lg": string;
+    readonly "md": string;
+    readonly "sm": string;
+    readonly "xl": string;
+    readonly "xs": string;
+  };
+  readonly "size": {
+    readonly "control-lg": number;
+    readonly "control-md": number;
+    readonly "control-sm": number;
+    readonly "demo-box": number;
+    readonly "icon-lg": number;
+    readonly "icon-md": number;
+    readonly "icon-sm": number;
+    readonly "touch-target": number;
+  };
+  readonly "space": {
+    readonly "0": number;
+    readonly "1": number;
+    readonly "2": number;
+    readonly "3": number;
+    readonly "4": number;
+    readonly "5": number;
+    readonly "6": number;
+    readonly "8": number;
+    readonly "10": number;
+    readonly "12": number;
+    readonly "16": number;
+    readonly "20": number;
+    readonly "24": number;
+    readonly "0-5": number;
+    readonly "1-5": number;
+  };
+  readonly "text": {
+    readonly "body": NativeTextStyle;
+    readonly "body-lg": NativeTextStyle;
+    readonly "body-sm": NativeTextStyle;
+    readonly "caption": NativeTextStyle;
+    readonly "code": NativeTextStyle;
+    readonly "display": NativeTextStyle;
+    readonly "label": NativeTextStyle;
+    readonly "max-scale": number;
+    readonly "title": NativeTextStyle;
+    readonly "title-lg": NativeTextStyle;
+    readonly "title-sm": NativeTextStyle;
+  };
+  readonly "zIndex": {
+    readonly "base": number;
+    readonly "dropdown": number;
+    readonly "modal": number;
+    readonly "overlay": number;
+    readonly "popover": number;
+    readonly "raised": number;
+    readonly "sticky": number;
+    readonly "toast": number;
+    readonly "tooltip": number;
+  };
+}
+
+export type SemanticColor = "accent" | "accent-active" | "accent-fg" | "accent-hover" | "accent-subtle" | "border" | "border-strong" | "canvas" | "danger" | "danger-border" | "danger-fg" | "danger-subtle" | "fg" | "fg-muted" | "fg-subtle" | "info" | "info-border" | "info-fg" | "info-subtle" | "muted" | "on-accent" | "on-danger" | "on-info" | "on-success" | "on-warning" | "overlay" | "ring" | "subtle" | "success" | "success-border" | "success-fg" | "success-subtle" | "surface" | "surface-raised" | "warning" | "warning-border" | "warning-fg" | "warning-subtle";
+export type TextStyle = "body" | "body-lg" | "body-sm" | "caption" | "code" | "display" | "label" | "title" | "title-lg" | "title-sm";
+export type RadiusToken = "card" | "control" | "overlay" | "pill";
+export type ShadowToken = "lg" | "md" | "sm" | "xl" | "xs";
+export type ElevationToken = "overlay" | "popover" | "raised";
+export type MotionPreset = "fade" | "pop" | "press" | "scale-in" | "sheet" | "slide-up";
+export type ThemeName = "default";
+
+/** Semantic token paths and the value each has in a \`UnisonTheme\`. */
+export interface SemanticTokenValues {
+  "border-width.default": number;
+  "border-width.ring": number;
+  "color.accent": string;
+  "color.accent-active": string;
+  "color.accent-fg": string;
+  "color.accent-hover": string;
+  "color.accent-subtle": string;
+  "color.border": string;
+  "color.border-strong": string;
+  "color.canvas": string;
+  "color.danger": string;
+  "color.danger-border": string;
+  "color.danger-fg": string;
+  "color.danger-subtle": string;
+  "color.fg": string;
+  "color.fg-muted": string;
+  "color.fg-subtle": string;
+  "color.info": string;
+  "color.info-border": string;
+  "color.info-fg": string;
+  "color.info-subtle": string;
+  "color.muted": string;
+  "color.on-accent": string;
+  "color.on-danger": string;
+  "color.on-info": string;
+  "color.on-success": string;
+  "color.on-warning": string;
+  "color.overlay": string;
+  "color.ring": string;
+  "color.subtle": string;
+  "color.success": string;
+  "color.success-border": string;
+  "color.success-fg": string;
+  "color.success-subtle": string;
+  "color.surface": string;
+  "color.surface-raised": string;
+  "color.warning": string;
+  "color.warning-border": string;
+  "color.warning-fg": string;
+  "color.warning-subtle": string;
+  "elevation.overlay": string;
+  "elevation.popover": string;
+  "elevation.raised": string;
+  "motion.duration.base.enter": number;
+  "motion.duration.base.exit": number;
+  "motion.duration.fast.enter": number;
+  "motion.duration.fast.exit": number;
+  "motion.duration.slow.enter": number;
+  "motion.duration.slow.exit": number;
+  "motion.emphasis": ResolvedTransition;
+  "motion.enter": ResolvedTransition;
+  "motion.exit": ResolvedTransition;
+  "motion.preset.fade": MotionPresetValue;
+  "motion.preset.pop": MotionPresetValue;
+  "motion.preset.press": MotionPresetValue;
+  "motion.preset.scale-in": MotionPresetValue;
+  "motion.preset.sheet": MotionPresetValue;
+  "motion.preset.slide-up": MotionPresetValue;
+  "opacity.disabled": number;
+  "radius.card": number;
+  "radius.control": number;
+  "radius.overlay": number;
+  "radius.pill": number;
+  "ring-offset.default": number;
+  "size.demo-box": number;
+  "text.body": NativeTextStyle;
+  "text.body-lg": NativeTextStyle;
+  "text.body-sm": NativeTextStyle;
+  "text.caption": NativeTextStyle;
+  "text.code": NativeTextStyle;
+  "text.display": NativeTextStyle;
+  "text.label": NativeTextStyle;
+  "text.max-scale": number;
+  "text.title": NativeTextStyle;
+  "text.title-lg": NativeTextStyle;
+  "text.title-sm": NativeTextStyle;
+}
+export type SemanticTokenPath = keyof SemanticTokenValues;
 "
 `;
 
@@ -2166,10 +2799,10 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
   --unison-shadow-sm: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --unison-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --unison-shadow-xs: 0 1px 2px rgb(0 0 0 / 0.05);
-  --unison-size-box: 96px;
   --unison-size-control-lg: 48px;
   --unison-size-control-md: 40px;
   --unison-size-control-sm: 32px;
+  --unison-size-demo-box: var(--unison-space-24);
   --unison-size-icon-lg: 24px;
   --unison-size-icon-md: 20px;
   --unison-size-icon-sm: 16px;

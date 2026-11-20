@@ -3,10 +3,10 @@ import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { buildTheme, legacyFromBuild } from "../src/build";
+import { buildTheme } from "../src/build";
 import { MOTION_TYPES } from "../src/emit-motion";
 import { compile } from "../src/index";
-import { expandPreset, PRESETS } from "../src/motion/presets";
+import { expandPreset, expandPresets, PRESETS } from "../src/motion/presets";
 
 /** Expands with the feel the build carries, as the emitters do. */
 const expand = (
@@ -63,12 +63,16 @@ it("reduced feel makes press stand still", () => {
   expect(p.reduced).toBeNull();
 });
 it("a smooth build's emitted presets reflect smooth", () => {
-  const sets = legacyFromBuild(theme("smooth"));
-  expect(sets.motionPresets["scale-in"].exit.transition).toMatchObject({ duration: 96 });
-  expect(sets.motionPresets["scale-in"].enter.transition).toMatchObject({
+  const smooth = theme("smooth");
+  const presets = expandPresets(smooth.light.tokens, smooth.motion);
+  expect(presets["scale-in"].exit.transition).toMatchObject({ duration: 96 });
+  expect(presets["scale-in"].enter.transition).toMatchObject({
     config: { stiffness: 300, damping: 35 },
   });
-  expect(legacyFromBuild(theme()).motionPresets["scale-in"].exit.transition).toMatchObject({
+  const snappy = theme();
+  expect(
+    expandPresets(snappy.light.tokens, snappy.motion)["scale-in"].exit.transition,
+  ).toMatchObject({
     duration: 80,
   });
 });
@@ -118,8 +122,10 @@ describe("outputs", () => {
     const { motionPresets } = await import(join(out, "motion.js"));
     const { themes } = await import(join(out, "native/theme.js"));
     expect(motionPresets.default["scale-in"].enter.transition.type).toBe("spring");
-    expect(themes.light.motionPresets["scale-in"]).toEqual(motionPresets.default["scale-in"]);
-    expect(themes.dark.motionPresets).toEqual(themes.light.motionPresets);
+    expect(themes.default.light.motion.presets["scale-in"]).toEqual(
+      motionPresets.default["scale-in"],
+    );
+    expect(themes.default.dark.motion.presets).toEqual(themes.default.light.motion.presets);
     expect(Object.keys(motionPresets.default)).toEqual([...PRESETS]);
   });
 });

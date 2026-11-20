@@ -1,0 +1,4 @@
+{
+  "extends": "@unison-ui/tsconfig/native.json",
+  "include": ["src", "test/**/*.test-d.ts"]
+}

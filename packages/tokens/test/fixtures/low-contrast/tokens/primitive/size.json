@@ -1,10 +1,6 @@
 {
   "size": {
     "$type": "dimension",
-    "box": {
-      "$value": "96px",
-      "$description": "Phase 0 demo box; migrated in Task 16"
-    },
     "control-sm": {
       "$value": "32px"
     },

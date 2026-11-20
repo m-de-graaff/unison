@@ -1,4 +1,11 @@
 {
+  "size": {
+    "$type": "dimension",
+    "demo-box": {
+      "$value": "{space.24}",
+      "$description": "Phase 0 demo box (Box component)"
+    }
+  },
   "radius": {
     "$type": "dimension",
     "control": {

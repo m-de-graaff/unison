@@ -136,7 +136,7 @@ export default function ParityCase() {
         style={{
           width: 390,
           padding: 16,
-          backgroundColor: themes[active].color.surface,
+          backgroundColor: themes.default[active].color.surface,
           alignItems: "flex-start",
         }}
       >

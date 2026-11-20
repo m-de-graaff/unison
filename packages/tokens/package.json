@@ -12,6 +12,7 @@
   "type": "module",
   "files": [
     "dist",
+    "schema",
     "tokens"
   ],
   "bin": {
@@ -38,6 +39,10 @@
       "types": "./dist/native/theme.d.ts",
       "default": "./dist/native/theme.js"
     },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "default": "./dist/types.js"
+    },
     "./tokens.css": "./dist/web/tokens.css",
     "./theme.css": "./dist/web/theme.css",
     "./theme-strict.css": "./dist/web/theme-strict.css",
@@ -58,6 +63,7 @@
     "@types/node": "^26.6.6",
     "@unison-ui/tsconfig": "workspace:*",
     "@vitest/coverage-v8": "^5.1.1",
+    "ajv": "^8.20.0",
     "tailwindcss": "^4.3.5",
     "tsdown": "^0.23.7",
     "typescript": "catalog:",

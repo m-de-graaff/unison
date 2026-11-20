@@ -7,7 +7,7 @@ import { compile } from "../src/index";
 const out = mkdtempSync(join(tmpdir(), "unison-motion-"));
 await compile({ cwd: join(import.meta.dirname, ".."), outDir: out });
 const css = readFileSync(join(out, "web/tokens.css"), "utf8");
-const native = (await import(join(out, "native/theme.js"))).themes.light;
+const native = (await import(join(out, "native/theme.js"))).themes.default.light;
 
 it("web has four easings and six semantic durations", () => {
   for (const [name, curve] of [
@@ -29,7 +29,7 @@ it("web has four easings and six semantic durations", () => {
 });
 
 it("native has the tuples and plain milliseconds", () => {
-  expect(native.easing.enter).toEqual([0.05, 0.7, 0.1, 1]);
+  expect(native.motion.easing.enter).toEqual([0.05, 0.7, 0.1, 1]);
   expect(native.motion.duration["slow-exit"]).toBe(240);
-  expect(Object.keys(native.easing).sort()).toEqual(["enter", "exit", "linear", "standard"]);
+  expect(Object.keys(native.motion.easing).sort()).toEqual(["enter", "exit", "linear", "standard"]);
 });
