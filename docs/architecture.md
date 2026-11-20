@@ -33,8 +33,9 @@ graph LR
   tokens --> apps
 ```
 
-- `tokens` turns `tokens/base.json` and `tokens/dark.json` (DTCG) into CSS variables, a Tailwind v4
-  theme, a native Tailwind (Uniwind) theme and a typed native theme object.
+- `tokens` holds the token source (DTCG JSON, primitive and semantic tiers) and the compiler that
+  turns it, plus each app's `unison.config.ts`, into CSS variables, Tailwind v4 themes, a native
+  Tailwind (Uniwind) theme, a typed native theme object, motion presets and `tokens.json`.
 - `core` and `motion/src/shared` hold platform-free code. `react` and `native` hold only
   renderers. `ui` picks one of them per platform.
 - Every library builds to `dist/` with tsdown (ESM only). Apps consume `dist/`, never `src/`.
@@ -89,37 +90,74 @@ unbundled so the directive stays on that one module, not the package root.
 
 ## From a token to a pixel
 
+### The pipeline
+
+```mermaid
+flowchart LR
+  src["tokens/primitive/*.json<br/>tokens/semantic/*.json"] --> load["load + validate<br/>(all errors at once)"]
+  load --> lint["tier lint"]
+  config["unison.config.ts<br/>defineTheme()"] --> layers
+  gen["OKLCH scales<br/>(generated primitives)"] --> layers["layers per theme × scheme:<br/>primitives · density · radius · semantic · overrides"]
+  lint --> layers
+  layers --> resolve["resolve aliases"]
+  resolve --> contrast["WCAG check<br/>(+ autoContrast)"]
+  contrast --> out["emitters"]
+  out --> css["web/tokens.css"]
+  out --> tw["web/theme(-strict).css<br/>native/theme.css"]
+  out --> nat["native/theme.js + types.d.ts"]
+  out --> mo["motion.js"]
+  out --> json["tokens.json"]
+```
+
+1. `load.ts` reads `tokens/primitive/*.json` and `tokens/semantic/*.json` (`color.light.json` /
+   `color.dark.json` hold the scheme-specific colours). `validate.ts` normalises every value
+   (`"8px"` → `{ value: 8, unit: "px" }`) and collects every error.
+2. `lint-tiers.ts` enforces the tiers: semantic tokens alias primitives (or are marked raw), and
+   every semantic colour exists in both schemes.
+3. For each theme in the app's `unison.config.ts` (default: the package's own default theme),
+   `buildTheme()` stacks layers per scheme. The layers are the OKLCH colour scales generated from
+   the accent and neutral ([ADR 0012](adr/0012-oklch-generation-and-gamut-mapping.md)), the hand-
+   written primitives, the density and radius options, the semantic tokens, and the config's
+   `overrides`. `resolve.ts` resolves the aliases (cycles and type mismatches are errors) into one
+   flat map per theme × scheme.
+4. `color/auto-contrast.ts` checks every WCAG pair and fails the build, or nudges a text colour,
+   when `autoContrast` is on ([ADR 0014](adr/0014-wcag-enforced-apca-informational.md)).
+5. The emitters write the outputs. `unison-tokens build --config unison.config.ts --out unison`
+   writes them into the app's `unison/` folder, and the package's own build writes the default
+   theme into `dist/` ([ADR 0019](adr/0019-app-config-and-unison-folder.md)).
+
 ### Web
 
-1. `packages/tokens/tokens/base.json`: `color.accent = #5b5bd6`.
-2. `unison-tokens build` writes `dist/web/tokens.css`: `:root { --unison-color-accent: #5b5bd6 }`,
-   with dark overrides under `[data-theme="dark"]` and `prefers-color-scheme: dark`.
-3. `dist/web/theme.css` maps Tailwind's theme onto it: `--color-accent: var(--unison-color-accent)`.
-4. An app imports `tailwindcss`, `@unison-ui/tokens/tokens.css` and `@unison-ui/tokens/theme.css`.
-   From there:
-   - `Box` uses an inline style built by `cssVar("color.accent")` → `var(--unison-color-accent)`.
-   - App code can write the Tailwind utility `bg-accent`.
-
-   Both resolve to the same variable, so a token change updates both with no rebuild of the
-   components.
+1. `unison/web/tokens.css` declares every token as a `--unison-*` variable. Semantic tokens are
+   references (`--unison-color-accent: var(--unison-color-accent-600)`), and colour primitives come
+   as hex with an `oklch()` re-declaration under `@supports`. Dark mode and every named theme are
+   blocks that re-declare only what resolves differently, selected by `data-theme` and
+   `data-unison-theme` ([ADR 0018](adr/0018-theme-attributes-and-scoping.md)).
+2. `unison/web/theme.css` (or `theme-strict.css`) maps Tailwind's namespaces onto them:
+   `--color-accent: var(--unison-color-accent)` inside `@theme inline`, so classes follow a runtime
+   switch.
+3. `Box` builds its inline style with `cssVar("color.accent")` → `var(--unison-color-accent)`, and
+   app code writes `bg-accent`. Both resolve through the same variable.
+4. `ThemeScript` sets the two attributes on `<html>` before paint, and `ThemeProvider` / `useTheme`
+   change them.
 
 ### Native
 
-1. The same `base.json` and `dark.json`.
-2. `dist/native/theme.js` exports `themes = { light, dark }`, with dimensions as numbers, durations
-   in ms and springs as `{ stiffness, damping, mass }`. `dist/native/theme.d.ts` holds the
-   generated `UnisonTheme` type.
-3. `Box` calls `useUnisonTheme()` (picks `themes[light|dark]` from `useColorScheme()`) and
-   `token(theme, "color.accent")`, a typed dot-path lookup, to build its `style`.
-4. App code using Tailwind classes goes through Uniwind
-   ([ADR 0005](adr/0005-native-tailwind-engine.md)):
-   - The app imports `@unison-ui/tokens/native-theme.css`, which holds literal colours per
-     `@variant light` / `@variant dark`, plus `--spacing` and `--radius-md`.
-   - Uniwind can't resolve the web `var(--unison-…)` chain on native, which is why this file
-     exists.
+1. `unison/native/theme.js` exports `themes = { [theme]: { light, dark } }` with flat groups
+   (`color["accent-600"]`, `motion.duration["fast-enter"]`; see `nativeKey`), dimensions as numbers,
+   text styles as `{ fontFamily, fontSize, lineHeight, letterSpacing }` (the face per weight, no
+   `fontWeight`) and shadows as `boxShadow` strings. `types.d.ts` holds `UnisonTheme` and
+   `SemanticTokenValues`.
+2. `UnisonProvider` picks `themes[theme][scheme]`, and `Box` reads it with `useUnisonTheme()` and
+   `token(theme, "color.accent")`. `token()` only accepts semantic paths
+   ([ADR 0017](adr/0017-semantic-only-token-access.md)).
+3. Tailwind classes go through Uniwind ([ADR 0005](adr/0005-native-tailwind-engine.md)) with
+   `unison/native/theme.css`: literal values per `@variant light` / `dark` /
+   `<theme>-<scheme>`, because Uniwind can't resolve the web `var()` chain. `UnisonProvider`'s
+   `onThemeChange` tells Uniwind which variant is active.
 
-In both cases, saving `base.json` while `pnpm dev` runs rebuilds `dist/` and the apps update
-without a restart.
+While `pnpm dev` runs, editing `unison.config.ts` (or the token source) rebuilds `unison/` (or
+`dist/`), and the apps update without a restart.
 
 ## Parity harness
 

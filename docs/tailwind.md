@@ -9,13 +9,17 @@ the theme files map Tailwind's namespaces onto them.
 | `dist/web/theme-strict.css` | `@unison-ui/tokens/theme-strict.css` | Web, Unison only (the demo apps use this) |
 | `dist/native/theme.css` | `@unison-ui/tokens/native-theme.css` | Native (Uniwind), literal values |
 
-Import `tailwindcss`, then `tokens.css`, then one theme file:
+Import `tailwindcss`, then `tokens.css`, then one theme file. An app with a `unison.config.ts`
+imports its own generated copies from `unison/` (see [theming.md](theming.md)):
 
 ```css
 @import "tailwindcss";
-@import "@unison-ui/tokens/tokens.css";
-@import "@unison-ui/tokens/theme-strict.css";
+@import "../unison/web/tokens.css";
+@import "../unison/web/theme-strict.css";
 ```
+
+Without a config, use the package's default theme instead: `@unison-ui/tokens/tokens.css` and
+`@unison-ui/tokens/theme-strict.css`, and `@unison-ui/tokens/native-theme.css` on native.
 
 ## Namespaces
 
