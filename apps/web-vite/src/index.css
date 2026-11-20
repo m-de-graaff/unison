@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@import "../.unison/web/tokens.css";
-@import "../.unison/web/theme-strict.css";
+@import "../unison/web/tokens.css";
+@import "../unison/web/theme-strict.css";
 
 /* Paint the page in the theme colour before React mounts (no light flash on reload). */
 @layer base {

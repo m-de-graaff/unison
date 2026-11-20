@@ -13,7 +13,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { themes } from "../../../../.unison/native/theme.js";
+import { themes } from "../../../../unison/native/theme.js";
 
 // The iOS simulator shares the host's localhost; on Android, run.ts maps the emulator's
 // localhost:4545 to the host with `adb reverse`.

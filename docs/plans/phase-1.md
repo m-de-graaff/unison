@@ -21,7 +21,7 @@ components.
 is loaded, validated, merged with generated OKLCH colour primitives and the app's `defineTheme()`
 layers, then resolved into one flat `Map<path, ResolvedToken>` per theme × scheme. Every output is
 an emitter over those maps. `unison-tokens build --config` writes the outputs into an app's
-`.unison/`; the package's own `dist/` ships the default theme. Runtime switching is two
+`unison/`; the package's own `dist/` ships the default theme. Runtime switching is two
 attributes on web (`data-theme`, `data-unison-theme`) and a React context on native.
 
 **Tech stack:** culori 4.0.2 (build-time colour maths), jiti 2.7.0 (TS config loading),
@@ -129,8 +129,8 @@ the compound `[data-unison-theme="brand"][data-theme="dark"]` next to the descen
 `pnpm run hello` doesn't run `prehello`, even with `enablePrePostScripts: true` in
 `pnpm-workspace.yaml`. The todo's `prebuild` / `predev` would never run. Recommended: chain them
 explicitly (`"build": "pnpm tokens && next build"`, with
-`"tokens": "unison-tokens build --config unison.config.ts --out .unison"`). Also run
-`pnpm tokens` before `typecheck`, because `.unison/` is gitignored.
+`"tokens": "unison-tokens build --config unison.config.ts --out unison"`). Also run
+`pnpm tokens` before `typecheck`, because `unison/` is gitignored.
 
 **OQ-10: Which 12 colours go into the `swatches` fixture, and the ΔE tolerance** (blocks Task 21.2).
 The web emits the *unmapped* `oklch()`. If Chromium/WebKit clip it per channel instead of
@@ -331,7 +331,7 @@ records what that resolves to today.
 | `packages/react/src/{css-var,theme-script,theme-provider,theme-scope}.tsx` | Web runtime theming | 16, 19.1 |
 | `packages/native/src/{theme,provider,theme-scope}.tsx` | Native runtime theming | 16, 19.2 |
 | `packages/demo-content/src/{showcase-data,settings}.ts` | Showcase data, settings shared by apps | 20.1 |
-| `apps/*/unison.config.ts`, `apps/*/.unison/` (ignored) | App theme config and generated output | 18 |
+| `apps/*/unison.config.ts`, `apps/*/unison/` (ignored) | App theme config and generated output | 18 |
 | `apps/*` routes `/tokens`, settings bar, fonts | Showcase, switching, fonts | 8, 19.3, 20.2, 20.3 |
 | `packages/parity/src/fixtures/*`, `scripts/compare.ts`, registry entries | Token fixtures, theme dimension, colour sampler | 21 |
 | `tooling/scripts/docs-tokens.ts`, `docs/{tokens,theming,tailwind,motion,fonts}.md` | Docs | 8, 15, 23 |
@@ -2063,7 +2063,7 @@ before the build, then removing it).
     | `motion.{enter,exit,emphasis}` | `motion.transition[…]` |
 
   - `dist/native/theme.js`: `export const themes = { [name]: { light: UnisonTheme, dark: UnisonTheme } }`
-  - `dist/types.d.ts` (and `.unison/types.d.ts`): `UnisonTheme`; unions `SemanticColor`, `TextStyle`, `RadiusToken`, `ShadowToken`, `ElevationToken`, `MotionPreset`, `ThemeName`; `SemanticTokenPath`; `interface SemanticTokenValues { "color.fg-muted": string; "text.body": NativeTextStyle; "radius.card": number; … }`
+  - `dist/types.d.ts` (and `unison/types.d.ts`): `UnisonTheme`; unions `SemanticColor`, `TextStyle`, `RadiusToken`, `ShadowToken`, `ElevationToken`, `MotionPreset`, `ThemeName`; `SemanticTokenPath`; `interface SemanticTokenValues { "color.fg-muted": string; "text.body": NativeTextStyle; "radius.card": number; … }`
   - `@unison-ui/tokens` re-exports `type * from "@unison-ui/tokens/types"` (the phase 0 self-import pattern, OQ-15 there)
   - `dist/tokens.json`: `{ version: 1, defaultTheme, themes: { [name]: { light: Record<path, Entry>, dark: … } } }`, `Entry = { type, value, oklch?, aliasOf?, tier, description?, contrast?: { on, ratio, apca, min, pass, adjusted? }[] }`
   - `@unison-ui/react`: `cssVar(path: SemanticTokenPath): string`
@@ -2247,10 +2247,12 @@ Expect: 2 passed. ⚠ OQ-2: with the todo's values the first test fails with
 
 ### Task 18: Named themes (todo step 18)
 
+> **Amended during execution (owner decision):** the apps generate into `unison/`, not the todo's `.unison/`. Next 16.4.6's Turbopack dev server ignores edits inside dot-folders (measured: never reloads, versus 124 ms from a plain folder), and Metro might too. Recorded in ADR 0019.
+
 **Files:**
 - Modify: `packages/tokens/src/config.ts` (`extends`, name rules), `src/build.ts`
 - Create: `apps/web-next/unison.config.ts`, `apps/web-vite/unison.config.ts`, `apps/mobile/unison.config.ts` (identical)
-- Modify: `.gitignore` (`.unison/`), `apps/*/package.json` (scripts, `concurrently`), `apps/web-next/src/app/globals.css`, `apps/web-vite/src/index.css`, `apps/mobile/src/global.css`
+- Modify: `.gitignore` (`unison/`), `apps/*/package.json` (scripts, `concurrently`), `apps/web-next/src/app/globals.css`, `apps/web-vite/src/index.css`, `apps/mobile/src/global.css`
 - Test: `packages/tokens/test/named-themes.test.ts`
 
 **Interfaces:**
@@ -2258,7 +2260,7 @@ Expect: 2 passed. ⚠ OQ-2: with the todo's values the first test fails with
 - Produces:
   - `ThemeOptions.extends` resolved before validation (parent first, child keys win, `overrides` merged per path). Errors: `themes.a.extends: cycle a → b → a`; `themes.brand.extends: no theme "defualt", did you mean "default"?`
   - Name rules: `themes.Brand: theme names may only use a-z, 0-9 and "-"`; `themes: missing the "default" theme`
-  - App script `tokens` = `unison-tokens build --config unison.config.ts --out .unison`; generated files under `apps/<app>/.unison/`
+  - App script `tokens` = `unison-tokens build --config unison.config.ts --out unison`; generated files under `apps/<app>/unison/`
 
 Demo config (all three apps):
 
@@ -2285,8 +2287,8 @@ errors above, each with its exact text.
 `apps/web-vite/package.json` scripts:
 
 ```json
-"tokens": "unison-tokens build --config unison.config.ts --out .unison",
-"dev": "concurrently --kill-others --names tokens,vite \"unison-tokens build --watch --config unison.config.ts --out .unison\" \"vite\"",
+"tokens": "unison-tokens build --config unison.config.ts --out unison",
+"dev": "concurrently --kill-others --names tokens,vite \"unison-tokens build --watch --config unison.config.ts --out unison\" \"vite\"",
 "build": "pnpm tokens && tsc -b && vite build",
 "typecheck": "pnpm tokens && tsc -b --noEmit"
 ```
@@ -2296,21 +2298,21 @@ errors above, each with its exact text.
 `pnpm --filter <app> add -D concurrently`.
 
 CSS imports, relative to each CSS file: `apps/web-vite/src/index.css` →
-`@import "../.unison/web/tokens.css";` and `@import "../.unison/web/theme-strict.css";`;
-`apps/web-next/src/app/globals.css` → `../../.unison/web/…`; `apps/mobile/src/global.css` →
-`@import "../.unison/native/theme.css";`. The native `.unison/native/theme.js` goes into the
+`@import "../unison/web/tokens.css";` and `@import "../unison/web/theme-strict.css";`;
+`apps/web-next/src/app/globals.css` → `../../unison/web/…`; `apps/mobile/src/global.css` →
+`@import "../unison/native/theme.css";`. The native `unison/native/theme.js` goes into the
 `UnisonProvider` in Task 19.2; until then, the mobile parity route imports it directly.
 
-- [ ] **Step 4: Run, confirm it passes** — `pnpm test && pnpm build` → passes; `git status --short` lists no `.unison/` files.
+- [ ] **Step 4: Run, confirm it passes** — `pnpm test && pnpm build` → passes; `git status --short` lists no `unison/` files.
 - [ ] **Step 5: Live-reload check** (the phase 1 gate depends on it). With `pnpm dev:web` running,
 change `accent` in `apps/web-vite/unison.config.ts` to `"blue"`. Within 2 s the watcher prints
-`wrote .unison/web/tokens.css`, and Playwright reads a new `--unison-color-accent-600` on
+`wrote unison/web/tokens.css`, and Playwright reads a new `--unison-color-accent-600` on
 `http://localhost:5173/` with the dev server still running. Revert. Same for `web-next`. On
-mobile, Metro must pick up changes under `.unison/`; if it ignores the dot folder, stop and treat
+mobile, Metro must pick up changes under `unison/`; if it ignores the dot folder, stop and treat
 that as a finding.
 - [ ] **Step 6: Done-when check**
 
-Run: `pnpm --filter web-vite tokens && grep -c '\[data-unison-theme="brand"\]' apps/web-vite/.unison/web/tokens.css && node -e 'import("./apps/web-vite/.unison/native/theme.js").then(m=>console.log(Object.keys(m.themes), Object.keys(m.themes.brand)))'`
+Run: `pnpm --filter web-vite tokens && grep -c '\[data-unison-theme="brand"\]' apps/web-vite/unison/web/tokens.css && node -e 'import("./apps/web-vite/unison/native/theme.js").then(m=>console.log(Object.keys(m.themes), Object.keys(m.themes.brand)))'`
 Expect: a count of at least 1, then `[ 'default', 'brand' ] [ 'light', 'dark' ]`. ⚠ OQ-2 blocks
 this until answered (brand fails its dark contrast check).
 
@@ -2416,7 +2418,7 @@ where `mock.getItem("unison-theme")` resolves to `"brand"`; after it resolves,
 - Create: `packages/demo-content/src/settings.ts` (`SCHEMES = ["system", "light", "dark"] as const`, `THEMES = ["default", "brand"] as const`)
 - Delete: `apps/web-next/src/app/theme-toggle.tsx`, `apps/web-vite/src/theme-toggle.tsx`, and the inline scripts in `layout.tsx` / `index.html`
 - Create: `apps/web-next/src/app/settings-bar.tsx`, `apps/web-vite/src/settings-bar.tsx`, `apps/mobile/src/settings-bar.tsx`
-- Modify: `apps/web-next/src/app/layout.tsx` (`<ThemeScript />` in `<head>`, `<ThemeProvider>`), `apps/web-vite/vite.config.ts` (a `transformIndexHtml` hook injects `themeScript()` into `<head>`, so it can't go stale), `apps/web-vite/src/main.tsx`, `apps/mobile/src/app/_layout.tsx` (`UnisonProvider` with `.unison/native/theme.js`, an AsyncStorage adapter, `onThemeChange`), the three home screens
+- Modify: `apps/web-next/src/app/layout.tsx` (`<ThemeScript />` in `<head>`, `<ThemeProvider>`), `apps/web-vite/vite.config.ts` (a `transformIndexHtml` hook injects `themeScript()` into `<head>`, so it can't go stale), `apps/web-vite/src/main.tsx`, `apps/mobile/src/app/_layout.tsx` (`UnisonProvider` with `unison/native/theme.js`, an AsyncStorage adapter, `onThemeChange`), the three home screens
 - Modify: `apps/mobile/package.json` (`npx expo install @react-native-async-storage/async-storage`)
 - Modify: `packages/parity/tests/web.spec.ts` and `packages/parity/maestro/case.yaml` if they use `theme-toggle`
 
@@ -2491,7 +2493,7 @@ the todo's order; `palettes` has 6 items with 11 steps each; `typography` has 10
 - Note: demo-content holds the data only; each app renders it (app code, not library code)
 
 **Interfaces:**
-- Consumes: `showcaseSections` (20.1), `.unison/tokens.json`, `useTheme` (19.1), `useWaapi` / `toWaapi` (13.2), `motionPresets` from `.unison/motion.js`
+- Consumes: `showcaseSections` (20.1), `unison/tokens.json`, `useTheme` (19.1), `useWaapi` / `toWaapi` (13.2), `motionPresets` from `unison/motion.js`
 - Produces test ids: `section-<id>`, `swatch-<token>`, `badge-<token>` (text `pass` / `fail`), `play-<preset>`, `reduced-switch`, `motion-card`, `curve-<preset>`
 
 Layout with Tailwind classes (`grid`, `gap-4`, `p-4`, `rounded-card`, `text-body`, …). Dynamic
@@ -2512,7 +2514,7 @@ with `reducedMotion: "reduce"` the running animation's keyframes only contain `o
 - Create: `apps/mobile/src/app/tokens.tsx`; Modify: `apps/mobile/src/app/index.tsx` (link)
 
 **Interfaces:**
-- Consumes: `showcaseSections`, `.unison/tokens.json`, native `useTheme` (19.2), `useReanimatedPhase` / `toReanimated` (13.2, `@unison-ui/motion/reanimated`), `react-native-reanimated`'s `useSharedValue` / `useAnimatedStyle`
+- Consumes: `showcaseSections`, `unison/tokens.json`, native `useTheme` (19.2), `useReanimatedPhase` / `toReanimated` (13.2, `@unison-ui/motion/reanimated`), `react-native-reanimated`'s `useSharedValue` / `useAnimatedStyle`
 
 Same sections and test ids (`testID`). Colours via `style` from `useTheme().tokens`; layout via
 `className`. The curve is drawn with absolutely positioned 2 × 2 `View`s (no SVG dependency).
@@ -2587,7 +2589,7 @@ Android on a Mac or through CI (`workflow_dispatch` with `update_baselines`).
 Expect: `parity ok (<n> runs)`, with the report listing swatches, type-ramp, radius and
 elevation for 2 themes × 2 schemes.
 - [ ] **Step 2: Sabotage** (then revert both):
-  - native `title` line height → 30 (`.unison/native/theme.js` `text.title.lineHeight`) → `FAIL type-ramp/all/default/light: line-title.height …`
+  - native `title` line height → 30 (`unison/native/theme.js` `text.title.lineHeight`) → `FAIL type-ramp/all/default/light: line-title.height …`
   - native `accent` hex nudged a few steps (`#535cda` → `#4b53cf`) → `FAIL swatches/…: swatch-8 colour …`
   Native sabotage needs a native run; on web only, sabotage the web side the same way.
 - [ ] **Step 3: Check the browser gamut behaviour** (OQ-10): record in the commit body whether
@@ -2649,7 +2651,7 @@ shows up as a readable diff). ⚠ OQ-2 blocks this until brand builds.
 
 ### Task 22c: Build performance
 
-Run: `pnpm --filter web-vite exec unison-tokens build --config unison.config.ts --out .unison` under `time`.
+Run: `pnpm --filter web-vite exec unison-tokens build --config unison.config.ts --out unison` under `time`.
 Expect: `real` under `1.0s`. If slower, profile (`node --cpu-prof`) before adding themes; record
 the time in the commit body.
 
@@ -2708,7 +2710,7 @@ Content requirements:
 - `docs/theming.md`: every `defineTheme` option with its values and default; named themes and
 `extends`; setup for Next.js (`ThemeScript` in `layout.tsx`, `ThemeProvider`), Vite
 (`themeScript()` in `index.html`), Expo (`UnisonProvider` in `_layout.tsx`, storage adapter,
-`onThemeChange` for Uniwind); `ThemeScope`; the `.unison/` scripts (no `pre*` scripts, OQ-9).
+`onThemeChange` for Uniwind); `ThemeScope`; the `unison/` scripts (no `pre*` scripts, OQ-9).
 - `docs/motion.md`: the preset table, which spring when, the reduced-motion rules, and exits
 running at about 70 % of the matching enter.
 - Each ADR records the answers to the open questions that touch it (OQ-1/2/3 in 0012–0014,
