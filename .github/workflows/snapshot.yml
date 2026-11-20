@@ -36,6 +36,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm changeset version --snapshot pr${{ github.event.number }}
+      # Snapshots pin each other exactly. A range like "^0.0.0-pr12-…" would also match older
+      # snapshots, because prerelease tags compare as text ("pr7-…" sorts above "pr12-…").
+      - name: Pin internal dependencies to this snapshot
+        run: |
+          sed -i 's/"\(@unison-ui\/[a-z-]*\)": "workspace:\^"/"\1": "workspace:*"/' packages/*/package.json
       - run: pnpm changeset publish --tag pr${{ github.event.number }} --no-git-tag
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
