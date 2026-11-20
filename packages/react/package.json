@@ -1,6 +1,7 @@
 {
   "name": "@unison-ui/react",
   "version": "0.0.0",
+  "description": "The web renderers for Unison components (React DOM).",
   "license": "MIT",
   "repository": {
     "type": "git",

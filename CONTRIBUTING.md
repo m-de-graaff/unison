@@ -182,6 +182,29 @@ attach the parity report. A baseline update that nobody explains will be sent ba
 - No `Co-Authored-By` trailers or other tool attribution in commits, PRs, tags or releases.
 - Label a PR `snapshot` to publish `pr<n>` versions to npm for testing in another project.
 
+### Releases
+
+All public `@unison-ui/*` packages are published to npm from GitHub Actions, never from a laptop,
+and every version gets [npm provenance](https://docs.npmjs.com/generating-provenance-statements).
+
+- **Releases** (`.github/workflows/release.yml`, on every push to `main`): while changesets are
+  pending, the workflow opens or updates a "Version packages" PR. Merging that PR publishes every
+  public package at the new version. `pnpm release` refuses to publish while the packages are
+  still at `0.0.0`, so nothing is published before the first "Version packages" PR is merged.
+- **Snapshots** (`.github/workflows/snapshot.yml`): label a PR `snapshot`. The PR needs at least
+  one changeset. Every push then publishes `0.0.0-pr<n>-<timestamp>` versions under the `pr<n>`
+  dist-tag, and the workflow comments the install command on the PR.
+- **Provenance:** pnpm ignores `publishConfig.provenance`, so both workflows set
+  `PNPM_CONFIG_PROVENANCE: "true"` on their publish step. Keep it if you touch them.
+- **Authentication:** publishing currently uses the `NPM_TOKEN` repository secret, a granular npm
+  token that can publish `@unison-ui/*`. npm stops accepting direct publishes with tokens in
+  January 2027. Before then, set up Trusted Publishing for each package (npmjs.com → package →
+  Settings → Trusted publishing: GitHub Actions, `m-de-graaff/unison`, `release.yml`, "Allow
+  npm publish" on). Then turn on "Require two-factor authentication and disallow tokens", and
+  delete the token and the secret. Snapshots publish from `snapshot.yml`, so they need covering
+  too (a second trusted publisher, or publishing them from `release.yml`) before tokens are
+  disallowed.
+
 ## 6. Troubleshooting
 
 | Symptom | Fix |

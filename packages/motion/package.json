@@ -1,6 +1,7 @@
 {
   "name": "@unison-ui/motion",
   "version": "0.0.0",
+  "description": "Motion helpers for Unison: springs and reduced-motion support for the web and React Native.",
   "license": "MIT",
   "repository": {
     "type": "git",
