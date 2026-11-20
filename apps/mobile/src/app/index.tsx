@@ -1,5 +1,6 @@
 import { DemoItems } from "demo-content";
-import { View } from "react-native";
+import { Link } from "expo-router";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { withUniwind } from "uniwind";
 import { ScopedPanel, SettingsBar } from "../settings-bar";
@@ -13,6 +14,9 @@ export default function Index() {
       <DemoItems />
       <View testID="tw-box" className="size-24 rounded-md border border-border bg-accent" />
       <SettingsBar />
+      <Link href="/tokens" testID="link-tokens">
+        <Text className="text-label text-accent-fg underline">Token showcase</Text>
+      </Link>
       <ScopedPanel />
     </StyledSafeAreaView>
   );

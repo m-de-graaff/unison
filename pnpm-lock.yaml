@@ -232,6 +232,9 @@ importers:
       '@react-native-async-storage/async-storage':
         specifier: 2.2.0
         version: 2.2.0(react-native@0.88.1(@babel/core@7.29.13(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.13(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))
+      '@unison-ui/motion':
+        specifier: workspace:^
+        version: link:../../packages/motion
       '@unison-ui/parity':
         specifier: workspace:*
         version: link:../../packages/parity
@@ -347,6 +350,9 @@ importers:
       '@fontsource-variable/jetbrains-mono':
         specifier: ^5.3.0
         version: 5.3.0
+      '@unison-ui/motion':
+        specifier: workspace:^
+        version: link:../../packages/motion
       '@unison-ui/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
@@ -396,6 +402,9 @@ importers:
       '@fontsource-variable/jetbrains-mono':
         specifier: ^5.3.0
         version: 5.3.0
+      '@unison-ui/motion':
+        specifier: workspace:^
+        version: link:../../packages/motion
       '@unison-ui/parity':
         specifier: workspace:*
         version: link:../../packages/parity
@@ -481,6 +490,9 @@ importers:
 
   packages/demo-content:
     dependencies:
+      '@unison-ui/tokens':
+        specifier: workspace:^
+        version: link:../tokens
       '@unison-ui/ui':
         specifier: workspace:^
         version: link:../ui

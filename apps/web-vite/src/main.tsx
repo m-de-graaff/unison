@@ -6,8 +6,16 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { DemoPage } from "./demo-page";
 import { ParityPage } from "./parity-page";
+import { Showcase } from "./tokens-page";
 
-const page = location.pathname.startsWith("/parity/") ? <ParityPage /> : <DemoPage />;
+const path = location.pathname;
+const page = path.startsWith("/parity/") ? (
+  <ParityPage />
+) : path === "/tokens" ? (
+  <Showcase />
+) : (
+  <DemoPage />
+);
 
 createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>

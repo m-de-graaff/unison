@@ -46,7 +46,8 @@
     "./tokens.css": "./dist/web/tokens.css",
     "./theme.css": "./dist/web/theme.css",
     "./theme-strict.css": "./dist/web/theme-strict.css",
-    "./native-theme.css": "./dist/native/theme.css"
+    "./native-theme.css": "./dist/native/theme.css",
+    "./tokens.json": "./dist/tokens.json"
   },
   "sideEffects": [
     "*.css"

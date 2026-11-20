@@ -17,9 +17,10 @@
     "build": "tsdown",
     "dev": "tsdown --watch --no-clean",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run"
   },
   "dependencies": {
+    "@unison-ui/tokens": "workspace:^",
     "@unison-ui/ui": "workspace:^"
   },
   "peerDependencies": {

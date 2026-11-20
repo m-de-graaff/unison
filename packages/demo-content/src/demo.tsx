@@ -10,3 +10,10 @@ export function DemoItems() {
   );
 }
 export { SCHEMES, THEMES } from "./settings";
+export {
+  SAMPLE_TEXT,
+  type ShowcaseItem,
+  type ShowcaseSection,
+  showcaseSections,
+  type TokensJson,
+} from "./showcase-data";
