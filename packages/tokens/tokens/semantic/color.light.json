@@ -1,9 +1,37 @@
 {
   "color": {
     "$type": "color",
-    "accent": { "$value": "#5b5bd6" },
-    "surface": { "$value": "#ffffff" },
-    "fg": { "$value": "#111113" },
-    "border": { "$value": "#e4e4e7" }
+    "accent": {
+      "$value": "#5b5bd6",
+      "$extensions": {
+        "dev.unison": {
+          "raw": true
+        }
+      }
+    },
+    "surface": {
+      "$value": "#ffffff",
+      "$extensions": {
+        "dev.unison": {
+          "raw": true
+        }
+      }
+    },
+    "fg": {
+      "$value": "#111113",
+      "$extensions": {
+        "dev.unison": {
+          "raw": true
+        }
+      }
+    },
+    "border": {
+      "$value": "#e4e4e7",
+      "$extensions": {
+        "dev.unison": {
+          "raw": true
+        }
+      }
+    }
   }
 }

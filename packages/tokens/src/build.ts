@@ -1,3 +1,4 @@
+import { assertTiers } from "./lint-tiers";
 import { loadSource } from "./load";
 import { type ResolvedToken, resolve } from "./resolve";
 import type { ColorValue, Dimension, Duration, SourceToken } from "./schema";
@@ -63,7 +64,9 @@ const ordered = (tokens: Token[]) =>
 
 /** light = primitive + semantic + light; dark = the same with dark merged over light. */
 export function legacySets(root: string): TokenSets {
-  const { primitive, semantic, light, dark } = loadSource(root);
+  const layers = loadSource(root);
+  assertTiers(layers);
+  const { primitive, semantic, light, dark } = layers;
   const l = ordered(toLegacy([...resolve(primitive, semantic, light).values()]));
   const d = ordered(toLegacy([...resolve(primitive, semantic, light, dark).values()]));
   const lightValues = new Map(l.map((t) => [t.path, JSON.stringify(t.value)]));
