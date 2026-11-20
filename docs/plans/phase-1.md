@@ -2247,7 +2247,7 @@ Expect: 2 passed. ⚠ OQ-2: with the todo's values the first test fails with
 
 ### Task 18: Named themes (todo step 18)
 
-> **Amended during execution (owner decision):** the apps generate into `unison/`, not the todo's `.unison/`. Next 16.4.6's Turbopack dev server ignores edits inside dot-folders (measured: never reloads, versus 124 ms from a plain folder), and Metro might too. Recorded in ADR 0019.
+> **Amended during execution (owner decision):** the apps generate into `unison/`, not the todo's `.unison/`. Next 16.4.6's Turbopack dev server didn't pick up edits to the imported CSS inside the gitignored dot-folder `.unison/`, not even after a reload. It did pick them up from a plain folder (gitignored or not, ~120 ms) and from a dot-folder that wasn't gitignored. Metro might have a similar issue (unverified). Recorded in ADR 0019.
 
 **Files:**
 - Modify: `packages/tokens/src/config.ts` (`extends`, name rules), `src/build.ts`
