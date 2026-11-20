@@ -8,7 +8,8 @@ import { typeRampFixture } from "./type-ramp";
 export type FixtureCheck =
   | "layout"
   | { layout: true; color: { maxDeltaE: number } }
-  /** Only `y` and `height` of each part: glyph widths differ by platform. */
+  /** Each part's height and its gap from the part above, not widths (glyph widths differ by
+   * platform) or absolute `y` (per-line rounding adds up). */
   | { layout: "height-y" };
 
 export interface Fixture {

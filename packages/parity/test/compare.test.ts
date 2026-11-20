@@ -39,7 +39,7 @@ function write(
 }
 const stage = rect(0, 0, 390, 200);
 
-it("compares every part's y and height for type-ramp, not widths", () => {
+it("compares every part's height for type-ramp, not widths", () => {
   const dir = join(tmp, "type-ramp");
   const run = "type-ramp/all/default/light";
   const lines = (titleHeight: number, width: number) => ({
@@ -58,6 +58,49 @@ it("compares every part's y and height for type-ramp, not widths", () => {
     /^FAIL type-ramp\/all\/default\/light: line-title\.height (web-chromium=28 ios=30|ios=30 web-chromium=28) \(Δ2\)$/,
   );
   expect(failures.some((f) => f.includes("width"))).toBe(false);
+});
+
+// 11 stacked lines, each ⅓ px taller on iOS: one device pixel at 3×, as iOS rounds text boxes.
+const stacked = (extra: number, gapBefore: Record<string, number> = {}) => {
+  const parts: Metrics["parts"] = { subject: rect(16, 16, 300, 0) };
+  let y = 16;
+  for (let i = 0; i < 11; i++) {
+    const name = `line-${String(i).padStart(2, "0")}`;
+    y += gapBefore[name] ?? 0;
+    parts[name] = rect(16, y, 300, 20 + extra);
+    y += 20 + extra;
+  }
+  parts.subject.height = y - 16;
+  return parts;
+};
+
+it("doesn't let per-line rounding add up down a height-y stack", () => {
+  const dir = join(tmp, "type-ramp-rounding");
+  const run = "type-ramp/all/default/light";
+  write(dir, "web-chromium", run, { pixelRatio: 2, stage, parts: stacked(0) });
+  write(dir, "ios", run, { pixelRatio: 3, stage, parts: stacked(1 / 3) }); // ends 3.67 px lower
+  const failures = compare({
+    crossOnly: true,
+    metricsDir: join(dir, "metrics"),
+    screenshotsDir: join(dir, "shots"),
+  });
+  expect(failures).toEqual([]);
+});
+
+it("fails a height-y part whose offset from the previous part differs", () => {
+  const dir = join(tmp, "type-ramp-gap");
+  const run = "type-ramp/all/default/light";
+  write(dir, "web-chromium", run, { pixelRatio: 2, stage, parts: stacked(0) });
+  write(dir, "ios", run, { pixelRatio: 3, stage, parts: stacked(0, { "line-05": 2 }) });
+  const failures = compare({
+    crossOnly: true,
+    metricsDir: join(dir, "metrics"),
+    screenshotsDir: join(dir, "shots"),
+  });
+  expect(failures).toHaveLength(1);
+  expect(failures[0]).toMatch(
+    /^FAIL type-ramp\/all\/default\/light: line-05\.gap (web-chromium=0 ios=2|ios=2 web-chromium=0) \(Δ2\)$/,
+  );
 });
 
 it("fails a swatch whose centre colour differs by more than ΔE 3", () => {

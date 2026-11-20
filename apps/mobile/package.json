@@ -51,6 +51,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
+    "build": "pnpm tokens",
     "dev": "concurrently --kill-others --names tokens,expo \"unison-tokens build --watch --config unison.config.ts --out unison\" \"expo start\"",
     "typecheck": "pnpm tokens && tsc --noEmit",
     "tokens": "unison-tokens build --config unison.config.ts --out unison"

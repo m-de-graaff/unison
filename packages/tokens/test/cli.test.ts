@@ -88,7 +88,14 @@ async function startWatch(config: string, out: string) {
         return false;
       }
     }, 2_000);
-  return { child, rebuilt, waitFor, output: () => output };
+  // Waits for the exit: a watcher still writing a rebuild would race the temp folder's removal.
+  const stop = () =>
+    new Promise<void>((resolve) => {
+      if (child.exitCode !== null || child.signalCode !== null) return resolve();
+      child.once("exit", () => resolve());
+      child.kill();
+    });
+  return { child, rebuilt, waitFor, stop, output: () => output };
 }
 
 it("--watch rebuilds within 2 s of the config changing", async () => {
@@ -99,7 +106,7 @@ it("--watch rebuilds within 2 s of the config changing", async () => {
     writeFileSync(config, configSource("#e11d48"));
     await w.rebuilt("#e11d48");
   } finally {
-    w.child.kill();
+    await w.stop();
   }
 }, 30_000);
 
@@ -121,7 +128,7 @@ it("--watch keeps watching after an atomic save (temp file renamed over the conf
     writeFileSync(config, configSource("#0891b2"));
     await w.rebuilt("#0891b2");
   } finally {
-    w.child.kill();
+    await w.stop();
   }
 }, 30_000);
 
@@ -139,6 +146,6 @@ it("--watch survives the config going missing and picks it up when it's back", a
     writeFileSync(config, configSource("#16a34a"));
     await w.rebuilt("#16a34a");
   } finally {
-    w.child.kill();
+    await w.stop();
   }
 }, 30_000);
