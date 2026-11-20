@@ -11,6 +11,13 @@ for (const r of runs()) {
     await page.goto(`/parity/${r.component}/${r.caseName}?theme=${r.theme}&scheme=${r.scheme}`);
     await page.locator("html[data-parity-ready]").waitFor({ state: "attached" });
 
+    // The stage must render the run's theme and scheme, not whatever the app last stored.
+    const attrs = await page.evaluate(() => ({
+      theme: document.documentElement.getAttribute("data-unison-theme"),
+      scheme: document.documentElement.getAttribute("data-theme"),
+    }));
+    expect(attrs, "html theme attributes").toEqual({ theme: r.theme, scheme: r.scheme });
+
     const stage = page.getByTestId("stage");
     const shot = screenshotPath(platform, r.id);
     mkdirSync(dirname(shot), { recursive: true });
