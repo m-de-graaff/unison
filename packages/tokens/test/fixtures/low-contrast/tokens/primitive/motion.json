@@ -54,17 +54,31 @@
       "$description": "Opacity-only and reduced-motion fades"
     }
   },
-  "motion": {
-    "spring": {
-      "snappy": {
-        "$type": "spring",
-        "$value": {
-          "stiffness": 400,
-          "damping": 30,
-          "mass": 1
-        },
-        "$description": "Phase 0 spring; Task 12 moves springs to spring.*"
-      }
+  "spring": {
+    "$type": "spring",
+    "snappy": {
+      "$value": {
+        "stiffness": 400,
+        "damping": 30,
+        "mass": 1
+      },
+      "$description": "Quick, tight response (\u03b6 0.75): small controls, toggles"
+    },
+    "smooth": {
+      "$value": {
+        "stiffness": 300,
+        "damping": 35,
+        "mass": 1
+      },
+      "$description": "Critically damped, no overshoot (\u03b6 1.01): sheets, dialogs"
+    },
+    "bouncy": {
+      "$value": {
+        "stiffness": 300,
+        "damping": 15,
+        "mass": 1
+      },
+      "$description": "Visible overshoot (\u03b6 0.43): playful emphasis"
     }
   }
 }

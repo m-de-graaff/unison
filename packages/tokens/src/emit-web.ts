@@ -10,7 +10,7 @@ function declarations(tokens: Token[], indent: string): string[] {
     const name = cssVarName(t.path);
     if (t.type === "spring") {
       const { easing, durationMs } = springToCssLinear(t.value as SpringConfig);
-      return [`${indent}${name}-easing: ${easing};`, `${indent}${name}-duration: ${durationMs}ms;`];
+      return [`${indent}${name}: ${easing};`, `${indent}${name}-duration: ${durationMs}ms;`];
     }
     if (t.type === "cubicBezier") {
       return [`${indent}${name}: cubic-bezier(${(t.value as number[]).join(", ")});`];
@@ -21,6 +21,20 @@ function declarations(tokens: Token[], indent: string): string[] {
     }
     return [`${indent}${name}: ${t.value as string};`];
   });
+}
+
+/** Browsers without linear() get a plain cubic-bezier instead (the duration variable still applies). */
+function springFallback(tokens: Token[]): string[] {
+  const springs = tokens.filter((t) => t.type === "spring");
+  if (springs.length === 0) return [];
+  return [
+    "@supports not (transition-timing-function: linear(0, 1)) {",
+    "  :root {",
+    ...springs.map((t) => `    ${cssVarName(t.path)}: cubic-bezier(0.2, 0, 0, 1);`),
+    "  }",
+    "}",
+    "",
+  ];
 }
 
 const THEME_CSS = `@theme inline {
@@ -47,6 +61,7 @@ export function emitWeb(outDir: string, sets: TokenSets): string[] {
     ),
     "}",
     "",
+    ...springFallback(sets.light),
     '[data-theme="dark"] {',
     ...declarations(sets.darkOverrides, "  "),
     "}",

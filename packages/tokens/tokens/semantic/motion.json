@@ -49,7 +49,7 @@
     "emphasis": {
       "$type": "transition",
       "$value": {
-        "spring": "{motion.spring.snappy}"
+        "spring": "{spring.snappy}"
       },
       "$description": "Attention-drawing, spring-driven"
     }

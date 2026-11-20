@@ -97,7 +97,9 @@ const LEGACY_ORDER = [
   "space.4",
   "radius.md",
   "size.box",
-  "motion.spring.snappy",
+  "spring.snappy",
+  "spring.smooth",
+  "spring.bouncy",
 ];
 const rank = (path: string) => {
   const i = LEGACY_ORDER.indexOf(path);
