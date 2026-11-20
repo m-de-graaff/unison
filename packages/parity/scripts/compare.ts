@@ -81,10 +81,7 @@ function compareCross(
   // Only the platforms present are compared (docs/plans/phase-0.md, OQ-14).
   for (const [run, platforms] of [...byRun].sort(([a], [b]) => a.localeCompare(b))) {
     const check = checkOf(run.split("/")[0] as string);
-    const props =
-      typeof check === "object" && check.layout === "height-y"
-        ? (["y", "height"] as const)
-        : (["x", "y", "width", "height"] as const);
+    const heightY = typeof check === "object" && check.layout === "height-y";
     const entries = [...platforms];
     for (let i = 0; i < entries.length; i++) {
       for (let j = i + 1; j < entries.length; j++) {
@@ -98,10 +95,12 @@ function compareCross(
         const names = Object.keys(a.parts)
           .filter((n) => Object.hasOwn(b.parts, n))
           .sort();
+        const order = heightY ? stackOrder(a.parts, names) : [];
+        const valuesA = heightY ? stackValues(a.parts, order) : layoutValues(a.parts, names);
+        const valuesB = heightY ? stackValues(b.parts, order) : layoutValues(b.parts, names);
         for (const name of names) {
-          for (const prop of props) {
-            const va = (a.parts[name] as Rect)[prop];
-            const vb = (b.parts[name] as Rect)[prop];
+          for (const [prop, va] of Object.entries(valuesA[name] ?? {})) {
+            const vb = valuesB[name]?.[prop] as number;
             const delta = Math.abs(va - vb);
             if (delta > TOLERANCE_PX) {
               failures.push(
@@ -119,6 +118,38 @@ function compareCross(
     }
   }
   return { failures, runs: byRun.size };
+}
+
+type Values = Record<string, Record<string, number>>;
+
+function layoutValues(parts: Record<string, Rect>, names: string[]): Values {
+  return Object.fromEntries(
+    names.map((n) => {
+      const { x, y, width, height } = parts[n] as Rect;
+      return [n, { x, y, width, height }];
+    }),
+  );
+}
+
+/** The parts of a `height-y` stack (all but `subject`), top to bottom on the reference platform. */
+const stackOrder = (parts: Record<string, Rect>, names: string[]) =>
+  names.filter((n) => n !== "subject").sort((p, q) => (parts[p] as Rect).y - (parts[q] as Rect).y);
+
+/**
+ * A `height-y` stack: each part's height, and its gap from the bottom of the part above (the
+ * subject's top for the first). Native text boxes round up to a device pixel (⅓ px on a 3× iPhone),
+ * so absolute `y` would add that rounding up down the stack; per-part values hold each line to the
+ * tolerance on its own. The subject only contributes its `y`: its height is the sum of the parts.
+ */
+function stackValues(parts: Metrics["parts"], order: string[]): Values {
+  const out: Values = { subject: { y: parts.subject.y } };
+  let bottom = parts.subject.y;
+  for (const name of order) {
+    const r = parts[name] as Rect;
+    out[name] = { height: r.height, gap: r.y - bottom };
+    bottom = r.y + r.height;
+  }
+  return out;
 }
 
 /** `FAIL <run>: parts differ, ios lacks line-title` for every name one platform lacks. */
