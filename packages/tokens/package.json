@@ -1,6 +1,6 @@
 {
   "name": "@unison-ui/tokens",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Design tokens for Unison and the compiler that turns them into CSS variables, a Tailwind v4 theme and a typed React Native theme.",
   "license": "MIT",
   "repository": {
