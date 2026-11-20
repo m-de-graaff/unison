@@ -40,3 +40,5 @@ jobs:
           # delete the NPM_TOKEN secret (CONTRIBUTING.md, "Releases").
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # pnpm ignores publishConfig.provenance; this setting turns provenance on.
+          PNPM_CONFIG_PROVENANCE: "true"
