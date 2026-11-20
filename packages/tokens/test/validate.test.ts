@@ -79,3 +79,27 @@ it("marks the tier by folder and reads the raw extension", () => {
   });
   expect(tokens[0]).toMatchObject({ tier: "semantic", raw: true, value: { hex: "#00000080" } });
 });
+
+it("rejects a motionPreset with a bad reduced mode or translateY", () => {
+  const preset = (reduced: string, translateY: unknown) => ({
+    p: {
+      $type: "motionPreset",
+      $value: {
+        enter: {
+          from: { translateY },
+          to: { translateY: 0 },
+          transition: { spring: "{spring.snappy}" },
+        },
+        exit: { to: { opacity: 0 }, transition: { spring: "{spring.snappy}" } },
+        reduced,
+      },
+    },
+  });
+  expect(validateFile(file, "semantic", preset("opacity", "100%")).errors).toEqual([]);
+  expect(validateFile(file, "semantic", preset("fade", 8)).errors[0]?.message).toMatch(
+    /reduced: expected "opacity" or "none"/,
+  );
+  expect(validateFile(file, "semantic", preset("opacity", "tall")).errors[0]?.message).toMatch(
+    /enter: from: translateY: unexpected "tall"/,
+  );
+});

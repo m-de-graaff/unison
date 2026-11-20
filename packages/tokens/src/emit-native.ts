@@ -81,6 +81,13 @@ function themeType(tokens: Token[], tree: Tree): string {
   return walk(tree, "", 0);
 }
 
+/** Adds the preset map, whose types come from `dist/motion.d.ts`, to the generated theme type. */
+const withMotionPresets = (type: string) =>
+  type.replace(
+    /\n\}$/,
+    '\n  readonly "motionPresets": { readonly [K in MotionPresetName]: MotionPresetValue };\n}',
+  );
+
 function colorDeclarations(tokens: Token[], indent: string): string[] {
   return tokens
     .filter((t) => t.type === "color")
@@ -127,9 +134,16 @@ export function emitNative(outDir: string, sets: TokenSets): string[] {
   const text = Object.fromEntries(sets.text.map(({ style, native }) => [style, { ...native }]));
   const light = { ...toTree(sets.light), text, shadow: sets.shadows.light };
   const dark = { ...toTree(sets.dark), text, shadow: sets.shadows.dark };
-  const js = `export const themes = ${JSON.stringify({ light, dark }, null, 2)};\n`;
+  const presets = sets.motionPresets;
+  const js = `export const themes = ${JSON.stringify(
+    { light: { ...light, motionPresets: presets }, dark: { ...dark, motionPresets: presets } },
+    null,
+    2,
+  )};\n`;
   const dts = [
-    `export interface UnisonTheme ${themeType(sets.light, light)}`,
+    'import type { MotionPresetName, MotionPresetValue } from "../motion.js";',
+    "",
+    `export interface UnisonTheme ${withMotionPresets(themeType(sets.light, light))}`,
     "",
     "export declare const themes: { readonly light: UnisonTheme; readonly dark: UnisonTheme };",
     "",

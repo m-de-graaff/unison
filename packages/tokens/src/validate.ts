@@ -185,7 +185,30 @@ function transition(v: unknown): Result {
   return composite("transition", v, { duration, easing: cubicBezier });
 }
 
-const motionPreset = (v: unknown): Result => (isRecord(v) ? ok(v) : bad("motionPreset", v));
+const PERCENT = /^-?(?:\d+\.?\d*|\.\d+)%$/;
+
+/** `{ opacity?, scale?, translateY? }`; translateY is a number (px) or a percentage string. */
+function motionValues(v: unknown): Result {
+  if (!isRecord(v) || Object.keys(v).length === 0) return bad("motion values", v);
+  for (const [k, x] of Object.entries(v)) {
+    const valid =
+      k === "translateY"
+        ? isNumber(x) || (typeof x === "string" && PERCENT.test(x))
+        : (k === "opacity" || k === "scale") && isNumber(x);
+    if (!valid) return { ok: false, message: `${k}: unexpected ${JSON.stringify(x)}` };
+  }
+  return ok({ ...v });
+}
+
+const presetEnter = (v: unknown) =>
+  composite("motionPreset", v, { from: motionValues, to: motionValues, transition });
+const presetExit = (v: unknown) =>
+  composite("motionPreset", v, { to: motionValues, transition }, { from: motionValues });
+const presetReduced = (v: unknown): Result =>
+  v === "opacity" || v === "none" ? ok(v) : bad('"opacity" or "none"', v);
+
+const motionPreset = (v: unknown): Result =>
+  composite("motionPreset", v, { enter: presetEnter, exit: presetExit, reduced: presetReduced });
 const number = (v: unknown): Result => (isNumber(v) ? ok(v) : bad("number", v));
 
 const NORMALISERS: Record<TokenType, (v: unknown) => Result> = {

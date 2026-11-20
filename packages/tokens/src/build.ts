@@ -4,6 +4,12 @@ import type { Mode } from "./color/generate-scale";
 import { BUILT_IN_PALETTES, colorPrimitives, type PaletteSpec } from "./color/palettes";
 import { assertTiers } from "./lint-tiers";
 import { loadSource } from "./load";
+import {
+  expandPresets,
+  type MotionFeel,
+  type MotionPresetName,
+  type MotionPresetValue,
+} from "./motion/presets";
 import { type Resolved, type ResolvedToken, resolve } from "./resolve";
 import type {
   ColorValue,
@@ -46,6 +52,10 @@ export interface TokenSets {
   shadows: { light: Record<string, string>; dark: Record<string, string> };
   /** `font-family.*` as CSS font-family lists. */
   fontFamilies: { name: string; value: string }[];
+  /** The theme the presets belong to (`dist/motion.js` is keyed by it). */
+  themeName: string;
+  /** Every motion preset with its feel applied; the same for both schemes. */
+  motionPresets: Record<MotionPresetName, MotionPresetValue>;
 }
 
 const LEGACY_TYPES = new Set(["color", "dimension", "duration", "spring", "cubicBezier"]);
@@ -125,6 +135,8 @@ export function legacyFromBuild(build: ThemeBuild): TokenSets {
     text: textStyles(build),
     fontFamilies: fontFamilies(build.light.tokens),
     shadows: { light: shadows(build.light.tokens), dark: shadows(build.dark.tokens) },
+    themeName: build.name,
+    motionPresets: expandPresets(build.light.tokens, build.motion),
   };
 }
 
@@ -213,6 +225,8 @@ export interface ThemeBuildOptions {
   radius?: RadiusOption;
   /** Native font face per family and weight; defaults to `DEFAULT_NATIVE_FONTS`. */
   nativeFonts?: NativeFonts;
+  /** How the motion presets feel; default `"snappy"`. */
+  motion?: MotionFeel;
   /** Where `tokens/` lives. Defaults to this package. */
   root?: string;
 }
@@ -226,6 +240,8 @@ export interface ThemeBuild {
   dark: SchemeBuild;
   warnings: string[];
   nativeFonts: NativeFonts;
+  /** The motion feel the presets are expanded with. */
+  motion: MotionFeel;
 }
 
 /** Dark overrides for every primitive shadow, derived so the geometry can't drift. */
@@ -281,5 +297,6 @@ export function buildTheme(opts: ThemeBuildOptions): ThemeBuild {
     dark,
     warnings,
     nativeFonts: opts.nativeFonts ?? DEFAULT_NATIVE_FONTS,
+    motion: opts.motion ?? "snappy",
   };
 }

@@ -1,6 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Token, TokenSets } from "./build";
+import { animateDeclarations, keyframes, tailwindAnimations } from "./motion/css";
 import { type SpringConfig, springToCssLinear } from "./spring";
 
 export const cssVarName = (path: string): string => `--unison-${path.replaceAll(".", "-")}`;
@@ -37,15 +38,19 @@ function springFallback(tokens: Token[]): string[] {
   ];
 }
 
-const THEME_CSS = `@theme inline {
-  --color-accent: var(--unison-color-accent);
-  --color-surface: var(--unison-color-surface);
-  --color-fg: var(--unison-color-fg);
-  --color-border: var(--unison-color-border);
-  --radius-md: var(--unison-radius-md);
-  --spacing: var(--unison-space-1);
-}
-`;
+const themeCss = () =>
+  [
+    "@theme inline {",
+    "  --color-accent: var(--unison-color-accent);",
+    "  --color-surface: var(--unison-color-surface);",
+    "  --color-fg: var(--unison-color-fg);",
+    "  --color-border: var(--unison-color-border);",
+    "  --radius-md: var(--unison-radius-md);",
+    "  --spacing: var(--unison-space-1);",
+    ...tailwindAnimations("  "),
+    "}",
+    "",
+  ].join("\n");
 
 /** Writes dist/web/tokens.css and dist/web/theme.css; returns the written paths. */
 export function emitWeb(outDir: string, sets: TokenSets): string[] {
@@ -59,9 +64,11 @@ export function emitWeb(outDir: string, sets: TokenSets): string[] {
     ...sets.text.flatMap(({ style, web }) =>
       Object.entries(web).map(([k, v]) => `  ${cssVarName(`text.${style}`)}-${k}: ${v};`),
     ),
+    ...animateDeclarations(sets.motionPresets, sets.light, "", "  "),
     "}",
     "",
     ...springFallback(sets.light),
+    ...keyframes(sets.motionPresets),
     '[data-theme="dark"] {',
     ...declarations(sets.darkOverrides, "  "),
     "}",
@@ -72,10 +79,16 @@ export function emitWeb(outDir: string, sets: TokenSets): string[] {
     "  }",
     "}",
     "",
+    "@media (prefers-reduced-motion: reduce) {",
+    "  :root {",
+    ...animateDeclarations(sets.motionPresets, sets.light, "reduced-", "    "),
+    "  }",
+    "}",
+    "",
   ].join("\n");
   const tokensPath = join(outDir, "tokens.css");
   const themePath = join(outDir, "theme.css");
   writeFileSync(tokensPath, tokensCss);
-  writeFileSync(themePath, THEME_CSS);
+  writeFileSync(themePath, themeCss());
   return [tokensPath, themePath];
 }

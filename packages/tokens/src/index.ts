@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { buildTheme, legacyFromBuild } from "./build";
 import { BUILT_IN_PALETTES, type PaletteSpec } from "./color/palettes";
+import { emitMotion } from "./emit-motion";
 import { emitNative } from "./emit-native";
 import { emitWeb } from "./emit-web";
 
@@ -9,6 +10,16 @@ export type { UnisonTheme } from "@unison-ui/tokens/native";
 export type { Token } from "./build";
 export { wcagRatio, wcagRatio as contrastRatio } from "./color/contrast";
 export { cssVarName } from "./emit-web";
+export type {
+  CubicBezier,
+  MotionFeel,
+  MotionPresetName,
+  MotionPresetValue,
+  MotionValues,
+  PresetPhase,
+  ResolvedTransition,
+} from "./motion/presets";
+export { expandPreset, PRESETS } from "./motion/presets";
 export type { SourceToken, TokenType } from "./schema";
 export type { SpringConfig } from "./spring";
 export { simulateSpring, springToCssLinear } from "./spring";
@@ -32,5 +43,9 @@ export async function compile({
   });
   for (const warning of theme.warnings) console.warn(warning);
   const sets = legacyFromBuild(theme);
-  return [...emitWeb(join(outDir, "web"), sets), ...emitNative(join(outDir, "native"), sets)];
+  return [
+    ...emitWeb(join(outDir, "web"), sets),
+    ...emitNative(join(outDir, "native"), sets),
+    ...emitMotion(outDir, sets),
+  ];
 }

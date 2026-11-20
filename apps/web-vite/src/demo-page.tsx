@@ -6,6 +6,7 @@ export function DemoPage() {
     <main className="min-h-dvh bg-surface text-fg p-4 flex flex-wrap items-center gap-4">
       <DemoItems />
       <div data-testid="tw-box" className="size-24 rounded-md border border-border bg-accent" />
+      <div data-testid="motion-probe" className="animate-scale-in size-4" />
       <ThemeToggle />
     </main>
   );

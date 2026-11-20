@@ -236,6 +236,425 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
       "sm": "0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
       "xl": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
       "xs": "0 1px 2px rgb(0 0 0 / 0.05)"
+    },
+    "motionPresets": {
+      "fade": {
+        "enter": {
+          "from": {
+            "opacity": 0
+          },
+          "to": {
+            "opacity": 1
+          },
+          "transition": {
+            "type": "timing",
+            "duration": 200,
+            "easing": [
+              0.05,
+              0.7,
+              0.1,
+              1
+            ]
+          }
+        },
+        "exit": {
+          "from": {
+            "opacity": 1
+          },
+          "to": {
+            "opacity": 0
+          },
+          "transition": {
+            "type": "timing",
+            "duration": 140,
+            "easing": [
+              0.3,
+              0,
+              0.8,
+              0.15
+            ]
+          }
+        },
+        "reduced": {
+          "enter": {
+            "from": {
+              "opacity": 0
+            },
+            "to": {
+              "opacity": 1
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 120,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          },
+          "exit": {
+            "from": {
+              "opacity": 1
+            },
+            "to": {
+              "opacity": 0
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 80,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "scale-in": {
+        "enter": {
+          "from": {
+            "opacity": 0,
+            "scale": 0.96
+          },
+          "to": {
+            "opacity": 1,
+            "scale": 1
+          },
+          "transition": {
+            "type": "spring",
+            "config": {
+              "stiffness": 400,
+              "damping": 30,
+              "mass": 1
+            }
+          }
+        },
+        "exit": {
+          "from": {
+            "opacity": 1,
+            "scale": 1
+          },
+          "to": {
+            "opacity": 0,
+            "scale": 0.98
+          },
+          "transition": {
+            "type": "timing",
+            "duration": 80,
+            "easing": [
+              0.3,
+              0,
+              0.8,
+              0.15
+            ]
+          }
+        },
+        "reduced": {
+          "enter": {
+            "from": {
+              "opacity": 0
+            },
+            "to": {
+              "opacity": 1
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 120,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          },
+          "exit": {
+            "from": {
+              "opacity": 1
+            },
+            "to": {
+              "opacity": 0
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 80,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "slide-up": {
+        "enter": {
+          "from": {
+            "opacity": 0,
+            "translateY": 8
+          },
+          "to": {
+            "opacity": 1,
+            "translateY": 0
+          },
+          "transition": {
+            "type": "spring",
+            "config": {
+              "stiffness": 400,
+              "damping": 30,
+              "mass": 1
+            }
+          }
+        },
+        "exit": {
+          "from": {
+            "opacity": 1,
+            "translateY": 0
+          },
+          "to": {
+            "opacity": 0,
+            "translateY": 4
+          },
+          "transition": {
+            "type": "timing",
+            "duration": 80,
+            "easing": [
+              0.3,
+              0,
+              0.8,
+              0.15
+            ]
+          }
+        },
+        "reduced": {
+          "enter": {
+            "from": {
+              "opacity": 0
+            },
+            "to": {
+              "opacity": 1
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 120,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          },
+          "exit": {
+            "from": {
+              "opacity": 1
+            },
+            "to": {
+              "opacity": 0
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 80,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "sheet": {
+        "enter": {
+          "from": {
+            "translateY": "100%"
+          },
+          "to": {
+            "translateY": 0
+          },
+          "transition": {
+            "type": "spring",
+            "config": {
+              "stiffness": 300,
+              "damping": 35,
+              "mass": 1
+            }
+          }
+        },
+        "exit": {
+          "from": {
+            "translateY": 0
+          },
+          "to": {
+            "translateY": "100%"
+          },
+          "transition": {
+            "type": "timing",
+            "duration": 240,
+            "easing": [
+              0.3,
+              0,
+              0.8,
+              0.15
+            ]
+          }
+        },
+        "reduced": {
+          "enter": {
+            "from": {
+              "opacity": 0
+            },
+            "to": {
+              "opacity": 1
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 120,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          },
+          "exit": {
+            "from": {
+              "opacity": 1
+            },
+            "to": {
+              "opacity": 0
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 80,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "pop": {
+        "enter": {
+          "from": {
+            "scale": 0.9
+          },
+          "to": {
+            "scale": 1
+          },
+          "transition": {
+            "type": "spring",
+            "config": {
+              "stiffness": 300,
+              "damping": 15,
+              "mass": 1
+            }
+          }
+        },
+        "exit": {
+          "from": {
+            "scale": 1
+          },
+          "to": {
+            "opacity": 0
+          },
+          "transition": {
+            "type": "timing",
+            "duration": 80,
+            "easing": [
+              0.3,
+              0,
+              0.8,
+              0.15
+            ]
+          }
+        },
+        "reduced": {
+          "enter": {
+            "from": {
+              "opacity": 0
+            },
+            "to": {
+              "opacity": 1
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 120,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          },
+          "exit": {
+            "from": {
+              "opacity": 1
+            },
+            "to": {
+              "opacity": 0
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 80,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "press": {
+        "enter": {
+          "from": {
+            "scale": 1
+          },
+          "to": {
+            "scale": 0.97
+          },
+          "transition": {
+            "type": "timing",
+            "duration": 80,
+            "easing": [
+              0.2,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "exit": {
+          "from": {
+            "scale": 0.97
+          },
+          "to": {
+            "scale": 1
+          },
+          "transition": {
+            "type": "spring",
+            "config": {
+              "stiffness": 400,
+              "damping": 30,
+              "mass": 1
+            }
+          }
+        },
+        "reduced": null
+      }
     }
   },
   "dark": {
@@ -472,6 +891,425 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
       "sm": "0 1px 3px rgb(0 0 0 / 0.25), 0 1px 2px -1px rgb(0 0 0 / 0.25)",
       "xl": "0 20px 25px -5px rgb(0 0 0 / 0.25), 0 8px 10px -6px rgb(0 0 0 / 0.25)",
       "xs": "0 1px 2px rgb(0 0 0 / 0.13)"
+    },
+    "motionPresets": {
+      "fade": {
+        "enter": {
+          "from": {
+            "opacity": 0
+          },
+          "to": {
+            "opacity": 1
+          },
+          "transition": {
+            "type": "timing",
+            "duration": 200,
+            "easing": [
+              0.05,
+              0.7,
+              0.1,
+              1
+            ]
+          }
+        },
+        "exit": {
+          "from": {
+            "opacity": 1
+          },
+          "to": {
+            "opacity": 0
+          },
+          "transition": {
+            "type": "timing",
+            "duration": 140,
+            "easing": [
+              0.3,
+              0,
+              0.8,
+              0.15
+            ]
+          }
+        },
+        "reduced": {
+          "enter": {
+            "from": {
+              "opacity": 0
+            },
+            "to": {
+              "opacity": 1
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 120,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          },
+          "exit": {
+            "from": {
+              "opacity": 1
+            },
+            "to": {
+              "opacity": 0
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 80,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "scale-in": {
+        "enter": {
+          "from": {
+            "opacity": 0,
+            "scale": 0.96
+          },
+          "to": {
+            "opacity": 1,
+            "scale": 1
+          },
+          "transition": {
+            "type": "spring",
+            "config": {
+              "stiffness": 400,
+              "damping": 30,
+              "mass": 1
+            }
+          }
+        },
+        "exit": {
+          "from": {
+            "opacity": 1,
+            "scale": 1
+          },
+          "to": {
+            "opacity": 0,
+            "scale": 0.98
+          },
+          "transition": {
+            "type": "timing",
+            "duration": 80,
+            "easing": [
+              0.3,
+              0,
+              0.8,
+              0.15
+            ]
+          }
+        },
+        "reduced": {
+          "enter": {
+            "from": {
+              "opacity": 0
+            },
+            "to": {
+              "opacity": 1
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 120,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          },
+          "exit": {
+            "from": {
+              "opacity": 1
+            },
+            "to": {
+              "opacity": 0
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 80,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "slide-up": {
+        "enter": {
+          "from": {
+            "opacity": 0,
+            "translateY": 8
+          },
+          "to": {
+            "opacity": 1,
+            "translateY": 0
+          },
+          "transition": {
+            "type": "spring",
+            "config": {
+              "stiffness": 400,
+              "damping": 30,
+              "mass": 1
+            }
+          }
+        },
+        "exit": {
+          "from": {
+            "opacity": 1,
+            "translateY": 0
+          },
+          "to": {
+            "opacity": 0,
+            "translateY": 4
+          },
+          "transition": {
+            "type": "timing",
+            "duration": 80,
+            "easing": [
+              0.3,
+              0,
+              0.8,
+              0.15
+            ]
+          }
+        },
+        "reduced": {
+          "enter": {
+            "from": {
+              "opacity": 0
+            },
+            "to": {
+              "opacity": 1
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 120,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          },
+          "exit": {
+            "from": {
+              "opacity": 1
+            },
+            "to": {
+              "opacity": 0
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 80,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "sheet": {
+        "enter": {
+          "from": {
+            "translateY": "100%"
+          },
+          "to": {
+            "translateY": 0
+          },
+          "transition": {
+            "type": "spring",
+            "config": {
+              "stiffness": 300,
+              "damping": 35,
+              "mass": 1
+            }
+          }
+        },
+        "exit": {
+          "from": {
+            "translateY": 0
+          },
+          "to": {
+            "translateY": "100%"
+          },
+          "transition": {
+            "type": "timing",
+            "duration": 240,
+            "easing": [
+              0.3,
+              0,
+              0.8,
+              0.15
+            ]
+          }
+        },
+        "reduced": {
+          "enter": {
+            "from": {
+              "opacity": 0
+            },
+            "to": {
+              "opacity": 1
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 120,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          },
+          "exit": {
+            "from": {
+              "opacity": 1
+            },
+            "to": {
+              "opacity": 0
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 80,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "pop": {
+        "enter": {
+          "from": {
+            "scale": 0.9
+          },
+          "to": {
+            "scale": 1
+          },
+          "transition": {
+            "type": "spring",
+            "config": {
+              "stiffness": 300,
+              "damping": 15,
+              "mass": 1
+            }
+          }
+        },
+        "exit": {
+          "from": {
+            "scale": 1
+          },
+          "to": {
+            "opacity": 0
+          },
+          "transition": {
+            "type": "timing",
+            "duration": 80,
+            "easing": [
+              0.3,
+              0,
+              0.8,
+              0.15
+            ]
+          }
+        },
+        "reduced": {
+          "enter": {
+            "from": {
+              "opacity": 0
+            },
+            "to": {
+              "opacity": 1
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 120,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          },
+          "exit": {
+            "from": {
+              "opacity": 1
+            },
+            "to": {
+              "opacity": 0
+            },
+            "transition": {
+              "type": "timing",
+              "duration": 80,
+              "easing": [
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "press": {
+        "enter": {
+          "from": {
+            "scale": 1
+          },
+          "to": {
+            "scale": 0.97
+          },
+          "transition": {
+            "type": "timing",
+            "duration": 80,
+            "easing": [
+              0.2,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "exit": {
+          "from": {
+            "scale": 0.97
+          },
+          "to": {
+            "scale": 1
+          },
+          "transition": {
+            "type": "spring",
+            "config": {
+              "stiffness": 400,
+              "damping": 30,
+              "mass": 1
+            }
+          }
+        },
+        "reduced": null
+      }
     }
   }
 };
@@ -486,6 +1324,18 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
   --color-border: var(--unison-color-border);
   --radius-md: var(--unison-radius-md);
   --spacing: var(--unison-space-1);
+  --animate-fade: var(--unison-animate-fade);
+  --animate-fade-out: var(--unison-animate-fade-out);
+  --animate-scale-in: var(--unison-animate-scale-in);
+  --animate-scale-in-out: var(--unison-animate-scale-in-out);
+  --animate-slide-up: var(--unison-animate-slide-up);
+  --animate-slide-up-out: var(--unison-animate-slide-up-out);
+  --animate-sheet: var(--unison-animate-sheet);
+  --animate-sheet-out: var(--unison-animate-sheet-out);
+  --animate-pop: var(--unison-animate-pop);
+  --animate-pop-out: var(--unison-animate-pop-out);
+  --animate-press: var(--unison-animate-press);
+  --animate-press-out: var(--unison-animate-press-out);
 }
 "
 `;
@@ -646,6 +1496,18 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
   --unison-text-code-line-height: 20px;
   --unison-text-code-weight: 400;
   --unison-text-code-tracking: 0em;
+  --unison-animate-fade: unison-fade-in var(--unison-motion-duration-base-enter) var(--unison-easing-enter) both;
+  --unison-animate-fade-out: unison-fade-out var(--unison-motion-duration-base-exit) var(--unison-easing-exit) both;
+  --unison-animate-scale-in: unison-scale-in-in var(--unison-spring-snappy-duration) var(--unison-spring-snappy) both;
+  --unison-animate-scale-in-out: unison-scale-in-out var(--unison-motion-duration-fast-exit) var(--unison-easing-exit) both;
+  --unison-animate-slide-up: unison-slide-up-in var(--unison-spring-snappy-duration) var(--unison-spring-snappy) both;
+  --unison-animate-slide-up-out: unison-slide-up-out var(--unison-motion-duration-fast-exit) var(--unison-easing-exit) both;
+  --unison-animate-sheet: unison-sheet-in var(--unison-spring-smooth-duration) var(--unison-spring-smooth) both;
+  --unison-animate-sheet-out: unison-sheet-out var(--unison-motion-duration-slow-exit) var(--unison-easing-exit) both;
+  --unison-animate-pop: unison-pop-in var(--unison-spring-bouncy-duration) var(--unison-spring-bouncy) both;
+  --unison-animate-pop-out: unison-pop-out var(--unison-motion-duration-fast-exit) var(--unison-easing-exit) both;
+  --unison-animate-press: unison-press-in var(--unison-duration-80) var(--unison-easing-standard) both;
+  --unison-animate-press-out: unison-press-out var(--unison-spring-snappy-duration) var(--unison-spring-snappy) both;
 }
 
 @supports not (transition-timing-function: linear(0, 1)) {
@@ -654,6 +1516,116 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
     --unison-spring-smooth: cubic-bezier(0.2, 0, 0, 1);
     --unison-spring-bouncy: cubic-bezier(0.2, 0, 0, 1);
   }
+}
+
+@keyframes unison-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes unison-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes unison-fade-reduced-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes unison-fade-reduced-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes unison-scale-in-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes unison-scale-in-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.98); }
+}
+
+@keyframes unison-scale-in-reduced-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes unison-scale-in-reduced-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes unison-slide-up-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0px); }
+}
+
+@keyframes unison-slide-up-out {
+  from { opacity: 1; transform: translateY(0px); }
+  to { opacity: 0; transform: translateY(4px); }
+}
+
+@keyframes unison-slide-up-reduced-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes unison-slide-up-reduced-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes unison-sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0px); }
+}
+
+@keyframes unison-sheet-out {
+  from { transform: translateY(0px); }
+  to { transform: translateY(100%); }
+}
+
+@keyframes unison-sheet-reduced-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes unison-sheet-reduced-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes unison-pop-in {
+  from { transform: scale(0.9); }
+  to { transform: scale(1); }
+}
+
+@keyframes unison-pop-out {
+  from { transform: scale(1); }
+  to { opacity: 0; }
+}
+
+@keyframes unison-pop-reduced-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes unison-pop-reduced-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes unison-press-in {
+  from { transform: scale(1); }
+  to { transform: scale(0.97); }
+}
+
+@keyframes unison-press-out {
+  from { transform: scale(0.97); }
+  to { transform: scale(1); }
 }
 
 [data-theme="dark"] {
@@ -727,6 +1699,21 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
     --unison-color-warning-border: #673d00;
     --unison-color-warning-fg: #ffd79f;
     --unison-color-warning-subtle: #371e00;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --unison-animate-fade: unison-fade-reduced-in var(--unison-motion-duration-fast-enter) var(--unison-easing-linear) both;
+    --unison-animate-fade-out: unison-fade-reduced-out var(--unison-motion-duration-fast-exit) var(--unison-easing-linear) both;
+    --unison-animate-scale-in: unison-scale-in-reduced-in var(--unison-motion-duration-fast-enter) var(--unison-easing-linear) both;
+    --unison-animate-scale-in-out: unison-scale-in-reduced-out var(--unison-motion-duration-fast-exit) var(--unison-easing-linear) both;
+    --unison-animate-slide-up: unison-slide-up-reduced-in var(--unison-motion-duration-fast-enter) var(--unison-easing-linear) both;
+    --unison-animate-slide-up-out: unison-slide-up-reduced-out var(--unison-motion-duration-fast-exit) var(--unison-easing-linear) both;
+    --unison-animate-sheet: unison-sheet-reduced-in var(--unison-motion-duration-fast-enter) var(--unison-easing-linear) both;
+    --unison-animate-sheet-out: unison-sheet-reduced-out var(--unison-motion-duration-fast-exit) var(--unison-easing-linear) both;
+    --unison-animate-pop: unison-pop-reduced-in var(--unison-motion-duration-fast-enter) var(--unison-easing-linear) both;
+    --unison-animate-pop-out: unison-pop-reduced-out var(--unison-motion-duration-fast-exit) var(--unison-easing-linear) both;
   }
 }
 "

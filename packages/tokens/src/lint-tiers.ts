@@ -16,8 +16,8 @@ const STRUCTURAL_FIELDS = new Set(["inset"]);
 /**
  * True when a semantic token's value (or one field of a composite) is a literal design value
  * rather than an alias. Every field of a typography, shadow or transition must be an alias
- * (`fontWeight` numbers and `transition.spring` included); `motionPreset` bodies are structure
- * until Task 13.1 defines them.
+ * (`fontWeight` numbers and `transition.spring` included); `motionPreset` bodies are structure: their
+ * literal opacity, scale and translate values are the shape of the animation.
  */
 export function isRawLeaf(tok: SourceToken): boolean {
   const v = tok.value;

@@ -26,6 +26,10 @@
       "types": "./dist/spring.d.ts",
       "default": "./dist/spring.js"
     },
+    "./motion": {
+      "types": "./dist/motion.d.ts",
+      "default": "./dist/motion.js"
+    },
     "./native": {
       "types": "./dist/native/theme.d.ts",
       "default": "./dist/native/theme.js"
