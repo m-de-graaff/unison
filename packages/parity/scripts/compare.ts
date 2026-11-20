@@ -90,9 +90,13 @@ function compareCross(
       for (let j = i + 1; j < entries.length; j++) {
         const [pa, a] = entries[i] as [Platform, Metrics];
         const [pb, b] = entries[j] as [Platform, Metrics];
-        // Every part both platforms report.
+        // Both platforms must report the same parts and samples, or the checks below pass vacuously.
+        failures.push(
+          ...missingNames(run, "parts", [pa, a.parts], [pb, b.parts]),
+          ...missingNames(run, "samples", [pa, a.samples ?? {}], [pb, b.samples ?? {}]),
+        );
         const names = Object.keys(a.parts)
-          .filter((n) => n in b.parts)
+          .filter((n) => Object.hasOwn(b.parts, n))
           .sort();
         for (const name of names) {
           for (const prop of props) {
@@ -115,6 +119,21 @@ function compareCross(
     }
   }
   return { failures, runs: byRun.size };
+}
+
+/** `FAIL <run>: parts differ, ios lacks line-title` for every name one platform lacks. */
+function missingNames(
+  run: string,
+  what: "parts" | "samples",
+  [pa, a]: [Platform, object],
+  [pb, b]: [Platform, object],
+): string[] {
+  const lacks = (p: Platform, have: object, other: object) =>
+    Object.keys(other)
+      .filter((n) => !Object.hasOwn(have, n))
+      .sort()
+      .map((n) => `FAIL ${run}: ${what} differ, ${p} lacks ${n}`);
+  return [...lacks(pb, b, a), ...lacks(pa, a, b)];
 }
 
 const readPng = (file: string) => PNG.sync.read(readFileSync(file));

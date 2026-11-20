@@ -12,7 +12,7 @@ export function ThemeScope({ theme, scheme, children }: ThemeScopeProps) {
   if (!parent) throw new Error("ThemeScope must be used inside UnisonProvider");
   const name = theme ?? parent.theme;
   const resolvedScheme = scheme ?? parent.resolvedScheme;
-  const tokens = parent.all[name]?.[resolvedScheme];
+  const tokens = Object.hasOwn(parent.all, name) ? parent.all[name]?.[resolvedScheme] : undefined;
   if (!tokens) throw new Error(`unknown theme "${name}" (themes: ${parent.themes.join(", ")})`);
   const value = useMemo(
     () => ({ ...parent, theme: name, resolvedScheme, tokens }),

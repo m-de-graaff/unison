@@ -56,9 +56,13 @@ Uniwind cannot resolve the `var(--unison-*)` chain, so `dist/native/theme.css` c
 values: colours per `@variant light` / `@variant dark`, plus radius, spacing and text sizes in a
 static `@theme`.
 
-Named themes are emitted as `@variant <name>-light` and `@variant <name>-dark` (OQ-19). **This is a
-hypothesis and unverified on device**; no theme besides `default` exists until Task 18, and only a
-unit test with a second theme covers the output.
+Named themes are emitted as `@variant <name>-light` and `@variant <name>-dark` (OQ-19); the demo
+apps' `brand` theme is one. **This is a hypothesis and unverified on device.**
+
+Only colours change per variant. The static `@theme` (radius, spacing, text sizes) comes from the
+default theme alone, so on native `rounded-card` keeps default's radius under `brand`, even though
+`brand` sets `radius: "lg"`. Read a named theme's radius from `useTheme().tokens` instead
+(`borderRadius: tokens.radius.card`). On the web every namespace follows the theme.
 
 ### Verification status (OQ-14)
 
@@ -67,7 +71,9 @@ and Android: `bg-surface`, `text-fg-muted`, `rounded-card`, `text-body`, `p-4`.
 
 Families likely unsupported on native, also unverified:
 
-- `shadow-*`: React Native has no `box-shadow` string on every version and platform; use the
-  `shadow` objects in the native theme.
+- `shadow-*`: the native theme carries shadows as CSS `box-shadow` strings
+  (`tokens.shadow.md`, `tokens.elevation.raised`), the same as the web. React Native reads the
+  `boxShadow` style prop from 0.76 on (New Architecture); older versions and the old architecture
+  ignore it.
 - `animate-*`: CSS keyframe animations do not exist on native; use the Reanimated presets from
   `@unison-ui/motion`.

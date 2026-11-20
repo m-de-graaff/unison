@@ -204,3 +204,63 @@ describe("several themes", () => {
     );
   });
 });
+
+describe("spring fallback (no linear())", () => {
+  const FALLBACK = "@supports not (transition-timing-function: linear(0, 1)) {";
+  const fallbackOf = (text: string) => text.split(FALLBACK)[1]?.split("\n}\n")[0] ?? "";
+
+  it("takes its curve from easing.standard", () => {
+    const tweaked = buildTheme({
+      name: "default",
+      accent: { name: "accent", hue: 275, chroma: 0.2 },
+      neutral: { name: "gray", hue: 275, chroma: 0.012 },
+      autoContrast: true,
+    });
+    for (const scheme of ["light", "dark"] as const) {
+      const t = tweaked[scheme].tokens.get("easing.standard");
+      if (!t) throw new Error("no easing.standard");
+      tweaked[scheme].tokens.set("easing.standard", { ...t, value: [0.4, 0, 0.2, 1] });
+    }
+    const block = fallbackOf(emitTokensCss([tweaked]));
+    expect(block).toContain("--unison-spring-snappy: cubic-bezier(0.4, 0, 0.2, 1);");
+    expect(block).not.toContain("cubic-bezier(0.2, 0, 0, 1)");
+  });
+
+  it("covers every rule that declares a spring, not just the default light one", () => {
+    // A theme whose springs differ: its rules (and default's dark rules) declare them too.
+    const bouncy = buildTheme({
+      name: "bouncy",
+      accent: { name: "accent", hue: 200, chroma: 0.15 },
+      neutral: { name: "gray", hue: 275, chroma: 0.012 },
+      autoContrast: true,
+    });
+    for (const scheme of ["light", "dark"] as const) {
+      const tokens = bouncy[scheme].tokens;
+      const spring = tokens.get("spring.snappy");
+      const easing = tokens.get("easing.standard");
+      if (!spring || !easing) throw new Error("missing tokens");
+      tokens.set("spring.snappy", {
+        ...spring,
+        value: { ...(spring.value as object), stiffness: 120 },
+      });
+      tokens.set("easing.standard", { ...easing, value: [0.3, 0, 0, 1] });
+    }
+    const text = emitTokensCss([def, bouncy]);
+    const block = fallbackOf(text);
+    const rule = (selector: string) => block.split(`${selector} {\n`)[1]?.split("}")[0] ?? "";
+    expect(rule(LIGHT)).toContain("--unison-spring-snappy: cubic-bezier(0.2, 0, 0, 1);");
+    expect(rule(DARK)).toContain("--unison-spring-snappy: cubic-bezier(0.2, 0, 0, 1);");
+    const bouncyLight = list("bouncy", "light", false);
+    const bouncyDark = list("bouncy", "dark", false);
+    expect(rule(bouncyLight)).toContain("--unison-spring-snappy: cubic-bezier(0.3, 0, 0, 1);");
+    expect(rule(bouncyDark)).toContain("--unison-spring-snappy: cubic-bezier(0.3, 0, 0, 1);");
+    // The OS-dark rules sit in the same media query inside the fallback.
+    expect(block).toContain(
+      '@media (prefers-color-scheme: dark) {\n    :where([data-unison-theme="bouncy"]:not([data-theme]):not([data-theme] *)) {\n      --unison-spring-snappy: cubic-bezier(0.3, 0, 0, 1);',
+    );
+    // Springs that don't vary stay only in the default light rule.
+    expect(rule(bouncyLight)).not.toContain("--unison-spring-smooth:");
+    // Every rule in the fallback declares only springs.
+    expect(block).not.toMatch(/--unison-(?!spring-)[a-z-]+:/);
+  });
+});

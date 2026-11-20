@@ -84,3 +84,30 @@ it("fails a swatch whose centre colour differs by more than ΔE 3", () => {
     /^FAIL swatches\/all\/default\/light: swatch-8 colour (web-chromium=#535cda ios=#4b53cf|ios=#4b53cf web-chromium=#535cda) \(ΔE \d+\.\d\d > 3\)$/,
   );
 });
+
+it("fails when the platforms report different parts or samples", () => {
+  const dir = join(tmp, "missing-parts");
+  const run = "type-ramp/all/default/light";
+  const parts = {
+    subject: rect(16, 16, 200, 100),
+    "line-body": rect(16, 16, 200, 24),
+    "line-title": rect(16, 40, 200, 28),
+  };
+  const { "line-title": _dropped, ...fewer } = parts;
+  write(dir, "web-chromium", run, {
+    pixelRatio: 2,
+    stage,
+    parts,
+    samples: { "line-body": { x: 1, y: 1 } },
+  });
+  write(dir, "ios", run, { pixelRatio: 3, stage, parts: fewer });
+  const failures = compare({
+    crossOnly: true,
+    metricsDir: join(dir, "metrics"),
+    screenshotsDir: join(dir, "shots"),
+  });
+  expect(failures).toEqual([
+    "FAIL type-ramp/all/default/light: parts differ, ios lacks line-title",
+    "FAIL type-ramp/all/default/light: samples differ, ios lacks line-body",
+  ]);
+});

@@ -66,7 +66,7 @@ export function UnisonProvider({
         ]);
         if (!live) return;
         if (s && SCHEMES.includes(s) && !touched.current.scheme) setSchemeState(s as ColorScheme);
-        if (t && t in themes && !touched.current.theme) setThemeState(t);
+        if (t && Object.hasOwn(themes, t) && !touched.current.theme) setThemeState(t);
       } catch {
         // A failing storage read keeps the defaults.
       }
@@ -83,7 +83,8 @@ export function UnisonProvider({
   const system = useColorScheme();
   const resolvedScheme: ResolvedScheme =
     scheme === "system" ? (system === "dark" ? "dark" : "light") : scheme;
-  const active = theme in themes ? theme : defaultTheme;
+  // Own keys only: a stored "constructor" or "__proto__" must fall back, not crash.
+  const active = Object.hasOwn(themes, theme) ? theme : defaultTheme;
 
   useEffect(() => {
     onThemeChange?.(active, resolvedScheme);
@@ -109,7 +110,8 @@ export function UnisonProvider({
   );
   const setTheme = useCallback(
     (t: string) => {
-      if (!(t in themes)) throw new Error(`unknown theme "${t}" (themes: ${names.join(", ")})`);
+      if (!Object.hasOwn(themes, t))
+        throw new Error(`unknown theme "${t}" (themes: ${names.join(", ")})`);
       touched.current.theme = true;
       setThemeState(t);
       persist("theme", t);
@@ -117,7 +119,8 @@ export function UnisonProvider({
     [themes, names, persist],
   );
 
-  const tokens = (themes[active] ?? Object.values(themes)[0])?.[resolvedScheme];
+  const tokens = ((Object.hasOwn(themes, active) ? themes[active] : undefined) ??
+    Object.values(themes)[0])?.[resolvedScheme];
   if (!tokens) throw new Error("UnisonProvider needs at least one theme");
   const value = useMemo(
     () => ({

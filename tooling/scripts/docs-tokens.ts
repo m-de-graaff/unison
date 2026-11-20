@@ -59,9 +59,7 @@ function show(e: Entry): string {
 const cell = (s: string) => s.replaceAll("|", "\\|");
 const semantic = (scheme: "light" | "dark") =>
   Object.entries(theme[scheme])
-    .filter(
-      ([, e]) => e.tier === "semantic" && !(e as { file?: string }).file?.startsWith?.("auto"),
-    )
+    .filter(([, e]) => e.tier === "semantic")
     .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
 
 const lines = [

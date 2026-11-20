@@ -125,7 +125,9 @@ is written to `packages/parity/parity-output/report.html`.
 The web runner needs Playwright's browsers (`pnpm --filter @unison-ui/parity exec playwright
 install chromium webkit`). Two optional environment variables help on machines with a
 preinstalled browser set: `PARITY_CHROMIUM_PATH` (a Chromium executable to use instead of
-Playwright's) and `PARITY_WEB_PROJECTS` (e.g. `web-chromium` to skip WebKit).
+Playwright's) and `PARITY_WEB_PROJECTS` (e.g. `web-chromium` to skip WebKit). The rendered theme
+cascade test (`packages/parity/test/cascade.test.ts`, part of `pnpm test`) uses the same Chromium
+and skips when there's none.
 
 **When native parity runs in CI:** a normal PR push runs only `check`, `parity-web` and
 `parity-compare`, which takes about two minutes. The `parity-ios` and `parity-android` jobs run:

@@ -257,9 +257,10 @@ platforms (the setters still change the whole app), and on native also the scope
 
 ## Troubleshooting
 
-- **`contrast: theme brand, scheme dark, color.accent on color.surface is 2.89:1`**: the colour
-  misses AA. Pick another accent, or override the alias (`overrides: { "color.accent":
-  "{color.accent.400}" }`).
+- **`contrast: theme brand, scheme light, color.fg-muted on color.surface is 2.05:1 (needs 4.5:1)`**:
+  a pair misses WCAG AA, here because of an override such as `"color.fg-muted": "{color.gray.400}"`.
+  Point the override at a step that passes (`{color.gray.700}`), or drop it. `autoContrast` only
+  nudges `on-*` and `*-fg` colours, so other pairs fail the build instead.
 - **Classes like `bg-blue-500` do nothing**: you imported `theme-strict.css`, which only has
   Unison's tokens. Use `theme.css` to keep Tailwind's palette.
 - **A config edit doesn't show up**: is the `--watch` process running? It prints each file it

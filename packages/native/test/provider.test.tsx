@@ -92,3 +92,45 @@ test("ThemeScope overrides theme and scheme for its subtree only", async () => {
   expect(inner?.tokens).toBe(themes.brand.dark);
   expect(seen?.tokens).toBe(themes.default.light);
 });
+
+test.each(["constructor", "__proto__", "toString"])(
+  'a stored "%s" falls back to the default theme',
+  async (stored) => {
+    const storage: StorageAdapter = {
+      getItem: (key) => (key === "unison-theme" ? stored : null),
+      setItem: jest.fn(),
+    };
+    await render(
+      <UnisonProvider themes={themes} storage={storage}>
+        <Probe />
+      </UnisonProvider>,
+    );
+    await act(async () => {});
+    expect(screen.getByTestId("probe")).toHaveTextContent("default/light");
+    expect(seen?.tokens).toBe(themes.default.light);
+    expect(() => seen?.setTheme(stored)).toThrow(`unknown theme "${stored}"`);
+  },
+);
+
+test("a provider whose defaultTheme is an inherited key still renders the first theme", async () => {
+  await render(
+    <UnisonProvider themes={themes} defaultTheme="constructor">
+      <Probe />
+    </UnisonProvider>,
+  );
+  expect(seen?.tokens).toBe(themes.default.light);
+});
+
+test("ThemeScope rejects an inherited key as an unknown theme", async () => {
+  jest.spyOn(console, "error").mockImplementation(() => {});
+  await expect(
+    render(
+      <UnisonProvider themes={themes}>
+        <ThemeScope theme="constructor">
+          <Probe />
+        </ThemeScope>
+      </UnisonProvider>,
+    ),
+  ).rejects.toThrow('unknown theme "constructor"');
+  jest.restoreAllMocks();
+});

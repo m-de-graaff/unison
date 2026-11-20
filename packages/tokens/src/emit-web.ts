@@ -202,20 +202,42 @@ function selectorsFor(name: string, isFirst: boolean) {
   return { light: scheme(LIGHT), dark: scheme(DARK), media: `:where(${media.join(", ")})` };
 }
 
-/** Browsers without linear() get a plain cubic-bezier instead (the duration variable still applies). */
-function springFallback(selector: string, light: Decls): string[] {
-  const springs = [...light.keys()].filter(
-    (k) => k.startsWith("--unison-spring-") && !k.endsWith("-duration"),
-  );
-  if (springs.length === 0) return [];
-  return [
-    "@supports not (transition-timing-function: linear(0, 1)) {",
-    `  ${selector} {`,
-    ...springs.map((k) => `    ${k}: cubic-bezier(0.2, 0, 0, 1);`),
-    "  }",
-    "}",
-    "",
-  ];
+/** One emitted rule, kept so the spring fallback can repeat its selector. */
+interface Block {
+  selector: string;
+  decls: Decls;
+  media: boolean;
+  /** The `easing.standard` curve of the rule's theme and scheme. */
+  curve: string;
+}
+
+/** `easing.standard` as CSS, the fallback curve for springs (`ease` if a source drops it). */
+function standardCurve(tokens: Resolved): string {
+  const t = tokens.get("easing.standard");
+  return t?.type === "cubicBezier" ? `cubic-bezier(${(t.value as number[]).join(", ")})` : "ease";
+}
+
+/**
+ * Browsers without linear() get the theme's standard curve instead (the duration variable still
+ * applies): every rule that declares a spring is repeated with the same selector, so it wins.
+ */
+function springFallback(blocks: Block[]): string[] {
+  const out: string[] = [];
+  for (const b of blocks) {
+    const springs = [...b.decls.keys()].filter(
+      (k) => k.startsWith("--unison-spring-") && !k.endsWith("-duration"),
+    );
+    if (springs.length === 0) continue;
+    const pad = b.media ? "    " : "  ";
+    const rule = [
+      `${pad}${b.selector} {`,
+      ...springs.map((k) => `${pad}  ${k}: ${b.curve};`),
+      `${pad}}`,
+    ];
+    out.push(...(b.media ? [`  ${MEDIA_DARK} {`, ...rule, "  }"] : rule));
+  }
+  if (out.length === 0) return [];
+  return ["@supports not (transition-timing-function: linear(0, 1)) {", ...out, "}", ""];
 }
 
 /** Names whose resolved value isn't the same in every theme × scheme (or is missing in one). */
@@ -242,6 +264,7 @@ export function emitTokensCss(themes: ThemeBuild[]): string {
   const vary = varying(decls.flatMap((d) => [d.light, d.dark]));
   const reducedAll = themes.map(reducedDecls);
   const reducedVary = varying(reducedAll);
+  const blocks: Block[] = [];
   const out: string[] = [];
   const reduced: string[] = [];
 
@@ -252,6 +275,13 @@ export function emitTokensCss(themes: ThemeBuild[]): string {
     const darkOut = only(dark, (k) => vary.has(k));
     const lightWide = oklchDecls(theme.light.tokens);
     const darkWide = oklchDecls(theme.dark.tokens);
+    const lightCurve = standardCurve(theme.light.tokens);
+    const darkCurve = standardCurve(theme.dark.tokens);
+    blocks.push(
+      { selector: sel.light, decls: lightOut, media: false, curve: lightCurve },
+      { selector: sel.dark, decls: darkOut, media: false, curve: darkCurve },
+      { selector: sel.media, decls: darkOut, media: true, curve: darkCurve },
+    );
     out.push(
       ...rules(sel.light, lightOut, lightWide, ""),
       ...rules(sel.dark, darkOut, darkWide, ""),
@@ -270,7 +300,7 @@ export function emitTokensCss(themes: ThemeBuild[]): string {
 
   return [
     ...out,
-    ...springFallback(selectorsFor(first.name, true).light, decls[0]?.light ?? new Map()),
+    ...springFallback(blocks.filter((b) => b.decls.size > 0)),
     ...keyframes(expandPresets(first.light.tokens, first.motion)),
     ...(reduced.length === 0
       ? []
