@@ -44,6 +44,7 @@
     "test": "vitest run --coverage"
   },
   "devDependencies": {
+    "@types/culori": "^4.0.1",
     "@types/node": "^26.6.6",
     "@unison-ui/tsconfig": "workspace:*",
     "@vitest/coverage-v8": "^5.1.1",
@@ -54,5 +55,8 @@
   "publishConfig": {
     "access": "public",
     "provenance": true
+  },
+  "dependencies": {
+    "culori": "^4.0.2"
   }
 }

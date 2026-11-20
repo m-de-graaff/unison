@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import type { Token, TokenSets } from "./read";
+import type { Token, TokenSets } from "./build";
 import { type SpringConfig, springToCssLinear } from "./spring";
 
 export const cssVarName = (path: string): string => `--unison-${path.replaceAll(".", "-")}`;

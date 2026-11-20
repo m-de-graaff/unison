@@ -1,0 +1,8 @@
+{
+  "motion": {
+    "duration": { "base": { "$type": "duration", "$value": "200ms" } },
+    "spring": {
+      "snappy": { "$type": "spring", "$value": { "stiffness": 400, "damping": 30, "mass": 1 } }
+    }
+  }
+}

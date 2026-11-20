@@ -1,7 +1,0 @@
-{
-  "color": {
-    "surface": { "$type": "color", "$value": "#111113" },
-    "fg": { "$type": "color", "$value": "#ededef" },
-    "border": { "$type": "color", "$value": "#2e2e32" }
-  }
-}

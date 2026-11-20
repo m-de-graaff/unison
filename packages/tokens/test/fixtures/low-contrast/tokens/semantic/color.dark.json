@@ -1,0 +1,9 @@
+{
+  "color": {
+    "$type": "color",
+    "accent": { "$value": "#5b5bd6" },
+    "surface": { "$value": "#111113" },
+    "fg": { "$value": "#ededef" },
+    "border": { "$value": "#2e2e32" }
+  }
+}

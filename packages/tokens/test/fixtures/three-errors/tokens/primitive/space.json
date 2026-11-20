@@ -1,0 +1,7 @@
+{
+  "space": {
+    "1": { "$type": "dimension", "$value": "8em" },
+    "2": { "$type": "dimension", "$value": "big" },
+    "3": { "$type": "size", "$value": "8px" }
+  }
+}

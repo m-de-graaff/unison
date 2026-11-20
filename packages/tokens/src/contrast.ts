@@ -1,4 +1,4 @@
-import type { Token } from "./read";
+import type { Token } from "./build";
 
 function channel(c: number): number {
   const s = c / 255;

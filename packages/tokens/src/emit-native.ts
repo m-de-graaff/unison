@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import type { Token, TokenSets } from "./read";
+import type { Token, TokenSets } from "./build";
 import type { SpringConfig } from "./spring";
 
 type Leaf = string | number | SpringConfig;
