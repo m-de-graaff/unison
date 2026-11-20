@@ -1,5 +1,9 @@
 # Unison
 
+[![npm](https://img.shields.io/npm/v/@unison-ui/ui?label=npm)](https://www.npmjs.com/package/@unison-ui/ui)
+[![CI](https://github.com/m-de-graaff/unison/actions/workflows/ci.yml/badge.svg)](https://github.com/m-de-graaff/unison/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
 One design system for React on the web (Next.js, Vite) and React Native (Expo), with motion
 built in.
 
@@ -11,19 +15,20 @@ build when they drift apart.
 > **Status: early.** Unison is built in six phases (0–5); this is the end of phase 0, the
 > foundation. In place: the monorepo, the token compiler, the platform split, three demo apps,
 > the parity harness and CI. There are no real components yet (only `Box` and `MotionBadge`,
-> which prove the pipeline). There's no release yet; only PR snapshots are on npm.
+> which prove the pipeline). The packages are on npm as preview builds (`0.0.0-pr…`); expect
+> breaking changes until the first release, `0.1.0`.
 > See the [roadmap](docs/planning/roadmap.md).
 
 ## Packages
 
-| Package | What it is |
-| --- | --- |
-| [`@unison-ui/ui`](packages/ui) | The public entry. Re-exports the web or the native renderers, picked by the `react-native` export condition, so one import works everywhere |
-| [`@unison-ui/tokens`](packages/tokens) | Design tokens in DTCG JSON and the compiler that turns them into CSS variables, a Tailwind v4 theme and a typed native theme |
-| [`@unison-ui/core`](packages/core) | Platform-free props types, state hooks and style specs |
-| [`@unison-ui/motion`](packages/motion) | Springs (compiled to CSS `linear()` on web) and reduced-motion support |
-| [`@unison-ui/react`](packages/react) | Web renderers |
-| [`@unison-ui/native`](packages/native) | React Native renderers |
+| Package | npm | What it is |
+| --- | --- | --- |
+| [`@unison-ui/ui`](packages/ui) | [npm](https://www.npmjs.com/package/@unison-ui/ui) | The public entry. Re-exports the web or the native renderers, picked by the `react-native` export condition, so one import works everywhere |
+| [`@unison-ui/tokens`](packages/tokens) | [npm](https://www.npmjs.com/package/@unison-ui/tokens) | Design tokens in DTCG JSON and the compiler that turns them into CSS variables, a Tailwind v4 theme and a typed native theme |
+| [`@unison-ui/core`](packages/core) | [npm](https://www.npmjs.com/package/@unison-ui/core) | Platform-free props types, state hooks and style specs |
+| [`@unison-ui/motion`](packages/motion) | [npm](https://www.npmjs.com/package/@unison-ui/motion) | Springs (compiled to CSS `linear()` on web) and reduced-motion support |
+| [`@unison-ui/react`](packages/react) | [npm](https://www.npmjs.com/package/@unison-ui/react) | Web renderers |
+| [`@unison-ui/native`](packages/native) | [npm](https://www.npmjs.com/package/@unison-ui/native) | React Native renderers |
 
 All packages are ESM only. The component packages need React 19, and on native Expo with the New
 Architecture
@@ -31,12 +36,17 @@ Architecture
 
 ## Using it
 
-The packages aren't on npm yet. To try a pull request's build in another project, label the PR
-`snapshot`. CI then publishes `pr<n>` versions and comments the install command:
+Install the public entry and the tokens:
 
 ```bash
-pnpm add @unison-ui/ui@pr<n> @unison-ui/tokens@pr<n>
+pnpm add @unison-ui/ui @unison-ui/tokens
 ```
+
+These are preview builds, so pin the exact version you test with. Every published version is
+built in GitHub Actions with [npm provenance](https://docs.npmjs.com/generating-provenance-statements),
+except the first snapshot, `0.0.0-pr7-20261120101000`. To try a pull request's build, label the PR
+`snapshot`; CI publishes it under a `pr<n>` tag and comments the install command
+(`pnpm add @unison-ui/ui@pr<n> @unison-ui/tokens@pr<n>`).
 
 **Web (Next.js or Vite).** Import the tokens in your global CSS. `theme.css` is only needed if you
 use Tailwind classes such as `bg-accent`:

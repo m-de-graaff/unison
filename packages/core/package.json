@@ -1,6 +1,7 @@
 {
   "name": "@unison-ui/core",
   "version": "0.0.0",
+  "description": "Platform-free building blocks for Unison components: props types, state hooks and style specs.",
   "license": "MIT",
   "repository": {
     "type": "git",

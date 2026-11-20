@@ -1,6 +1,7 @@
 {
   "name": "@unison-ui/ui",
   "version": "0.0.0",
+  "description": "The public entry of Unison: one import that works on the web and in React Native.",
   "license": "MIT",
   "repository": {
     "type": "git",
