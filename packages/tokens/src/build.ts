@@ -1,3 +1,4 @@
+import { BUILT_IN_PALETTES, colorPrimitives } from "./color/palettes";
 import { assertTiers } from "./lint-tiers";
 import { loadSource } from "./load";
 import { type ResolvedToken, resolve } from "./resolve";
@@ -20,7 +21,12 @@ const LEGACY_TYPES = new Set(["color", "dimension", "duration", "spring"]);
 /** Phase 0 emitters still take string values; this adapter goes away in Tasks 14 and 16. */
 export function toLegacy(tokens: (SourceToken | ResolvedToken)[]): Token[] {
   return tokens
-    .filter((t) => LEGACY_TYPES.has(t.type) && typeof t.value !== "string")
+    .filter(
+      (t) =>
+        LEGACY_TYPES.has(t.type) &&
+        typeof t.value !== "string" &&
+        (!("file" in t) || t.file !== "generated"),
+    )
     .map((t) => {
       const type = t.type as Token["type"];
       switch (type) {
@@ -67,8 +73,11 @@ export function legacySets(root: string): TokenSets {
   const layers = loadSource(root);
   assertTiers(layers);
   const { primitive, semantic, light, dark } = layers;
-  const l = ordered(toLegacy([...resolve(primitive, semantic, light).values()]));
-  const d = ordered(toLegacy([...resolve(primitive, semantic, light, dark).values()]));
+  const palettes = BUILT_IN_PALETTES();
+  const lightPrimitive = [...colorPrimitives(palettes, "light"), ...primitive];
+  const darkPrimitive = [...colorPrimitives(palettes, "dark"), ...primitive];
+  const l = ordered(toLegacy([...resolve(lightPrimitive, semantic, light).values()]));
+  const d = ordered(toLegacy([...resolve(darkPrimitive, semantic, light, dark).values()]));
   const lightValues = new Map(l.map((t) => [t.path, JSON.stringify(t.value)]));
   const darkOverrides = d.filter((t) => lightValues.get(t.path) !== JSON.stringify(t.value));
   return { light: l, dark: d, darkOverrides };
