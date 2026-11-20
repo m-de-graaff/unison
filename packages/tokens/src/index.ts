@@ -9,7 +9,6 @@ import { emitWeb } from "./emit-web";
 export type { UnisonTheme } from "@unison-ui/tokens/native";
 export type { Token } from "./build";
 export { wcagRatio, wcagRatio as contrastRatio } from "./color/contrast";
-export { cssVarName } from "./emit-web";
 export type {
   CubicBezier,
   MotionFeel,
@@ -20,6 +19,7 @@ export type {
   ResolvedTransition,
 } from "./motion/presets";
 export { expandPreset, PRESETS } from "./motion/presets";
+export { cssVarName } from "./paths";
 export type { SourceToken, TokenType } from "./schema";
 export type { SpringConfig } from "./spring";
 export { simulateSpring, springToCssLinear } from "./spring";
@@ -44,7 +44,7 @@ export async function compile({
   for (const warning of theme.warnings) console.warn(warning);
   const sets = legacyFromBuild(theme);
   return [
-    ...emitWeb(join(outDir, "web"), sets),
+    ...emitWeb(join(outDir, "web"), [theme]),
     ...emitNative(join(outDir, "native"), sets),
     ...emitMotion(outDir, sets),
   ];

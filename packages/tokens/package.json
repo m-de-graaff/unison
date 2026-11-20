@@ -26,6 +26,10 @@
       "types": "./dist/spring.d.ts",
       "default": "./dist/spring.js"
     },
+    "./paths": {
+      "types": "./dist/paths.d.ts",
+      "default": "./dist/paths.js"
+    },
     "./motion": {
       "types": "./dist/motion.d.ts",
       "default": "./dist/motion.js"

@@ -1,5 +1,5 @@
-import type { Token } from "../build";
-import { cssVarName } from "../emit-web";
+import { cssVarName } from "../paths";
+import type { Resolved } from "../resolve";
 import { type SpringConfig, springToCssLinear } from "../spring";
 import {
   type MotionPresetName,
@@ -40,9 +40,10 @@ const sameSpring = (a: SpringConfig, b: SpringConfig) =>
 /** The CSS duration and easing of a transition; reuses a token's variable when one matches. */
 function timing(
   t: ResolvedTransition,
-  tokens: Token[],
+  resolved: Resolved,
   phase: Phase,
 ): { duration: string; easing: string } {
+  const tokens = [...resolved.values()];
   if (t.type === "spring") {
     const named = tokens.find(
       (k) => k.type === "spring" && sameSpring(k.value as SpringConfig, t.config),
@@ -55,13 +56,14 @@ function timing(
     return { duration: `${durationMs}ms`, easing };
   }
   const ms = `${t.duration}ms`;
+  const isMs = (k: { value: unknown }) => (k.value as { value: number }).value === t.duration;
   // A semantic duration of the same phase wins (`motion.duration.fast.exit`), then a primitive.
   const semantic = new RegExp(
     `^motion\\.duration\\.[a-z]+\\.${phase === "in" ? "enter" : "exit"}$`,
   );
   const duration =
-    tokens.find((k) => k.type === "duration" && k.value === ms && semantic.test(k.path)) ??
-    tokens.find((k) => k.type === "duration" && k.value === ms && /^duration\.\d+$/.test(k.path));
+    tokens.find((k) => k.type === "duration" && isMs(k) && semantic.test(k.path)) ??
+    tokens.find((k) => k.type === "duration" && isMs(k) && /^duration\.\d+$/.test(k.path));
   const curve = JSON.stringify(t.easing);
   const easing = tokens.find((k) => k.type === "cubicBezier" && JSON.stringify(k.value) === curve);
   return {
@@ -97,22 +99,19 @@ export function keyframes(presets: Presets): string[] {
   );
 }
 
-/** `--unison-animate-<preset>` and `-out` declarations for the normal or the reduced variant. */
+/** `--unison-animate-<preset>` and `-out` as [name, value] for the normal or the reduced variant. */
 export function animateDeclarations(
   presets: Presets,
-  tokens: Token[],
+  tokens: Resolved,
   variant: Variant,
-  indent: string,
-): string[] {
+): [name: string, value: string][] {
   return PRESETS.flatMap((name) =>
     (["in", "out"] as const).flatMap((phase) => {
       const p = phaseOf(presets[name], variant, phase);
       if (!p) return [];
       const { duration, easing } = timing(p.transition, tokens, phase);
       const prop = cssVarName(`animate.${name}`) + (phase === "out" ? "-out" : "");
-      return [
-        `${indent}${prop}: ${keyframesName(name, variant, phase)} ${duration} ${easing} both;`,
-      ];
+      return [[prop, `${keyframesName(name, variant, phase)} ${duration} ${easing} both`]];
     }),
   );
 }

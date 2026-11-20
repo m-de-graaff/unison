@@ -34,13 +34,10 @@ export interface Token {
   path: string;
   type: "color" | "dimension" | "duration" | "spring" | "cubicBezier";
   value: string | SpringConfig | number[];
-  /** The direct reference of an alias; the interim web emitter prints durations as var(). */
-  aliasOf?: string;
 }
-/** One text style for the interim emitters: web CSS values and the native style. */
+/** One text style for the interim native emitter. */
 export interface TextStyleOutput {
   style: string;
-  web: { size: string; "line-height": string; weight: string; tracking: string };
   native: NativeTextStyle;
 }
 export interface TokenSets {
@@ -50,8 +47,6 @@ export interface TokenSets {
   text: TextStyleOutput[];
   /** `shadow.<size>` as CSS strings per scheme, sorted by size name. */
   shadows: { light: Record<string, string>; dark: Record<string, string> };
-  /** `font-family.*` as CSS font-family lists. */
-  fontFamilies: { name: string; value: string }[];
   /** The theme the presets belong to (`dist/motion.js` is keyed by it). */
   themeName: string;
   /** Every motion preset with its feel applied; the same for both schemes. */
@@ -62,7 +57,7 @@ const LEGACY_TYPES = new Set(["color", "dimension", "duration", "spring", "cubic
 /** Primitives that only feed text styles; the interim emitters output the styles instead. */
 const TEXT_PRIMITIVE = /^(font-size|line-height)\./;
 
-/** Phase 0 emitters still take string values; this adapter goes away in Tasks 14 and 16. */
+/** The phase 0 native emitter still takes string values; this adapter goes away in Task 16. */
 export function toLegacy(tokens: (SourceToken | ResolvedToken)[]): Token[] {
   return tokens
     .filter(
@@ -80,13 +75,7 @@ export function toLegacy(tokens: (SourceToken | ResolvedToken)[]): Token[] {
         case "dimension":
         case "duration": {
           const v = t.value as Dimension | Duration;
-          const aliasOf = "aliasOf" in t ? t.aliasOf : undefined;
-          return {
-            path: t.path,
-            type,
-            value: `${v.value}${v.unit}`,
-            ...(type === "duration" && aliasOf ? { aliasOf } : {}),
-          };
+          return { path: t.path, type, value: `${v.value}${v.unit}` };
         }
         case "cubicBezier":
           return { path: t.path, type, value: [...(t.value as number[])] };
@@ -122,7 +111,7 @@ const ordered = (tokens: Token[]) =>
     .sort((a, b) => rank(a.t.path) - rank(b.t.path) || a.i - b.i)
     .map(({ t }) => t);
 
-/** The phase 0 token sets, taken from a theme build so the outputs match what contrast checked. */
+/** The phase 0 token sets for the native emitters, taken from a theme build so the outputs match what contrast checked. */
 export function legacyFromBuild(build: ThemeBuild): TokenSets {
   const l = ordered(toLegacy([...build.light.tokens.values()]));
   const d = ordered(toLegacy([...build.dark.tokens.values()]));
@@ -133,31 +122,11 @@ export function legacyFromBuild(build: ThemeBuild): TokenSets {
     dark: d,
     darkOverrides,
     text: textStyles(build),
-    fontFamilies: fontFamilies(build.light.tokens),
     shadows: { light: shadows(build.light.tokens), dark: shadows(build.dark.tokens) },
     themeName: build.name,
     motionPresets: expandPresets(build.light.tokens, build.motion),
   };
 }
-
-const GENERIC_FAMILIES = new Set([
-  "serif",
-  "sans-serif",
-  "monospace",
-  "cursive",
-  "fantasy",
-  "system-ui",
-  "ui-sans-serif",
-  "ui-serif",
-  "ui-monospace",
-  "ui-rounded",
-  "-apple-system",
-]);
-/** Quotes every family that isn't a generic or unquoted-safe keyword. */
-const cssFamilyList = (families: string[]) =>
-  families
-    .map((f) => (GENERIC_FAMILIES.has(f) || /^[A-Za-z-]+$/.test(f) ? f : `"${f}"`))
-    .join(", ");
 
 function shadows(tokens: Resolved): Record<string, string> {
   return Object.fromEntries(
@@ -174,17 +143,6 @@ function shadows(tokens: Resolved): Record<string, string> {
   );
 }
 
-function fontFamilies(tokens: Resolved): { name: string; value: string }[] {
-  return [...tokens.values()]
-    .filter((t) => t.type === "fontFamily" && t.path.startsWith("font-family."))
-    .map((t) => ({
-      name: t.path.slice("font-family.".length),
-      value: cssFamilyList(t.value as string[]),
-    }));
-}
-
-const measure = (v: { value: number; unit: string }) => `${v.value}${v.unit}`;
-
 /** Text styles are scheme-independent, so they come from the light scheme. */
 function textStyles(build: ThemeBuild): TextStyleOutput[] {
   const tokens = build.light.tokens;
@@ -196,12 +154,6 @@ function textStyles(build: ThemeBuild): TextStyleOutput[] {
     return [
       {
         style,
-        web: {
-          size: measure(t.fontSize),
-          "line-height": measure(t.lineHeight),
-          weight: String(t.fontWeight),
-          tracking: measure(t.letterSpacing),
-        },
         native: toNativeTextStyle(t, family, build.nativeFonts),
       },
     ];
