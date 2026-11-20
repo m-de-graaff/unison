@@ -1,8 +1,70 @@
 {
+  "duration": {
+    "$type": "duration",
+    "0": {
+      "$value": "0ms"
+    },
+    "50": {
+      "$value": "50ms"
+    },
+    "80": {
+      "$value": "80ms"
+    },
+    "120": {
+      "$value": "120ms"
+    },
+    "140": {
+      "$value": "140ms"
+    },
+    "160": {
+      "$value": "160ms"
+    },
+    "200": {
+      "$value": "200ms"
+    },
+    "240": {
+      "$value": "240ms"
+    },
+    "320": {
+      "$value": "320ms"
+    },
+    "400": {
+      "$value": "400ms"
+    },
+    "500": {
+      "$value": "500ms"
+    }
+  },
+  "easing": {
+    "$type": "cubicBezier",
+    "standard": {
+      "$value": [0.2, 0, 0, 1],
+      "$description": "Elements moving on screen"
+    },
+    "enter": {
+      "$value": [0.05, 0.7, 0.1, 1],
+      "$description": "Elements appearing (decelerate)"
+    },
+    "exit": {
+      "$value": [0.3, 0, 0.8, 0.15],
+      "$description": "Elements leaving (accelerate)"
+    },
+    "linear": {
+      "$value": [0, 0, 1, 1],
+      "$description": "Opacity-only and reduced-motion fades"
+    }
+  },
   "motion": {
-    "duration": { "base": { "$type": "duration", "$value": "200ms" } },
     "spring": {
-      "snappy": { "$type": "spring", "$value": { "stiffness": 400, "damping": 30, "mass": 1 } }
+      "snappy": {
+        "$type": "spring",
+        "$value": {
+          "stiffness": 400,
+          "damping": 30,
+          "mass": 1
+        },
+        "$description": "Phase 0 spring; Task 12 moves springs to spring.*"
+      }
     }
   }
 }

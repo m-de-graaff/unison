@@ -3,7 +3,7 @@ import { join } from "node:path";
 import type { Token, TokenSets } from "./build";
 import type { SpringConfig } from "./spring";
 
-type Leaf = string | number | SpringConfig;
+type Leaf = string | number | number[] | SpringConfig;
 interface Tree {
   [key: string]: Tree | Leaf;
 }
@@ -20,14 +20,27 @@ function nativeValue(t: Token): Leaf {
     }
     case "color":
       return t.value as string;
+    case "cubicBezier":
+      return [...(t.value as number[])];
   }
+}
+
+/**
+ * Interim native key path (Task 16's nativeKey replaces it): a decimal step such as space.0.5
+ * stays one key ("0.5"), and motion.duration.<speed>.<phase> is flat ("fast-enter").
+ */
+function interimKeys(path: string): string[] {
+  const keys = path.match(/\d+\.\d+|[^.]+/g) as string[];
+  if (keys[0] === "motion" && keys[1] === "duration" && keys.length > 3) {
+    return ["motion", "duration", keys.slice(2).join("-")];
+  }
+  return keys;
 }
 
 function toTree(tokens: Token[]): Tree {
   const root: Tree = {};
   for (const t of tokens) {
-    // A decimal step such as space.0.5 stays one key ("0.5"); Task 16's nativeKey replaces this.
-    const keys = t.path.match(/\d+\.\d+|[^.]+/g) as string[];
+    const keys = interimKeys(t.path);
     let node = root;
     for (const key of keys.slice(0, -1)) {
       node[key] ??= {};
@@ -56,6 +69,7 @@ function typeOf(node: Tree | Leaf, depth: number, isSpring: boolean): string {
 function themeType(tokens: Token[], tree: Tree): string {
   const springs = new Set(tokens.filter((t) => t.type === "spring").map((t) => t.path));
   const walk = (node: Tree | Leaf, path: string, depth: number): string => {
+    if (Array.isArray(node)) return `readonly [${node.map(() => "number").join(", ")}]`;
     if (typeof node !== "object" || springs.has(path)) return typeOf(node, depth, true);
     const pad = "  ".repeat(depth + 1);
     const lines = Object.entries(node).map(([k, v]) => {

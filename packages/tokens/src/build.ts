@@ -26,8 +26,10 @@ import {
 
 export interface Token {
   path: string;
-  type: "color" | "dimension" | "duration" | "spring";
-  value: string | SpringConfig;
+  type: "color" | "dimension" | "duration" | "spring" | "cubicBezier";
+  value: string | SpringConfig | number[];
+  /** The direct reference of an alias; the interim web emitter prints durations as var(). */
+  aliasOf?: string;
 }
 /** One text style for the interim emitters: web CSS values and the native style. */
 export interface TextStyleOutput {
@@ -46,7 +48,7 @@ export interface TokenSets {
   fontFamilies: { name: string; value: string }[];
 }
 
-const LEGACY_TYPES = new Set(["color", "dimension", "duration", "spring"]);
+const LEGACY_TYPES = new Set(["color", "dimension", "duration", "spring", "cubicBezier"]);
 /** Primitives that only feed text styles; the interim emitters output the styles instead. */
 const TEXT_PRIMITIVE = /^(font-size|line-height)\./;
 
@@ -68,8 +70,16 @@ export function toLegacy(tokens: (SourceToken | ResolvedToken)[]): Token[] {
         case "dimension":
         case "duration": {
           const v = t.value as Dimension | Duration;
-          return { path: t.path, type, value: `${v.value}${v.unit}` };
+          const aliasOf = "aliasOf" in t ? t.aliasOf : undefined;
+          return {
+            path: t.path,
+            type,
+            value: `${v.value}${v.unit}`,
+            ...(type === "duration" && aliasOf ? { aliasOf } : {}),
+          };
         }
+        case "cubicBezier":
+          return { path: t.path, type, value: [...(t.value as number[])] };
         default:
           return { path: t.path, type, value: t.value as SpringConfig };
       }
@@ -87,7 +97,6 @@ const LEGACY_ORDER = [
   "space.4",
   "radius.md",
   "size.box",
-  "motion.duration.base",
   "motion.spring.snappy",
 ];
 const rank = (path: string) => {

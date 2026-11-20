@@ -85,15 +85,20 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
       "touch-target": 44
     },
     "motion": {
-      "duration": {
-        "base": 200
-      },
       "spring": {
         "snappy": {
           "stiffness": 400,
           "damping": 30,
           "mass": 1
         }
+      },
+      "duration": {
+        "base-enter": 200,
+        "base-exit": 140,
+        "fast-enter": 120,
+        "fast-exit": 80,
+        "slow-enter": 320,
+        "slow-exit": 240
       }
     },
     "border-width": {
@@ -109,6 +114,45 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
       "md": 768,
       "sm": 640,
       "xl": 1280
+    },
+    "duration": {
+      "0": 0,
+      "50": 50,
+      "80": 80,
+      "120": 120,
+      "140": 140,
+      "160": 160,
+      "200": 200,
+      "240": 240,
+      "320": 320,
+      "400": 400,
+      "500": 500
+    },
+    "easing": {
+      "enter": [
+        0.05,
+        0.7,
+        0.1,
+        1
+      ],
+      "exit": [
+        0.3,
+        0,
+        0.8,
+        0.15
+      ],
+      "linear": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "standard": [
+        0.2,
+        0,
+        0,
+        1
+      ]
     },
     "ring-offset": {
       "2": 2,
@@ -267,15 +311,20 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
       "touch-target": 44
     },
     "motion": {
-      "duration": {
-        "base": 200
-      },
       "spring": {
         "snappy": {
           "stiffness": 400,
           "damping": 30,
           "mass": 1
         }
+      },
+      "duration": {
+        "base-enter": 200,
+        "base-exit": 140,
+        "fast-enter": 120,
+        "fast-exit": 80,
+        "slow-enter": 320,
+        "slow-exit": 240
       }
     },
     "border-width": {
@@ -291,6 +340,45 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
       "md": 768,
       "sm": 640,
       "xl": 1280
+    },
+    "duration": {
+      "0": 0,
+      "50": 50,
+      "80": 80,
+      "120": 120,
+      "140": 140,
+      "160": 160,
+      "200": 200,
+      "240": 240,
+      "320": 320,
+      "400": 400,
+      "500": 500
+    },
+    "easing": {
+      "enter": [
+        0.05,
+        0.7,
+        0.1,
+        1
+      ],
+      "exit": [
+        0.3,
+        0,
+        0.8,
+        0.15
+      ],
+      "linear": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "standard": [
+        0.2,
+        0,
+        0,
+        1
+      ]
     },
     "ring-offset": {
       "2": 2,
@@ -393,7 +481,6 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
   --unison-space-4: 16px;
   --unison-radius-md: 6px;
   --unison-size-box: 96px;
-  --unison-motion-duration-base: 200ms;
   --unison-motion-spring-snappy-easing: linear(0, 0.0606, 0.148, 0.2901, 0.4381, 0.576, 0.6676, 0.7709, 0.8523, 0.9, 0.9478, 0.9806, 1.0016, 1.0114, 1.0186, 1.0211, 1.021, 1.0192, 1.0164, 1.014, 1.0109, 1.0081, 1.0057, 1.0043, 1.0027, 1.0015, 1.0008, 1.0002, 0.9999, 0.9997, 0.9996, 1);
   --unison-motion-spring-snappy-duration: 479ms;
   --unison-border-width-0: 0px;
@@ -440,6 +527,27 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
   --unison-color-warning-border: #ffca78;
   --unison-color-warning-fg: #845100;
   --unison-color-warning-subtle: #fff1d5;
+  --unison-duration-0: 0ms;
+  --unison-duration-120: 120ms;
+  --unison-duration-140: 140ms;
+  --unison-duration-160: 160ms;
+  --unison-duration-200: 200ms;
+  --unison-duration-240: 240ms;
+  --unison-duration-320: 320ms;
+  --unison-duration-400: 400ms;
+  --unison-duration-50: 50ms;
+  --unison-duration-500: 500ms;
+  --unison-duration-80: 80ms;
+  --unison-easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --unison-easing-exit: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --unison-easing-linear: cubic-bezier(0, 0, 1, 1);
+  --unison-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --unison-motion-duration-base-enter: var(--unison-duration-200);
+  --unison-motion-duration-base-exit: var(--unison-duration-140);
+  --unison-motion-duration-fast-enter: var(--unison-duration-120);
+  --unison-motion-duration-fast-exit: var(--unison-duration-80);
+  --unison-motion-duration-slow-enter: var(--unison-duration-320);
+  --unison-motion-duration-slow-exit: var(--unison-duration-240);
   --unison-radius-2xl: 16px;
   --unison-radius-card: 8px;
   --unison-radius-control: 6px;

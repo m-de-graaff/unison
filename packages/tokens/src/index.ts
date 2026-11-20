@@ -14,7 +14,14 @@ export type { SpringConfig } from "./spring";
 export { simulateSpring, springToCssLinear } from "./spring";
 
 /** Reads the token source in `cwd`, checks contrast and writes every output. */
-export async function compile({ cwd }: { cwd: string }): Promise<string[]> {
+export async function compile({
+  cwd,
+  outDir = join(cwd, "dist"),
+}: {
+  cwd: string;
+  /** Where web/ and native/ are written; defaults to `<cwd>/dist`. */
+  outDir?: string;
+}): Promise<string[]> {
   const palettes = BUILT_IN_PALETTES();
   const theme = buildTheme({
     name: "default",
@@ -25,5 +32,5 @@ export async function compile({ cwd }: { cwd: string }): Promise<string[]> {
   });
   for (const warning of theme.warnings) console.warn(warning);
   const sets = legacyFromBuild(theme);
-  return [...emitWeb(join(cwd, "dist/web"), sets), ...emitNative(join(cwd, "dist/native"), sets)];
+  return [...emitWeb(join(outDir, "web"), sets), ...emitNative(join(outDir, "native"), sets)];
 }

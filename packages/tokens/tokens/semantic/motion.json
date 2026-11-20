@@ -1,1 +1,57 @@
-{}
+{
+  "motion": {
+    "duration": {
+      "$type": "duration",
+      "fast": {
+        "$description": "Small state changes: hover, toggles, colour",
+        "enter": {
+          "$value": "{duration.120}"
+        },
+        "exit": {
+          "$value": "{duration.80}"
+        }
+      },
+      "base": {
+        "$description": "Standard UI: popovers, menus, fades",
+        "enter": {
+          "$value": "{duration.200}"
+        },
+        "exit": {
+          "$value": "{duration.140}"
+        }
+      },
+      "slow": {
+        "$description": "Large surfaces: dialogs, sheets (when not spring-driven)",
+        "enter": {
+          "$value": "{duration.320}"
+        },
+        "exit": {
+          "$value": "{duration.240}"
+        }
+      }
+    },
+    "enter": {
+      "$type": "transition",
+      "$value": {
+        "duration": "{motion.duration.base.enter}",
+        "easing": "{easing.enter}"
+      },
+      "$description": "Elements appearing"
+    },
+    "exit": {
+      "$type": "transition",
+      "$value": {
+        "duration": "{motion.duration.base.exit}",
+        "easing": "{easing.exit}"
+      },
+      "$description": "Elements leaving"
+    },
+    "emphasis": {
+      "$type": "transition",
+      "$value": {
+        "spring": "{motion.spring.snappy}"
+      },
+      "$description": "Attention-drawing, spring-driven"
+    }
+  }
+}

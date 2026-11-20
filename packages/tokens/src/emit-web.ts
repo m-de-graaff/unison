@@ -12,6 +12,13 @@ function declarations(tokens: Token[], indent: string): string[] {
       const { easing, durationMs } = springToCssLinear(t.value as SpringConfig);
       return [`${indent}${name}-easing: ${easing};`, `${indent}${name}-duration: ${durationMs}ms;`];
     }
+    if (t.type === "cubicBezier") {
+      return [`${indent}${name}: cubic-bezier(${(t.value as number[]).join(", ")});`];
+    }
+    // Interim: only durations print aliases as var(); Task 14 makes that general.
+    if (t.type === "duration" && t.aliasOf) {
+      return [`${indent}${name}: var(${cssVarName(t.aliasOf)});`];
+    }
     return [`${indent}${name}: ${t.value as string};`];
   });
 }
