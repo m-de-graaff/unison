@@ -1,1 +1,17 @@
-{}
+{
+  "elevation": {
+    "$type": "shadow",
+    "raised": {
+      "$value": "{shadow.sm}",
+      "$description": "Cards and raised surfaces"
+    },
+    "popover": {
+      "$value": "{shadow.lg}",
+      "$description": "Popovers and menus"
+    },
+    "overlay": {
+      "$value": "{shadow.xl}",
+      "$description": "Dialogs and sheets"
+    }
+  }
+}

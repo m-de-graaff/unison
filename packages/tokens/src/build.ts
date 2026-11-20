@@ -5,7 +5,15 @@ import { BUILT_IN_PALETTES, colorPrimitives, type PaletteSpec } from "./color/pa
 import { assertTiers } from "./lint-tiers";
 import { loadSource } from "./load";
 import { type Resolved, type ResolvedToken, resolve } from "./resolve";
-import type { ColorValue, Dimension, Duration, SourceToken, Typography } from "./schema";
+import type {
+  ColorValue,
+  Dimension,
+  Duration,
+  ShadowLayer,
+  SourceToken,
+  Typography,
+} from "./schema";
+import { darkShadow, type ShadowSize, shadowToCss } from "./shadow";
 import { type Density, densityLayer, type RadiusOption, radiusLayer } from "./shape";
 import type { SpringConfig } from "./spring";
 import {
@@ -32,6 +40,8 @@ export interface TokenSets {
   dark: Token[];
   darkOverrides: Token[];
   text: TextStyleOutput[];
+  /** `shadow.<size>` as CSS strings per scheme, sorted by size name. */
+  shadows: { light: Record<string, string>; dark: Record<string, string> };
   /** `font-family.*` as CSS font-family lists. */
   fontFamilies: { name: string; value: string }[];
 }
@@ -103,6 +113,7 @@ export function legacyFromBuild(build: ThemeBuild): TokenSets {
     darkOverrides,
     text: textStyles(build),
     fontFamilies: fontFamilies(build.light.tokens),
+    shadows: { light: shadows(build.light.tokens), dark: shadows(build.dark.tokens) },
   };
 }
 
@@ -124,6 +135,21 @@ const cssFamilyList = (families: string[]) =>
   families
     .map((f) => (GENERIC_FAMILIES.has(f) || /^[A-Za-z-]+$/.test(f) ? f : `"${f}"`))
     .join(", ");
+
+function shadows(tokens: Resolved): Record<string, string> {
+  return Object.fromEntries(
+    [...tokens.values()]
+      .filter((t) => t.type === "shadow" && /^shadow\.[^.]+$/.test(t.path))
+      .map(
+        (t) =>
+          [
+            t.path.slice("shadow.".length) as ShadowSize,
+            shadowToCss(t.value as ShadowLayer[]),
+          ] as const,
+      )
+      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)),
+  );
+}
 
 function fontFamilies(tokens: Resolved): { name: string; value: string }[] {
   return [...tokens.values()]
@@ -191,6 +217,13 @@ export interface ThemeBuild {
   nativeFonts: NativeFonts;
 }
 
+/** Dark overrides for every primitive shadow, derived so the geometry can't drift. */
+function darkShadowLayer(primitive: SourceToken[]): SourceToken[] {
+  return primitive
+    .filter((t) => t.type === "shadow" && Array.isArray(t.value))
+    .map((t) => ({ ...t, value: darkShadow(t.value as ShadowLayer[]), file: "dark-shadow" }));
+}
+
 /** Builds one theme for both schemes and enforces contrast; throws `ContrastError` on failures. */
 export function buildTheme(opts: ThemeBuildOptions): ThemeBuild {
   const layers = loadSource(opts.root ?? packageRoot());
@@ -205,6 +238,7 @@ export function buildTheme(opts: ThemeBuildOptions): ThemeBuild {
       ...colorPrimitives(palettes, scheme),
       ...layers.primitive,
       ...densityLayer(opts.density ?? "default"),
+      ...(scheme === "dark" ? darkShadowLayer(layers.primitive) : []),
     ];
     const shape = radiusLayer(opts.radius ?? "md");
     const stacks =

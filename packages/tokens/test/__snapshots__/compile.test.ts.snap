@@ -103,6 +103,13 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
       "default": 1,
       "ring": 2
     },
+    "breakpoint": {
+      "2xl": 1536,
+      "lg": 1024,
+      "md": 768,
+      "sm": 640,
+      "xl": 1280
+    },
     "ring-offset": {
       "2": 2,
       "default": 2
@@ -168,6 +175,13 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
         "lineHeight": 20,
         "letterSpacing": 0
       }
+    },
+    "shadow": {
+      "lg": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+      "md": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+      "sm": "0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+      "xl": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+      "xs": "0 1px 2px rgb(0 0 0 / 0.05)"
     }
   },
   "dark": {
@@ -271,6 +285,13 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
       "default": 1,
       "ring": 2
     },
+    "breakpoint": {
+      "2xl": 1536,
+      "lg": 1024,
+      "md": 768,
+      "sm": 640,
+      "xl": 1280
+    },
     "ring-offset": {
       "2": 2,
       "default": 2
@@ -336,6 +357,13 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
         "lineHeight": 20,
         "letterSpacing": 0
       }
+    },
+    "shadow": {
+      "lg": "0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -4px rgb(0 0 0 / 0.25)",
+      "md": "0 4px 6px -1px rgb(0 0 0 / 0.25), 0 2px 4px -2px rgb(0 0 0 / 0.25)",
+      "sm": "0 1px 3px rgb(0 0 0 / 0.25), 0 1px 2px -1px rgb(0 0 0 / 0.25)",
+      "xl": "0 20px 25px -5px rgb(0 0 0 / 0.25), 0 8px 10px -6px rgb(0 0 0 / 0.25)",
+      "xs": "0 1px 2px rgb(0 0 0 / 0.13)"
     }
   }
 };
@@ -373,6 +401,11 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
   --unison-border-width-2: 2px;
   --unison-border-width-default: 1px;
   --unison-border-width-ring: 2px;
+  --unison-breakpoint-2xl: 1536px;
+  --unison-breakpoint-lg: 1024px;
+  --unison-breakpoint-md: 768px;
+  --unison-breakpoint-sm: 640px;
+  --unison-breakpoint-xl: 1280px;
   --unison-color-accent-active: #353b91;
   --unison-color-accent-fg: #464dbb;
   --unison-color-accent-hover: #464dbb;
