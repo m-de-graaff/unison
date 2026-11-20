@@ -39,6 +39,8 @@ jobs:
       - run: pnpm changeset publish --tag pr${{ github.event.number }} --no-git-tag
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # pnpm ignores publishConfig.provenance; this setting turns provenance on.
+          PNPM_CONFIG_PROVENANCE: "true"
       - uses: actions/github-script@v9
         with:
           script: |
