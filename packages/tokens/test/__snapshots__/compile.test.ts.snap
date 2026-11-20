@@ -4,10 +4,44 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
 "export const themes = {
   "light": {
     "color": {
-      "accent": "#5b5bd6",
+      "accent": "#535cda",
       "surface": "#ffffff",
-      "fg": "#111113",
-      "border": "#e4e4e7"
+      "fg": "#212124",
+      "border": "#e6e7eb",
+      "accent-active": "#353b91",
+      "accent-fg": "#464dbb",
+      "accent-hover": "#464dbb",
+      "accent-subtle": "#ecf3ff",
+      "border-strong": "#90929a",
+      "canvas": "#fafafb",
+      "danger": "#c52b30",
+      "danger-border": "#ffbeb7",
+      "danger-fg": "#a92227",
+      "danger-subtle": "#ffebe7",
+      "fg-muted": "#5c5d64",
+      "fg-subtle": "#90929a",
+      "info": "#0076b8",
+      "info-border": "#9bdeff",
+      "info-fg": "#00649d",
+      "info-subtle": "#def8ff",
+      "muted": "#e6e7eb",
+      "on-accent": "#ffffff",
+      "on-danger": "#ffffff",
+      "on-info": "#ffffff",
+      "on-success": "#ffffff",
+      "on-warning": "#000000",
+      "overlay": "#00000080",
+      "ring": "#535cda",
+      "subtle": "#f3f4f6",
+      "success": "#008736",
+      "success-border": "#9aebab",
+      "success-fg": "#00732c",
+      "success-subtle": "#e1fde5",
+      "surface-raised": "#ffffff",
+      "warning": "#eea628",
+      "warning-border": "#ffca78",
+      "warning-fg": "#845100",
+      "warning-subtle": "#fff1d5"
     },
     "space": {
       "1": 4,
@@ -35,10 +69,44 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
   },
   "dark": {
     "color": {
-      "accent": "#5b5bd6",
-      "surface": "#111113",
-      "fg": "#ededef",
-      "border": "#2e2e32"
+      "accent": "#545ed5",
+      "surface": "#18181a",
+      "fg": "#f1f2f5",
+      "border": "#323337",
+      "accent-active": "#242671",
+      "accent-fg": "#d0dbff",
+      "accent-hover": "#33369c",
+      "accent-subtle": "#1a1e4a",
+      "border-strong": "#6d6e75",
+      "canvas": "#0f0f10",
+      "danger": "#c13234",
+      "danger-border": "#8a0013",
+      "danger-fg": "#ffccc5",
+      "danger-subtle": "#430f0e",
+      "fg-muted": "#9c9ea4",
+      "fg-subtle": "#7e8086",
+      "info": "#0076b4",
+      "info-border": "#004d80",
+      "info-fg": "#b2e5ff",
+      "info-subtle": "#00273e",
+      "muted": "#323337",
+      "on-accent": "#ffffff",
+      "on-danger": "#ffffff",
+      "on-info": "#ffffff",
+      "on-success": "#ffffff",
+      "on-warning": "#000000",
+      "overlay": "#00000099",
+      "ring": "#6572e4",
+      "subtle": "#232426",
+      "success": "#00863a",
+      "success-border": "#005a18",
+      "success-fg": "#b7eec1",
+      "success-subtle": "#022d10",
+      "surface-raised": "#232426",
+      "warning": "#cd9130",
+      "warning-border": "#673d00",
+      "warning-fg": "#ffd79f",
+      "warning-subtle": "#371e00"
     },
     "space": {
       "1": 4,
@@ -82,10 +150,10 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
 
 exports[`compiles the token source to css, tailwind and native outputs > dist/web/tokens.css 1`] = `
 ":root {
-  --unison-color-accent: #5b5bd6;
+  --unison-color-accent: #535cda;
   --unison-color-surface: #ffffff;
-  --unison-color-fg: #111113;
-  --unison-color-border: #e4e4e7;
+  --unison-color-fg: #212124;
+  --unison-color-border: #e6e7eb;
   --unison-space-1: 4px;
   --unison-space-2: 8px;
   --unison-space-4: 16px;
@@ -94,19 +162,113 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
   --unison-motion-duration-base: 200ms;
   --unison-motion-spring-snappy-easing: linear(0, 0.0606, 0.148, 0.2901, 0.4381, 0.576, 0.6676, 0.7709, 0.8523, 0.9, 0.9478, 0.9806, 1.0016, 1.0114, 1.0186, 1.0211, 1.021, 1.0192, 1.0164, 1.014, 1.0109, 1.0081, 1.0057, 1.0043, 1.0027, 1.0015, 1.0008, 1.0002, 0.9999, 0.9997, 0.9996, 1);
   --unison-motion-spring-snappy-duration: 479ms;
+  --unison-color-accent-active: #353b91;
+  --unison-color-accent-fg: #464dbb;
+  --unison-color-accent-hover: #464dbb;
+  --unison-color-accent-subtle: #ecf3ff;
+  --unison-color-border-strong: #90929a;
+  --unison-color-canvas: #fafafb;
+  --unison-color-danger: #c52b30;
+  --unison-color-danger-border: #ffbeb7;
+  --unison-color-danger-fg: #a92227;
+  --unison-color-danger-subtle: #ffebe7;
+  --unison-color-fg-muted: #5c5d64;
+  --unison-color-fg-subtle: #90929a;
+  --unison-color-info: #0076b8;
+  --unison-color-info-border: #9bdeff;
+  --unison-color-info-fg: #00649d;
+  --unison-color-info-subtle: #def8ff;
+  --unison-color-muted: #e6e7eb;
+  --unison-color-on-accent: #ffffff;
+  --unison-color-on-danger: #ffffff;
+  --unison-color-on-info: #ffffff;
+  --unison-color-on-success: #ffffff;
+  --unison-color-on-warning: #000000;
+  --unison-color-overlay: #00000080;
+  --unison-color-ring: #535cda;
+  --unison-color-subtle: #f3f4f6;
+  --unison-color-success: #008736;
+  --unison-color-success-border: #9aebab;
+  --unison-color-success-fg: #00732c;
+  --unison-color-success-subtle: #e1fde5;
+  --unison-color-surface-raised: #ffffff;
+  --unison-color-warning: #eea628;
+  --unison-color-warning-border: #ffca78;
+  --unison-color-warning-fg: #845100;
+  --unison-color-warning-subtle: #fff1d5;
 }
 
 [data-theme="dark"] {
-  --unison-color-surface: #111113;
-  --unison-color-fg: #ededef;
-  --unison-color-border: #2e2e32;
+  --unison-color-accent: #545ed5;
+  --unison-color-surface: #18181a;
+  --unison-color-fg: #f1f2f5;
+  --unison-color-border: #323337;
+  --unison-color-accent-active: #242671;
+  --unison-color-accent-fg: #d0dbff;
+  --unison-color-accent-hover: #33369c;
+  --unison-color-accent-subtle: #1a1e4a;
+  --unison-color-border-strong: #6d6e75;
+  --unison-color-canvas: #0f0f10;
+  --unison-color-danger: #c13234;
+  --unison-color-danger-border: #8a0013;
+  --unison-color-danger-fg: #ffccc5;
+  --unison-color-danger-subtle: #430f0e;
+  --unison-color-fg-muted: #9c9ea4;
+  --unison-color-fg-subtle: #7e8086;
+  --unison-color-info: #0076b4;
+  --unison-color-info-border: #004d80;
+  --unison-color-info-fg: #b2e5ff;
+  --unison-color-info-subtle: #00273e;
+  --unison-color-muted: #323337;
+  --unison-color-overlay: #00000099;
+  --unison-color-ring: #6572e4;
+  --unison-color-subtle: #232426;
+  --unison-color-success: #00863a;
+  --unison-color-success-border: #005a18;
+  --unison-color-success-fg: #b7eec1;
+  --unison-color-success-subtle: #022d10;
+  --unison-color-surface-raised: #232426;
+  --unison-color-warning: #cd9130;
+  --unison-color-warning-border: #673d00;
+  --unison-color-warning-fg: #ffd79f;
+  --unison-color-warning-subtle: #371e00;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --unison-color-surface: #111113;
-    --unison-color-fg: #ededef;
-    --unison-color-border: #2e2e32;
+    --unison-color-accent: #545ed5;
+    --unison-color-surface: #18181a;
+    --unison-color-fg: #f1f2f5;
+    --unison-color-border: #323337;
+    --unison-color-accent-active: #242671;
+    --unison-color-accent-fg: #d0dbff;
+    --unison-color-accent-hover: #33369c;
+    --unison-color-accent-subtle: #1a1e4a;
+    --unison-color-border-strong: #6d6e75;
+    --unison-color-canvas: #0f0f10;
+    --unison-color-danger: #c13234;
+    --unison-color-danger-border: #8a0013;
+    --unison-color-danger-fg: #ffccc5;
+    --unison-color-danger-subtle: #430f0e;
+    --unison-color-fg-muted: #9c9ea4;
+    --unison-color-fg-subtle: #7e8086;
+    --unison-color-info: #0076b4;
+    --unison-color-info-border: #004d80;
+    --unison-color-info-fg: #b2e5ff;
+    --unison-color-info-subtle: #00273e;
+    --unison-color-muted: #323337;
+    --unison-color-overlay: #00000099;
+    --unison-color-ring: #6572e4;
+    --unison-color-subtle: #232426;
+    --unison-color-success: #00863a;
+    --unison-color-success-border: #005a18;
+    --unison-color-success-fg: #b7eec1;
+    --unison-color-success-subtle: #022d10;
+    --unison-color-surface-raised: #232426;
+    --unison-color-warning: #cd9130;
+    --unison-color-warning-border: #673d00;
+    --unison-color-warning-fg: #ffd79f;
+    --unison-color-warning-subtle: #371e00;
   }
 }
 "
