@@ -141,7 +141,7 @@ const { fieldProps, controlProps } = fromController({ field, fieldState });
 
 ### Step 12 — Clean-clone run and the phase 3 gate
 
-- [ ] `pnpm install`, `pnpm doctor`, `pnpm check` and `pnpm check:packages` pass
+- [ ] `pnpm install`, `pnpm run doctor`, `pnpm check` and `pnpm check:packages` pass
 - [ ] `pnpm test:parity` passes on all four platforms
 - [ ] **The roadmap gate:** the probe-form scenario passes on web-chromium, web-webkit, iOS and Android, from one file and one set of steps
 - [ ] The screen-reader table in `docs/a11y-checks.md` has no open issues

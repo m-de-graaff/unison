@@ -588,7 +588,7 @@ Most tests were written step by step. This step fills the gaps and adds the test
 
 Clone into a new folder and go through the list in order, without editing any file.
 
-- [ ] `pnpm install`, `pnpm doctor`, `pnpm check` and `pnpm check:packages` all pass
+- [ ] `pnpm install`, `pnpm run doctor`, `pnpm check` and `pnpm check:packages` all pass
 - [ ] `pnpm test:parity` passes on web-chromium, web-webkit, iOS and Android for all fixtures × 2 themes × 2 schemes
 - [ ] **The roadmap gate:** with `pnpm dev` running, change `accent` in `apps/web-next/unison.config.ts` (and the same in the other two apps) from `"indigo"` to `"teal"`, and each surface updates without a manual restart
 - [ ] The `/tokens` showcase on all four surfaces shows every section; all default-theme contrast badges pass

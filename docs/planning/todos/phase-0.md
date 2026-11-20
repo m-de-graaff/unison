@@ -816,7 +816,7 @@ The jobs:
 
 - [ ] Make `@unison-ui/tsconfig` and `@unison-ui/parity` `"private": true` (already done if you followed steps 4 and 19). Every public package gets `"publishConfig": { "access": "public", "provenance": true }`, plus `"repository"`, `"license": "MIT"` and `"homepage"` fields (publint warns without them).
 - [ ] Root script: `"release": "pnpm build && changeset publish"`.
-- [ ] `.github/workflows/release.yml`, on push to `main`: the same setup steps as CI, then `changesets/action` with `publish: pnpm release`. Permissions: `contents: write`, `pull-requests: write`, `id-token: write` (provenance). The action opens a "Version packages" PR; merging it publishes.
+- [ ] `.github/workflows/release.yml`, on push to `main`: the same setup steps as CI, then `changesets/action` (v2) with `publish-script: pnpm release`. Permissions: `contents: write`, `pull-requests: write`, `id-token: write` (provenance). The action opens a "Version packages" PR; merging it publishes.
 - [ ] npm authentication: the very first publish uses an npm automation token stored as the `NPM_TOKEN` secret. After the packages exist on npm, configure **Trusted Publishing** for each package (npmjs.com → package settings → GitHub Actions, this repo, `release.yml`) and delete the token.
 - [ ] `.github/workflows/snapshot.yml`: on a PR labelled `snapshot`, run `pnpm changeset version --snapshot pr${{ github.event.number }}` and `pnpm changeset publish --tag pr${{ github.event.number }} --no-git-tag`, then comment the install command (`pnpm add @unison-ui/ui@pr123`) on the PR. The PR needs at least one changeset.
 
@@ -881,7 +881,7 @@ pre-push:
   - `maestro --version` works
   - Ports 3000, 5173, 8081 and 4545 are free
 - [ ] `CONTRIBUTING.md`, in this order:
-  1. Prerequisites (copy from section 0), then `pnpm install && pnpm doctor`
+  1. Prerequisites (copy from section 0), then `pnpm install && pnpm run doctor`
   2. Running things: `pnpm dev`, `pnpm dev:web`, `pnpm dev:mobile`; `npx expo run:ios` / `run:android` for the first native build
   3. The exact parity devices: simulator name and emulator profile (from step 21)
   4. Tests: `pnpm test`, `pnpm test:parity`, `pnpm test:parity --update`, and when updating baselines is allowed (only for intended visual changes, explained in the PR)
@@ -891,7 +891,7 @@ pre-push:
 - [ ] `.github/ISSUE_TEMPLATE/`: `bug.yml` (platform dropdown: web / iOS / Android, package version, reproduction) and `feature.yml`.
 - [ ] GitHub labels: `web`, `native`, `motion`, `a11y`, `tokens`, `parity`, `snapshot`.
 
-**Done when:** a teammate (or you, on a fresh clone in a new folder) gets from zero to `pnpm dev` using only `CONTRIBUTING.md`, and `pnpm doctor` shows all ✓. Commit: `docs: contributing guide and doctor`.
+**Done when:** a teammate (or you, on a fresh clone in a new folder) gets from zero to `pnpm dev` using only `CONTRIBUTING.md`, and `pnpm run doctor` shows all ✓. Commit: `docs: contributing guide and doctor`.
 
 ### Step 27 — Architecture doc and ADRs
 
@@ -931,7 +931,7 @@ pre-push:
 
 Clone the repo into a new folder (not your working copy) and go through this list in order. Phase 0 is done only when every item passes without editing any file.
 
-- [ ] `pnpm install` finishes with no errors, and `pnpm doctor` is all ✓
+- [ ] `pnpm install` finishes with no errors, and `pnpm run doctor` is all ✓
 - [ ] `pnpm check` (lint, typecheck, test, build) passes
 - [ ] `pnpm check:packages` reports no publint or attw problems
 - [ ] `pnpm dev` starts the Next.js app (port 3000), the Vite app (port 5173) and Metro; the iOS and Android dev builds connect

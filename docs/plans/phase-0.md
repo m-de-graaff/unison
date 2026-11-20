@@ -2598,7 +2598,7 @@ Delete `.github/workflows/.gitkeep`.
     close it. Fix: `lsof -i :<port>`.
 - [ ] **Step 2: `CONTRIBUTING.md`.** Six sections in the todo's order:
   1. Prerequisites (copied from todo section 0, with the Node version from OQ-3), then
-     `pnpm install && pnpm doctor`
+     `pnpm install && pnpm run doctor`
   2. Running things
   3. Parity devices (from `parity-devices.json`, with the exact create commands)
   4. Tests, plus the baseline-update policy: only for intended visual changes, explained in the PR
@@ -2615,7 +2615,7 @@ Delete `.github/workflows/.gitkeep`.
 - [ ] **Step 4 (human, or `gh api` with OK):** create the labels `web`, `native`, `motion`, `a11y`,
   `tokens`, `parity` and `snapshot`.
 - [ ] **Step 5: Verify.**
-  Run: `pnpm doctor; echo "exit=$?"`
+  Run: `pnpm run doctor; echo "exit=$?"`
   Expect: on your Mac with everything installed, every line is `✓` and `exit=0`. In this Linux
   container, the macOS checks are skipped and the Android and Maestro checks show `✗` with fixes.
   That's the expected output there; it proves the ✗ path.
@@ -2714,7 +2714,7 @@ end.
 
 **Interfaces:** Consumes everything above.
 
-- [ ] **Step 1:** `git clone <repo> ~/unison-acceptance && cd ~/unison-acceptance && pnpm install && pnpm doctor`.
+- [ ] **Step 1:** `git clone <repo> ~/unison-acceptance && cd ~/unison-acceptance && pnpm install && pnpm run doctor`.
   Expect: install has no errors, and doctor shows all ✓.
 - [ ] **Step 2:** `pnpm check`. Expect: exit 0.
 - [ ] **Step 3:** `pnpm check:packages`. Expect: no publint errors or warnings, and attw

@@ -33,7 +33,7 @@ jobs:
       # Opens a "Version packages" PR; merging it publishes.
       - uses: changesets/action@v2.1.2
         with:
-          publish: pnpm release
+          publish-script: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Only for the very first publish; switch to npm Trusted Publishing afterwards and

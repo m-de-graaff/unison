@@ -257,7 +257,7 @@ Ejected code drifts; these commands let teams pull in upstream fixes without los
 
 Clone into a new folder and go through the list in order, without editing any file.
 
-- [ ] `pnpm install`, `pnpm doctor`, `pnpm check`, `pnpm check:packages`, the API report check and the licence check pass
+- [ ] `pnpm install`, `pnpm run doctor`, `pnpm check`, `pnpm check:packages`, the API report check and the licence check pass
 - [ ] `pnpm test:parity` passes for every fixture, all 3 presets × 2 schemes × 4 platforms, LTR and RTL, plus motion-curve traces
 - [ ] The probe-form scenario (phase 3) and the drawer/overlay flows (phase 4) pass on all four platforms
 - [ ] Performance budgets hold (Flashlight on the mid-range Android phone, `perf-web`, `size-limit`)

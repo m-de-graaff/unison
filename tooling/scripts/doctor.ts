@@ -1,4 +1,4 @@
-// `pnpm doctor`: checks the local toolchain and prints ✓ or ✗ with the fix for each item.
+// `pnpm run doctor`: checks the local toolchain and prints ✓ or ✗ with the fix for each item.
 import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { createServer } from "node:net";

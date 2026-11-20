@@ -220,7 +220,7 @@ Screenshots prove things look the same at rest; this proves they **move** the sa
 
 Clone into a new folder and go through the list in order, without editing any file.
 
-- [ ] `pnpm install`, `pnpm doctor`, `pnpm check` and `pnpm check:packages` pass
+- [ ] `pnpm install`, `pnpm run doctor`, `pnpm check` and `pnpm check:packages` pass
 - [ ] `pnpm test:parity` passes on all four platforms for every fixture from phases 1–4, including the motion-curve traces
 - [ ] **The roadmap gate, part 1:** the Flashlight flow on the physical mid-range Android phone averages ≥ 58 fps with no UI-thread frame over 32 ms, and the "Block JS" test keeps the drawer responsive
 - [ ] **The roadmap gate, part 2:** the reduced-motion matrix passes, automated and by hand, on iOS, Android and web
