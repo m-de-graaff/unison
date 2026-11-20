@@ -815,7 +815,7 @@ The jobs:
 `fixed` keeps every public package on one version number, so users never mix versions.
 
 - [ ] Make `@unison-ui/tsconfig` and `@unison-ui/parity` `"private": true` (already done if you followed steps 4 and 19). Every public package gets `"publishConfig": { "access": "public", "provenance": true }`, plus `"repository"`, `"license": "MIT"` and `"homepage"` fields (publint warns without them).
-- [ ] Root script: `"release": "pnpm build && changeset publish"`.
+- [ ] Root script: `"release": "tsx tooling/scripts/release.ts"`, which runs `pnpm build && changeset publish` but skips while the packages are still at `0.0.0`, so `release.yml` can't publish a `0.0.0` release before the first "Version packages" PR is merged.
 - [ ] `.github/workflows/release.yml`, on push to `main`: the same setup steps as CI, then `changesets/action` (v2) with `publish-script: pnpm release`. Permissions: `contents: write`, `pull-requests: write`, `id-token: write` (provenance). The action opens a "Version packages" PR; merging it publishes.
 - [ ] npm authentication: the very first publish uses an npm automation token stored as the `NPM_TOKEN` secret. After the packages exist on npm, configure **Trusted Publishing** for each package (npmjs.com → package settings → GitHub Actions, this repo, `release.yml`) and delete the token.
 - [ ] `.github/workflows/snapshot.yml`: on a PR labelled `snapshot`, run `pnpm changeset version --snapshot pr${{ github.event.number }}` and `pnpm changeset publish --tag pr${{ github.event.number }} --no-git-tag`, then comment the install command (`pnpm add @unison-ui/ui@pr123`) on the PR. The PR needs at least one changeset.

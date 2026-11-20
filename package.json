@@ -18,7 +18,7 @@
     "test:parity": "turbo run test:parity --filter=@unison-ui/parity --",
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "check:packages": "pnpm -r --filter \"./packages/*\" exec sh -c 'publint && attw --pack . --profile esm-only'",
-    "release": "pnpm build && changeset publish",
+    "release": "tsx tooling/scripts/release.ts",
     "prepare": "lefthook install",
     "doctor": "tsx tooling/scripts/doctor.ts",
     "new:component": "tsx tooling/scripts/new-component.ts"
