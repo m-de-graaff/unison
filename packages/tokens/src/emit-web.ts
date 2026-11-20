@@ -32,6 +32,9 @@ export function emitWeb(outDir: string, sets: TokenSets): string[] {
   const tokensCss = [
     ":root {",
     ...declarations(sets.light, "  "),
+    ...sets.fontFamilies.map(
+      ({ name, value }) => `  ${cssVarName(`font-family.${name}`)}: ${value};`,
+    ),
     ...sets.text.flatMap(({ style, web }) =>
       Object.entries(web).map(([k, v]) => `  ${cssVarName(`text.${style}`)}-${k}: ${v};`),
     ),

@@ -31,6 +31,8 @@ export interface TokenSets {
   dark: Token[];
   darkOverrides: Token[];
   text: TextStyleOutput[];
+  /** `font-family.*` as CSS font-family lists. */
+  fontFamilies: { name: string; value: string }[];
 }
 
 const LEGACY_TYPES = new Set(["color", "dimension", "duration", "spring"]);
@@ -94,7 +96,41 @@ export function legacyFromBuild(build: ThemeBuild): TokenSets {
   const d = ordered(toLegacy([...build.dark.tokens.values()]));
   const lightValues = new Map(l.map((t) => [t.path, JSON.stringify(t.value)]));
   const darkOverrides = d.filter((t) => lightValues.get(t.path) !== JSON.stringify(t.value));
-  return { light: l, dark: d, darkOverrides, text: textStyles(build) };
+  return {
+    light: l,
+    dark: d,
+    darkOverrides,
+    text: textStyles(build),
+    fontFamilies: fontFamilies(build.light.tokens),
+  };
+}
+
+const GENERIC_FAMILIES = new Set([
+  "serif",
+  "sans-serif",
+  "monospace",
+  "cursive",
+  "fantasy",
+  "system-ui",
+  "ui-sans-serif",
+  "ui-serif",
+  "ui-monospace",
+  "ui-rounded",
+  "-apple-system",
+]);
+/** Quotes every family that isn't a generic or unquoted-safe keyword. */
+const cssFamilyList = (families: string[]) =>
+  families
+    .map((f) => (GENERIC_FAMILIES.has(f) || /^[A-Za-z-]+$/.test(f) ? f : `"${f}"`))
+    .join(", ");
+
+function fontFamilies(tokens: Resolved): { name: string; value: string }[] {
+  return [...tokens.values()]
+    .filter((t) => t.type === "fontFamily" && t.path.startsWith("font-family."))
+    .map((t) => ({
+      name: t.path.slice("font-family.".length),
+      value: cssFamilyList(t.value as string[]),
+    }));
 }
 
 const measure = (v: { value: number; unit: string }) => `${v.value}${v.unit}`;

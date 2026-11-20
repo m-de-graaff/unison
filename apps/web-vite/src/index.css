@@ -7,5 +7,6 @@
   html {
     background-color: var(--color-surface);
     color: var(--color-fg);
+    font-family: var(--unison-font-family-sans);
   }
 }
