@@ -76,3 +76,21 @@ export interface SourceLayers {
 
 export const ALIAS = /^\{([a-z0-9.-]+)\}$/;
 export const isAlias = (v: unknown): v is string => typeof v === "string" && ALIAS.test(v);
+
+/** The type each field of a composite token must resolve to (checked by the resolver). */
+export const FIELD_TYPES: Partial<Record<TokenType, Record<string, TokenType>>> = {
+  typography: {
+    fontFamily: "fontFamily",
+    fontWeight: "fontWeight",
+    fontSize: "dimension",
+    lineHeight: "dimension",
+  },
+  shadow: {
+    x: "dimension",
+    y: "dimension",
+    blur: "dimension",
+    spread: "dimension",
+    color: "color",
+  },
+  transition: { duration: "duration", easing: "cubicBezier", spring: "spring" },
+};

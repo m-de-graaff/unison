@@ -1,4 +1,5 @@
 import { loadSource } from "./load";
+import { type ResolvedToken, resolve } from "./resolve";
 import type { ColorValue, Dimension, Duration, SourceToken } from "./schema";
 import type { SpringConfig } from "./spring";
 
@@ -16,7 +17,7 @@ export interface TokenSets {
 const LEGACY_TYPES = new Set(["color", "dimension", "duration", "spring"]);
 
 /** Phase 0 emitters still take string values; this adapter goes away in Tasks 14 and 16. */
-export function toLegacy(tokens: SourceToken[]): Token[] {
+export function toLegacy(tokens: (SourceToken | ResolvedToken)[]): Token[] {
   return tokens
     .filter((t) => LEGACY_TYPES.has(t.type) && typeof t.value !== "string")
     .map((t) => {
@@ -54,12 +55,6 @@ const rank = (path: string) => {
   return i === -1 ? LEGACY_ORDER.length : i;
 };
 
-function merge(...layers: SourceToken[][]): SourceToken[] {
-  const byPath = new Map<string, SourceToken>();
-  for (const layer of layers) for (const t of layer) byPath.set(t.path, t);
-  return [...byPath.values()];
-}
-
 const ordered = (tokens: Token[]) =>
   tokens
     .map((t, i) => ({ t, i }))
@@ -69,8 +64,8 @@ const ordered = (tokens: Token[]) =>
 /** light = primitive + semantic + light; dark = the same with dark merged over light. */
 export function legacySets(root: string): TokenSets {
   const { primitive, semantic, light, dark } = loadSource(root);
-  const l = ordered(toLegacy(merge(primitive, semantic, light)));
-  const d = ordered(toLegacy(merge(primitive, semantic, light, dark)));
+  const l = ordered(toLegacy([...resolve(primitive, semantic, light).values()]));
+  const d = ordered(toLegacy([...resolve(primitive, semantic, light, dark).values()]));
   const lightValues = new Map(l.map((t) => [t.path, JSON.stringify(t.value)]));
   const darkOverrides = d.filter((t) => lightValues.get(t.path) !== JSON.stringify(t.value));
   return { light: l, dark: d, darkOverrides };
