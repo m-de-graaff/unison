@@ -52,7 +52,7 @@
     "*.css"
   ],
   "scripts": {
-    "build": "tsdown && node dist/bin.js build",
+    "build": "tsdown && node dist/bin.js build --out dist",
     "dev": "tsx watch --include \"tokens/**\" src/bin.ts build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --coverage"
@@ -75,6 +75,7 @@
   },
   "dependencies": {
     "colorjs.io": "^0.7.1",
-    "culori": "^4.0.2"
+    "culori": "^4.0.2",
+    "jiti": "^2.7.0"
   }
 }

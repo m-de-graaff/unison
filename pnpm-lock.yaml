@@ -696,6 +696,9 @@ importers:
       culori:
         specifier: ^4.0.2
         version: 4.0.2
+      jiti:
+        specifier: ^2.7.0
+        version: 2.7.0
     devDependencies:
       '@tailwindcss/node':
         specifier: ^4.3.5
@@ -711,7 +714,7 @@ importers:
         version: link:../../tooling/tsconfig
       '@vitest/coverage-v8':
         specifier: ^5.1.1
-        version: 5.1.1(vitest@5.1.1)
+        version: 5.1.1(jsdom@31.0.1)(vitest@5.1.1)
       ajv:
         specifier: ^8.20.0
         version: 8.20.0
