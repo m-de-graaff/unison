@@ -24,11 +24,11 @@ Each phase is done when its gate passes, not when its checklist is ticked.
 ### Phase 0 — Setup
 
 - [x] Monorepo (pnpm + Turborepo): `packages/tokens`, `core`, `motion`, `react`, `native`, `ui`, `cli`, plus private `demo-content` and `parity`; `apps/web-next` (Next.js), `apps/web-vite` (Vite), `apps/mobile` (Expo)
-- [ ] CI: typecheck, lint, unit tests, changesets for releases
+- [ ] CI: typecheck, lint, unit tests, changesets for releases (all in place; publishing still needs the `NPM_TOKEN` secret, and the Release workflow needs "Allow GitHub Actions to create and approve pull requests" turned on)
 - [x] Parity test harness: render a component on both platforms with the same props and compare screenshots (Playwright + Maestro)
 - [x] Settle the decisions listed at the end of this doc
 
-**Gate:** all three demo apps build and run from one `pnpm dev`.
+- [x] **Gate:** all three demo apps build and run from one `pnpm dev`.
 
 Detailed development todo: [Phase 0 todo](todos/phase-0.md)
 

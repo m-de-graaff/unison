@@ -56,6 +56,18 @@ your own app code, set up [Uniwind](https://uniwind.dev) and import the native t
 @import "@unison-ui/tokens/native-theme.css";
 ```
 
+The packages are ESM only. If you test with `jest-expo`, add `@unison-ui` to the packages Jest
+transforms:
+
+```json
+"jest": {
+  "preset": "jest-expo",
+  "transformIgnorePatterns": [
+    "node_modules/(?!((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unison-ui/.*))"
+  ]
+}
+```
+
 Then, on either platform:
 
 ```tsx
