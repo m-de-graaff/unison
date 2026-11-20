@@ -5,7 +5,7 @@ import { dirname } from "node:path";
 import { pathToFileURL } from "node:url";
 import { type Metrics, metricsPath, PLATFORMS } from "../src/types";
 
-const RUN_RE = /^[a-z0-9-]+\/[a-z0-9-]+\/(light|dark)$/;
+const RUN_RE = /^[a-z0-9-]+\/[a-z0-9-]+\/[a-z0-9-]+\/(light|dark)$/;
 
 function isMetrics(value: unknown): value is Metrics {
   if (typeof value !== "object" || value === null) return false;

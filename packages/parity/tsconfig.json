@@ -1,5 +1,6 @@
 {
   "extends": "@unison-ui/tsconfig/web.json",
   "compilerOptions": { "types": ["node"] },
-  "include": ["src", "scripts", "tests", "playwright.config.ts"]
+  "include": ["src", "scripts", "tests", "test", "playwright.config.ts", "vitest.config.ts"],
+  "exclude": ["src/registry.native.tsx", "src/fixtures/components/native.tsx"]
 }

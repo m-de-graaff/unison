@@ -1,11 +1,19 @@
 import { Box } from "@unison-ui/ui";
 import type { ComponentType } from "react";
 import { fixtures } from "./fixtures";
+import { Elevation, Radius, Swatches, TypeRamp } from "./fixtures/components/native";
 
-/** Component name → component, resolved to web or native by the app's bundler. */
-export const registry = { box: Box } as const;
+/** Component name → component (React Native renderers). */
+export const registry = {
+  box: Box,
+  swatches: Swatches,
+  "type-ramp": TypeRamp,
+  radius: Radius,
+  elevation: Elevation,
+} as const;
 
-export { fixtures, SCHEMES } from "./fixtures";
+export { checkOf, fixtures, SCHEMES, THEMES } from "./fixtures";
+export { PartsContext, type PartsRegistry } from "./parts";
 
 type CaseProps = Record<string, unknown>;
 
