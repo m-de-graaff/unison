@@ -8,9 +8,10 @@ compiles to CSS variables, a Tailwind v4 theme and a typed native theme. A scree
 harness renders every component on web (Chromium and WebKit), iOS and Android and fails the
 build when they drift apart.
 
-> **Status: phase 0 of 6.** The foundation is in place: the monorepo, the token compiler, the
-> platform split, three demo apps, the parity harness and CI. There are no real components yet
-> (only `Box` and `MotionBadge`, which prove the pipeline), and nothing is published to npm.
+> **Status: early.** Unison is built in six phases (0–5); this is the end of phase 0, the
+> foundation. In place: the monorepo, the token compiler, the platform split, three demo apps,
+> the parity harness and CI. There are no real components yet (only `Box` and `MotionBadge`,
+> which prove the pipeline), and nothing is published to npm.
 > See the [roadmap](docs/planning/roadmap.md).
 
 ## Packages
@@ -88,7 +89,8 @@ pnpm dev
 
 `pnpm dev` starts every package watcher plus the Next.js app (http://localhost:3000), the Vite app
 (http://localhost:5173) and Metro for the Expo app. Edit a token in
-`packages/tokens/tokens/base.json` and all three update without a restart.
+`packages/tokens/tokens/base.json` and both web apps update without a restart; Metro rebuilds
+the Expo bundle at the same time.
 
 | Command | What it does |
 | --- | --- |
