@@ -694,6 +694,9 @@ importers:
         specifier: ^4.0.2
         version: 4.0.2
     devDependencies:
+      '@tailwindcss/node':
+        specifier: ^4.3.5
+        version: 4.3.5
       '@types/culori':
         specifier: ^4.0.1
         version: 4.0.1
@@ -706,6 +709,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^5.1.1
         version: 5.1.1(vitest@5.1.1)
+      tailwindcss:
+        specifier: ^4.3.5
+        version: 4.3.5
       tsdown:
         specifier: ^0.23.7
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)

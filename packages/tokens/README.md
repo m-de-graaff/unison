@@ -21,6 +21,7 @@ React Native with [Uniwind](https://uniwind.dev): import `@unison-ui/tokens/nati
 | --- | --- |
 | `@unison-ui/tokens/tokens.css` | CSS variables (`--unison-*`), light and dark |
 | `@unison-ui/tokens/theme.css` | Tailwind v4 `@theme` mapping |
+| `@unison-ui/tokens/theme-strict.css` | Same, with Tailwind's own colours, radii, shadows, fonts and text sizes removed (see `docs/tailwind.md`) |
 | `@unison-ui/tokens/native-theme.css` | Literal colours for Uniwind on native |
 | `@unison-ui/tokens/native` | Typed native theme (`UnisonTheme`) |
 | `@unison-ui/tokens/spring` | `simulateSpring`, `springToCssLinear` |

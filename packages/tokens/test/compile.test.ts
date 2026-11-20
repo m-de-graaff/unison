@@ -20,7 +20,13 @@ afterEach(() => {
 it("compiles the token source to css, tailwind and native outputs", async () => {
   const dir = workspaceWith(join(import.meta.dirname, "../tokens"));
   await compile({ cwd: dir });
-  for (const file of ["dist/web/tokens.css", "dist/web/theme.css", "dist/native/theme.js"]) {
+  for (const file of [
+    "dist/web/tokens.css",
+    "dist/web/theme.css",
+    "dist/web/theme-strict.css",
+    "dist/native/theme.css",
+    "dist/native/theme.js",
+  ]) {
     expect(readFileSync(join(dir, file), "utf8")).toMatchSnapshot(file);
   }
 });

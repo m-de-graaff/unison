@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { ThemeBuild } from "./build";
-import { animateDeclarations, keyframes, tailwindAnimations } from "./motion/css";
+import { animateDeclarations, keyframes } from "./motion/css";
 import { expandPresets } from "./motion/presets";
 import { cssVarName } from "./paths";
 import type { Resolved, ResolvedToken } from "./resolve";
@@ -262,26 +262,10 @@ export function emitTokensCss(themes: ThemeBuild[]): string {
   ].join("\n");
 }
 
-const themeCss = () =>
-  [
-    "@theme inline {",
-    "  --color-accent: var(--unison-color-accent);",
-    "  --color-surface: var(--unison-color-surface);",
-    "  --color-fg: var(--unison-color-fg);",
-    "  --color-border: var(--unison-color-border);",
-    "  --radius-md: var(--unison-radius-md);",
-    "  --spacing: var(--unison-space-1);",
-    ...tailwindAnimations("  "),
-    "}",
-    "",
-  ].join("\n");
-
-/** Writes dist/web/tokens.css and dist/web/theme.css; returns the written paths. */
+/** Writes dist/web/tokens.css; returns the written path. */
 export function emitWeb(outDir: string, themes: ThemeBuild[]): string[] {
   mkdirSync(outDir, { recursive: true });
   const tokensPath = join(outDir, "tokens.css");
-  const themePath = join(outDir, "theme.css");
   writeFileSync(tokensPath, emitTokensCss(themes));
-  writeFileSync(themePath, themeCss());
-  return [tokensPath, themePath];
+  return [tokensPath];
 }

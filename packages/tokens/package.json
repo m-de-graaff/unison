@@ -40,6 +40,7 @@
     },
     "./tokens.css": "./dist/web/tokens.css",
     "./theme.css": "./dist/web/theme.css",
+    "./theme-strict.css": "./dist/web/theme-strict.css",
     "./native-theme.css": "./dist/native/theme.css"
   },
   "sideEffects": [
@@ -52,10 +53,12 @@
     "test": "vitest run --coverage"
   },
   "devDependencies": {
+    "@tailwindcss/node": "^4.3.5",
     "@types/culori": "^4.0.1",
     "@types/node": "^26.6.6",
     "@unison-ui/tsconfig": "workspace:*",
     "@vitest/coverage-v8": "^5.1.1",
+    "tailwindcss": "^4.3.5",
     "tsdown": "^0.23.7",
     "typescript": "catalog:",
     "vitest": "^5.1.1"
