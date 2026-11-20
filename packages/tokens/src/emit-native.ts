@@ -26,7 +26,8 @@ function nativeValue(t: Token): Leaf {
 function toTree(tokens: Token[]): Tree {
   const root: Tree = {};
   for (const t of tokens) {
-    const keys = t.path.split(".");
+    // A decimal step such as space.0.5 stays one key ("0.5"); Task 16's nativeKey replaces this.
+    const keys = t.path.match(/\d+\.\d+|[^.]+/g) as string[];
     let node = root;
     for (const key of keys.slice(0, -1)) {
       node[key] ??= {};

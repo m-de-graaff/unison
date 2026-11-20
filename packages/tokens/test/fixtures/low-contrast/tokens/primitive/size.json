@@ -1,3 +1,31 @@
 {
-  "size": { "box": { "$type": "dimension", "$value": "96px" } }
+  "size": {
+    "$type": "dimension",
+    "box": {
+      "$value": "96px",
+      "$description": "Phase 0 demo box; migrated in Task 16"
+    },
+    "control-sm": {
+      "$value": "32px"
+    },
+    "control-md": {
+      "$value": "40px"
+    },
+    "control-lg": {
+      "$value": "48px"
+    },
+    "icon-sm": {
+      "$value": "16px"
+    },
+    "icon-md": {
+      "$value": "20px"
+    },
+    "icon-lg": {
+      "$value": "24px"
+    },
+    "touch-target": {
+      "$value": "44px",
+      "$description": "Minimum hit area on native"
+    }
+  }
 }

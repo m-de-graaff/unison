@@ -44,15 +44,45 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
       "warning-subtle": "#fff1d5"
     },
     "space": {
+      "0": 0,
       "1": 4,
       "2": 8,
-      "4": 16
+      "3": 12,
+      "4": 16,
+      "5": 20,
+      "6": 24,
+      "8": 32,
+      "10": 40,
+      "12": 48,
+      "16": 64,
+      "20": 80,
+      "24": 96,
+      "0.5": 2,
+      "1.5": 6
     },
     "radius": {
-      "md": 8
+      "md": 6,
+      "2xl": 16,
+      "card": 8,
+      "control": 6,
+      "full": 9999,
+      "lg": 8,
+      "none": 0,
+      "overlay": 12,
+      "pill": 9999,
+      "sm": 4,
+      "xl": 12,
+      "xs": 2
     },
     "size": {
-      "box": 96
+      "box": 96,
+      "control-lg": 48,
+      "control-md": 40,
+      "control-sm": 32,
+      "icon-lg": 24,
+      "icon-md": 20,
+      "icon-sm": 16,
+      "touch-target": 44
     },
     "motion": {
       "duration": {
@@ -65,6 +95,17 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
           "mass": 1
         }
       }
+    },
+    "border-width": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "default": 1,
+      "ring": 2
+    },
+    "ring-offset": {
+      "2": 2,
+      "default": 2
     },
     "text": {
       "caption": {
@@ -171,15 +212,45 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
       "warning-subtle": "#371e00"
     },
     "space": {
+      "0": 0,
       "1": 4,
       "2": 8,
-      "4": 16
+      "3": 12,
+      "4": 16,
+      "5": 20,
+      "6": 24,
+      "8": 32,
+      "10": 40,
+      "12": 48,
+      "16": 64,
+      "20": 80,
+      "24": 96,
+      "0.5": 2,
+      "1.5": 6
     },
     "radius": {
-      "md": 8
+      "md": 6,
+      "2xl": 16,
+      "card": 8,
+      "control": 6,
+      "full": 9999,
+      "lg": 8,
+      "none": 0,
+      "overlay": 12,
+      "pill": 9999,
+      "sm": 4,
+      "xl": 12,
+      "xs": 2
     },
     "size": {
-      "box": 96
+      "box": 96,
+      "control-lg": 48,
+      "control-md": 40,
+      "control-sm": 32,
+      "icon-lg": 24,
+      "icon-md": 20,
+      "icon-sm": 16,
+      "touch-target": 44
     },
     "motion": {
       "duration": {
@@ -192,6 +263,17 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/na
           "mass": 1
         }
       }
+    },
+    "border-width": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "default": 1,
+      "ring": 2
+    },
+    "ring-offset": {
+      "2": 2,
+      "default": 2
     },
     "text": {
       "caption": {
@@ -281,11 +363,16 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
   --unison-space-1: 4px;
   --unison-space-2: 8px;
   --unison-space-4: 16px;
-  --unison-radius-md: 8px;
+  --unison-radius-md: 6px;
   --unison-size-box: 96px;
   --unison-motion-duration-base: 200ms;
   --unison-motion-spring-snappy-easing: linear(0, 0.0606, 0.148, 0.2901, 0.4381, 0.576, 0.6676, 0.7709, 0.8523, 0.9, 0.9478, 0.9806, 1.0016, 1.0114, 1.0186, 1.0211, 1.021, 1.0192, 1.0164, 1.014, 1.0109, 1.0081, 1.0057, 1.0043, 1.0027, 1.0015, 1.0008, 1.0002, 0.9999, 0.9997, 0.9996, 1);
   --unison-motion-spring-snappy-duration: 479ms;
+  --unison-border-width-0: 0px;
+  --unison-border-width-1: 1px;
+  --unison-border-width-2: 2px;
+  --unison-border-width-default: 1px;
+  --unison-border-width-ring: 2px;
   --unison-color-accent-active: #353b91;
   --unison-color-accent-fg: #464dbb;
   --unison-color-accent-hover: #464dbb;
@@ -320,6 +407,38 @@ exports[`compiles the token source to css, tailwind and native outputs > dist/we
   --unison-color-warning-border: #ffca78;
   --unison-color-warning-fg: #845100;
   --unison-color-warning-subtle: #fff1d5;
+  --unison-radius-2xl: 16px;
+  --unison-radius-card: 8px;
+  --unison-radius-control: 6px;
+  --unison-radius-full: 9999px;
+  --unison-radius-lg: 8px;
+  --unison-radius-none: 0px;
+  --unison-radius-overlay: 12px;
+  --unison-radius-pill: 9999px;
+  --unison-radius-sm: 4px;
+  --unison-radius-xl: 12px;
+  --unison-radius-xs: 2px;
+  --unison-ring-offset-2: 2px;
+  --unison-ring-offset-default: 2px;
+  --unison-size-control-lg: 48px;
+  --unison-size-control-md: 40px;
+  --unison-size-control-sm: 32px;
+  --unison-size-icon-lg: 24px;
+  --unison-size-icon-md: 20px;
+  --unison-size-icon-sm: 16px;
+  --unison-size-touch-target: 44px;
+  --unison-space-0: 0px;
+  --unison-space-0-5: 2px;
+  --unison-space-1-5: 6px;
+  --unison-space-10: 40px;
+  --unison-space-12: 48px;
+  --unison-space-16: 64px;
+  --unison-space-20: 80px;
+  --unison-space-24: 96px;
+  --unison-space-3: 12px;
+  --unison-space-5: 20px;
+  --unison-space-6: 24px;
+  --unison-space-8: 32px;
   --unison-font-family-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --unison-font-family-sans: "Inter Variable", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --unison-text-caption-size: 12px;

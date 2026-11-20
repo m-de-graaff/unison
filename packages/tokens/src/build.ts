@@ -6,6 +6,7 @@ import { assertTiers } from "./lint-tiers";
 import { loadSource } from "./load";
 import { type Resolved, type ResolvedToken, resolve } from "./resolve";
 import type { ColorValue, Dimension, Duration, SourceToken, Typography } from "./schema";
+import { type Density, densityLayer, type RadiusOption, radiusLayer } from "./shape";
 import type { SpringConfig } from "./spring";
 import {
   DEFAULT_NATIVE_FONTS,
@@ -169,6 +170,10 @@ export interface ThemeBuildOptions {
   accent: PaletteSpec;
   neutral: PaletteSpec;
   autoContrast: boolean;
+  /** Control heights; default `"default"`. */
+  density?: Density;
+  /** How round controls, cards and overlays are; default `"md"`. */
+  radius?: RadiusOption;
   /** Native font face per family and weight; defaults to `DEFAULT_NATIVE_FONTS`. */
   nativeFonts?: NativeFonts;
   /** Where `tokens/` lives. Defaults to this package. */
@@ -196,11 +201,16 @@ export function buildTheme(opts: ThemeBuildOptions): ThemeBuild {
   const warnings: string[] = [];
   const failures: ContrastResult[] = [];
   const build = (scheme: Mode): SchemeBuild => {
-    const base = [...colorPrimitives(palettes, scheme), ...layers.primitive];
+    const base = [
+      ...colorPrimitives(palettes, scheme),
+      ...layers.primitive,
+      ...densityLayer(opts.density ?? "default"),
+    ];
+    const shape = radiusLayer(opts.radius ?? "md");
     const stacks =
       scheme === "light"
-        ? [layers.semantic, layers.light]
-        : [layers.semantic, layers.light, layers.dark];
+        ? [layers.semantic, shape, layers.light]
+        : [layers.semantic, shape, layers.light, layers.dark];
     const first = resolve(base, ...stacks);
     const {
       results,
