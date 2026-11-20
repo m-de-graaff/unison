@@ -9,3 +9,4 @@ export function DemoItems() {
     </>
   );
 }
+export { SCHEMES, THEMES } from "./settings";

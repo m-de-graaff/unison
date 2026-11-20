@@ -1,5 +1,5 @@
 import { DemoItems } from "demo-content";
-import { ThemeToggle } from "./theme-toggle";
+import { ScopedPanel, SettingsBar } from "./settings-bar";
 
 export function DemoPage() {
   return (
@@ -14,7 +14,8 @@ export function DemoPage() {
       <div data-testid="default-scope" data-unison-theme="default">
         <div data-testid="default-scope-surface" className="bg-surface size-4" />
       </div>
-      <ThemeToggle />
+      <SettingsBar />
+      <ScopedPanel />
     </main>
   );
 }

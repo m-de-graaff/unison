@@ -7,4 +7,6 @@ const config = getDefaultConfig(__dirname);
 module.exports = withUniwindConfig(config, {
   cssEntryFile: "./src/global.css",
   dtsFile: "./src/uniwind-types.d.ts",
+  // Named themes from unison.config.ts, as unison/native/theme.css emits them (OQ-19).
+  extraThemes: ["brand-light", "brand-dark"],
 });

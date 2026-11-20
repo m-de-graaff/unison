@@ -1,12 +1,26 @@
 import { themes } from "@unison-ui/tokens/native";
 import { nativeKey } from "@unison-ui/tokens/paths";
 import type { SemanticTokenPath, SemanticTokenValues, UnisonTheme } from "@unison-ui/tokens/types";
+import { useContext } from "react";
 import { useColorScheme } from "react-native";
+import { type NativeThemeState, ThemeContext } from "./provider";
 
-/** The default theme for the current colour scheme ("light" when the scheme is unknown). */
+/** The current theme and scheme, the setters and the resolved `tokens`. Throws outside `UnisonProvider`. */
+export function useTheme(): NativeThemeState {
+  const state = useContext(ThemeContext);
+  if (!state) throw new Error("useTheme must be used inside UnisonProvider");
+  const { all: _all, ...rest } = state;
+  return rest;
+}
+
+/**
+ * The tokens for the current theme and scheme. Outside a provider it falls back to the built-in
+ * default theme and the system scheme ("light" when unknown).
+ */
 export function useUnisonTheme(): UnisonTheme {
+  const state = useContext(ThemeContext);
   const scheme = useColorScheme();
-  return themes.default[scheme === "dark" ? "dark" : "light"];
+  return state ? state.tokens : themes.default[scheme === "dark" ? "dark" : "light"];
 }
 
 /** Typed lookup by semantic token path: `token(theme, "color.accent")`. */
