@@ -34,7 +34,7 @@ Defined in the root `package.json`. Run them from the repo root.
 | `pnpm check:packages` | `publint` and `attw --profile esm-only` on every package in `packages/` |
 | `pnpm test:parity` | Parity harness; `--platform web\|ios\|android\|all`, `--update` to rewrite baselines (only for intended visual changes) |
 | `pnpm new:component` | Component generator (`tooling/scripts/new-component.ts`) |
-| `pnpm release` | Build and `changeset publish` (CI only) |
+| `pnpm release` | Build and `changeset publish` (CI only); skips while the packages are at `0.0.0` |
 
 Toolchain: Node 26 (`.nvmrc`), pnpm from `packageManager` via Corepack.
 
