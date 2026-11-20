@@ -17,6 +17,7 @@ import { runs } from "../src/fixtures";
 import { type Metrics, metricsPath, screenshotPath } from "../src/types";
 import { startCollector } from "./collector";
 import { compare, countRuns } from "./compare";
+import { warmUpCommands } from "./flow";
 import { writeReport } from "./report";
 
 type Target = "web" | "ios" | "android";
@@ -145,7 +146,7 @@ async function runNative(platform: "ios" | "android"): Promise<void> {
     const warmUp = all.at(-1);
     let flow = flowHeader;
     if (warmUp) {
-      flow += `# warm-up\n${commandsFor(warmUp).replace(/^- takeScreenshot:.*$/m, "")}`;
+      flow += `# warm-up\n${warmUpCommands(commandsFor(warmUp))}`;
       flow += "- waitForAnimationToEnd:\n    timeout: 3000\n";
     }
     for (const r of all) {
