@@ -65,6 +65,7 @@
     "@unison-ui/tsconfig": "workspace:*",
     "@vitest/coverage-v8": "^5.1.1",
     "ajv": "^8.20.0",
+    "fast-check": "^4.10.3",
     "tailwindcss": "^4.3.5",
     "tsdown": "^0.23.7",
     "typescript": "catalog:",

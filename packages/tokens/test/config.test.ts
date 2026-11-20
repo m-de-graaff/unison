@@ -46,3 +46,24 @@ it("overrides accept semantic aliases only", () => {
     "only semantic tokens can be overridden",
   );
 });
+
+it.each([
+  ["fonts", { sans: "Geist, sans-serif" }, { sans: 42 }],
+  ["overrides", { "radius.card": "{radius.xl}" }, { "radius.card": "12px" }],
+] as const)("%s: a valid and an invalid value", (key, ok, bad) => {
+  expect(() => one({ [key]: ok } as never)).not.toThrow();
+  expect(() => one({ [key]: bad } as never)).toThrow(ConfigError);
+});
+
+it("extends: a known parent builds, an unknown one fails with a suggestion", () => {
+  const two = (parent: string) =>
+    build(
+      defineConfig({
+        themes: { default: defineTheme({}), brand: defineTheme({ extends: parent }) },
+      }),
+    );
+  expect(() => two("default")).not.toThrow();
+  expect(() => two("defualt")).toThrow(
+    'themes.brand.extends: no theme "defualt", did you mean "default"?',
+  );
+});

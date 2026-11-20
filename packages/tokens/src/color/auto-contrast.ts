@@ -20,6 +20,8 @@ export function autoAdjust(
   fg: string,
   bg: string,
   min: number,
+  /** Counts loop iterations (tests use it to prove termination). */
+  counter?: { n: number },
 ): { hex: string; ratio: number } | undefined {
   const f = oklch(parse(fg));
   const b = oklch(parse(bg));
@@ -28,6 +30,7 @@ export function autoAdjust(
   let l = f.l;
   let flipped = false;
   for (let i = 0; i < MAX_STEPS; i++) {
+    if (counter) counter.n++;
     const next = l + dir * STEP;
     if (next > 1 || next < 0) {
       if (flipped) return undefined;

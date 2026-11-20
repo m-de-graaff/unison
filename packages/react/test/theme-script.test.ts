@@ -32,3 +32,34 @@ it("ignores a stored value that isn't valid", () => {
     unisonTheme: "default",
   });
 });
+
+it("ThemeScript renders the same script, which runs from static markup", async () => {
+  const { renderToStaticMarkup } = await import("react-dom/server");
+  const { createElement } = await import("react");
+  const { ThemeScript } = await import("../src/theme-script");
+  const html = renderToStaticMarkup(createElement(ThemeScript, {}));
+  const code = /<script>([\s\S]*)<\/script>/.exec(html)?.[1] ?? "";
+  localStorage.setItem("unison-scheme", "light");
+  localStorage.setItem("unison-theme", "brand");
+  new Function(code)();
+  expect({ ...document.documentElement.dataset }).toEqual({ theme: "light", unisonTheme: "brand" });
+});
+
+it("a throwing localStorage leaves the defaults and doesn't throw", () => {
+  const original = Object.getOwnPropertyDescriptor(window, "localStorage");
+  Object.defineProperty(window, "localStorage", {
+    configurable: true,
+    get() {
+      throw new Error("denied");
+    },
+  });
+  try {
+    expect(() => new Function(themeScript({ defaultScheme: "dark" }))()).not.toThrow();
+    expect({ ...document.documentElement.dataset }).toEqual({
+      theme: "dark",
+      unisonTheme: "default",
+    });
+  } finally {
+    if (original) Object.defineProperty(window, "localStorage", original);
+  }
+});
