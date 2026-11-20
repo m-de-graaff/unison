@@ -1,0 +1,8 @@
+{
+  "opacity": {
+    "$type": "number",
+    "50": {
+      "$value": 0.5
+    }
+  }
+}

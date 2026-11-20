@@ -1,22 +1,26 @@
+import "@fontsource-variable/inter";
+import "@fontsource-variable/jetbrains-mono";
+import { ThemeProvider, ThemeScript } from "@unison-ui/ui";
+import { THEMES } from "demo-content";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Unison demo",
-  description: "Unison phase 0 demo (Next.js)",
+  description: "Unison demo (Next.js)",
 };
-
-// Runs before paint: applies a saved theme so there is no flash of the wrong one.
-const themeScript = `try{var t=localStorage.getItem("unison-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        {/* Sets data-theme and data-unison-theme before paint: no flash of the wrong theme. */}
+        <ThemeScript />
       </head>
-      <body>{children}</body>
+      <body>
+        <ThemeProvider themes={THEMES}>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

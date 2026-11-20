@@ -30,8 +30,8 @@ export interface ${pascal}Props {
   [p("packages/core/src/components", name, `${name}.styles.ts`)]:
     `// Token paths only, never raw values.
 export const ${camel}Styles = {
-  size: "size.box",
-  radius: "radius.md",
+  size: "size.demo-box",
+  radius: "radius.card",
   border: "color.border",
   background: "color.surface",
 } as const;

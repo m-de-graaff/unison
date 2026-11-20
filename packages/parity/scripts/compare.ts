@@ -3,9 +3,10 @@ import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSyn
 import { dirname, join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
+import { differenceCiede2000 } from "culori";
 import pixelmatch from "pixelmatch";
 import { PNG } from "pngjs";
-import { runs } from "../src/fixtures";
+import { checkOf, runs } from "../src/fixtures";
 import {
   baselinePath,
   CROSS_PLATFORMS,
@@ -13,6 +14,7 @@ import {
   OUT,
   PLATFORMS,
   type Platform,
+  type Rect,
 } from "../src/types";
 
 export interface CompareOptions {
@@ -21,6 +23,8 @@ export interface CompareOptions {
   crossOnly?: boolean;
   /** Directory holding <platform>/<run>.json; defaults to parity-output/metrics. */
   metricsDir?: string;
+  /** Directory holding <platform>/<run>.png for the colour check; defaults to parity-output/screenshots. */
+  screenshotsDir?: string;
 }
 
 const TOLERANCE_PX = 1;
@@ -37,13 +41,30 @@ function walk(dir: string, ext: string, out: string[] = []): string[] {
   return out;
 }
 
+const hex2 = (n: number) => n.toString(16).padStart(2, "0");
+
+/** The colour at a stage-relative point of a stage screenshot taken at `pixelRatio`. */
+export function sampleColor(png: PNG, point: { x: number; y: number }, pixelRatio: number): string {
+  const x = Math.min(png.width - 1, Math.max(0, Math.round(point.x * pixelRatio)));
+  const y = Math.min(png.height - 1, Math.max(0, Math.round(point.y * pixelRatio)));
+  const i = (y * png.width + x) * 4;
+  return `#${hex2(png.data[i] as number)}${hex2(png.data[i + 1] as number)}${hex2(png.data[i + 2] as number)}`;
+}
+
+const ciede2000 = differenceCiede2000();
+/** CIEDE2000 colour difference between two hex colours (0 = identical, ~1 = just noticeable). */
+export const deltaE2000 = (a: string, b: string): number => ciede2000(a, b);
+
 // Only the current fixtures count: stale output from a deleted fixture must not fail the run.
 const currentRuns = () => new Set(runs().map((r) => r.id));
 
 const runIdOf = (root: string, file: string, ext: string) =>
   relative(root, file).split("\\").join("/").slice(0, -ext.length);
 
-function compareCross(metricsDir: string): { failures: string[]; runs: number } {
+function compareCross(
+  metricsDir: string,
+  screenshotsDir: string,
+): { failures: string[]; runs: number } {
   const failures: string[] = [];
   const byRun = new Map<string, Map<Platform, Metrics>>();
   const known = currentRuns();
@@ -59,25 +80,93 @@ function compareCross(metricsDir: string): { failures: string[]; runs: number } 
   }
   // Only the platforms present are compared (docs/plans/phase-0.md, OQ-14).
   for (const [run, platforms] of [...byRun].sort(([a], [b]) => a.localeCompare(b))) {
+    const check = checkOf(run.split("/")[0] as string);
+    const props =
+      typeof check === "object" && check.layout === "height-y"
+        ? (["y", "height"] as const)
+        : (["x", "y", "width", "height"] as const);
     const entries = [...platforms];
     for (let i = 0; i < entries.length; i++) {
       for (let j = i + 1; j < entries.length; j++) {
         const [pa, a] = entries[i] as [Platform, Metrics];
         const [pb, b] = entries[j] as [Platform, Metrics];
-        for (const prop of ["x", "y", "width", "height"] as const) {
-          const va = a.parts.subject[prop];
-          const vb = b.parts.subject[prop];
-          const delta = Math.abs(va - vb);
-          if (delta > TOLERANCE_PX) {
-            failures.push(
-              `FAIL ${run}: subject.${prop} ${pa}=${va} ${pb}=${vb} (Δ${+delta.toFixed(2)})`,
-            );
+        // Both platforms must report the same parts and samples, or the checks below pass vacuously.
+        failures.push(
+          ...missingNames(run, "parts", [pa, a.parts], [pb, b.parts]),
+          ...missingNames(run, "samples", [pa, a.samples ?? {}], [pb, b.samples ?? {}]),
+        );
+        const names = Object.keys(a.parts)
+          .filter((n) => Object.hasOwn(b.parts, n))
+          .sort();
+        for (const name of names) {
+          for (const prop of props) {
+            const va = (a.parts[name] as Rect)[prop];
+            const vb = (b.parts[name] as Rect)[prop];
+            const delta = Math.abs(va - vb);
+            if (delta > TOLERANCE_PX) {
+              failures.push(
+                `FAIL ${run}: ${name}.${prop} ${pa}=${va} ${pb}=${vb} (Δ${+delta.toFixed(2)})`,
+              );
+            }
           }
+        }
+        if (typeof check === "object" && "color" in check) {
+          failures.push(
+            ...compareColors(run, [pa, a], [pb, b], check.color.maxDeltaE, screenshotsDir),
+          );
         }
       }
     }
   }
   return { failures, runs: byRun.size };
+}
+
+/** `FAIL <run>: parts differ, ios lacks line-title` for every name one platform lacks. */
+function missingNames(
+  run: string,
+  what: "parts" | "samples",
+  [pa, a]: [Platform, object],
+  [pb, b]: [Platform, object],
+): string[] {
+  const lacks = (p: Platform, have: object, other: object) =>
+    Object.keys(other)
+      .filter((n) => !Object.hasOwn(have, n))
+      .sort()
+      .map((n) => `FAIL ${run}: ${what} differ, ${p} lacks ${n}`);
+  return [...lacks(pb, b, a), ...lacks(pa, a, b)];
+}
+
+const readPng = (file: string) => PNG.sync.read(readFileSync(file));
+
+/** Samples each platform's screenshot at the reported centre points and compares the colours. */
+function compareColors(
+  run: string,
+  [pa, a]: [Platform, Metrics],
+  [pb, b]: [Platform, Metrics],
+  maxDeltaE: number,
+  screenshotsDir: string,
+): string[] {
+  const shotA = join(screenshotsDir, pa, `${run}.png`);
+  const shotB = join(screenshotsDir, pb, `${run}.png`);
+  if (!existsSync(shotA) || !existsSync(shotB)) {
+    return [`FAIL ${run}: colour check needs screenshots from ${pa} and ${pb}`];
+  }
+  const [pngA, pngB] = [readPng(shotA), readPng(shotB)];
+  const failures: string[] = [];
+  for (const name of Object.keys(a.samples ?? {}).sort()) {
+    const sa = a.samples?.[name];
+    const sb = b.samples?.[name];
+    if (!sa || !sb) continue;
+    const ca = sampleColor(pngA, sa, a.pixelRatio);
+    const cb = sampleColor(pngB, sb, b.pixelRatio);
+    const d = deltaE2000(ca, cb);
+    if (d > maxDeltaE) {
+      failures.push(
+        `FAIL ${run}: ${name} colour ${pa}=${ca} ${pb}=${cb} (ΔE ${d.toFixed(2)} > ${maxDeltaE})`,
+      );
+    }
+  }
+  return failures;
 }
 
 function compareBaselines(update: boolean): { failures: string[]; runs: number } {
@@ -124,14 +213,22 @@ function compareBaselines(update: boolean): { failures: string[]; runs: number }
 export function compare(opts: CompareOptions = {}): string[] {
   const failures: string[] = [];
   if (!opts.baselineOnly) {
-    failures.push(...compareCross(opts.metricsDir ?? join(OUT, "metrics")).failures);
+    failures.push(
+      ...compareCross(
+        opts.metricsDir ?? join(OUT, "metrics"),
+        opts.screenshotsDir ?? join(OUT, "screenshots"),
+      ).failures,
+    );
   }
   if (!opts.crossOnly) failures.push(...compareBaselines(opts.update ?? false).failures);
   return failures;
 }
 
 export function countRuns(opts: CompareOptions = {}): number {
-  return compareCross(opts.metricsDir ?? join(OUT, "metrics")).runs;
+  return compareCross(
+    opts.metricsDir ?? join(OUT, "metrics"),
+    opts.screenshotsDir ?? join(OUT, "screenshots"),
+  ).runs;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

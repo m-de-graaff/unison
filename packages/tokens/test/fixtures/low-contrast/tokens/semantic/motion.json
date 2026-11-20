@@ -1,0 +1,218 @@
+{
+  "motion": {
+    "duration": {
+      "$type": "duration",
+      "fast": {
+        "$description": "Small state changes: hover, toggles, colour",
+        "enter": {
+          "$value": "{duration.120}"
+        },
+        "exit": {
+          "$value": "{duration.80}"
+        }
+      },
+      "base": {
+        "$description": "Standard UI: popovers, menus, fades",
+        "enter": {
+          "$value": "{duration.200}"
+        },
+        "exit": {
+          "$value": "{duration.140}"
+        }
+      },
+      "slow": {
+        "$description": "Large surfaces: dialogs, sheets (when not spring-driven)",
+        "enter": {
+          "$value": "{duration.320}"
+        },
+        "exit": {
+          "$value": "{duration.240}"
+        }
+      }
+    },
+    "enter": {
+      "$type": "transition",
+      "$value": {
+        "duration": "{motion.duration.base.enter}",
+        "easing": "{easing.enter}"
+      },
+      "$description": "Elements appearing"
+    },
+    "exit": {
+      "$type": "transition",
+      "$value": {
+        "duration": "{motion.duration.base.exit}",
+        "easing": "{easing.exit}"
+      },
+      "$description": "Elements leaving"
+    },
+    "emphasis": {
+      "$type": "transition",
+      "$value": {
+        "spring": "{spring.snappy}"
+      },
+      "$description": "Attention-drawing, spring-driven"
+    },
+    "preset": {
+      "$type": "motionPreset",
+      "$description": "Enter, exit and reduced-motion variants of the animation presets",
+      "fade": {
+        "$value": {
+          "enter": {
+            "from": {
+              "opacity": 0
+            },
+            "to": {
+              "opacity": 1
+            },
+            "transition": {
+              "duration": "{motion.duration.base.enter}",
+              "easing": "{easing.enter}"
+            }
+          },
+          "exit": {
+            "to": {
+              "opacity": 0
+            },
+            "transition": {
+              "duration": "{motion.duration.base.exit}",
+              "easing": "{easing.exit}"
+            }
+          },
+          "reduced": "opacity"
+        }
+      },
+      "scale-in": {
+        "$value": {
+          "enter": {
+            "from": {
+              "opacity": 0,
+              "scale": 0.96
+            },
+            "to": {
+              "opacity": 1,
+              "scale": 1
+            },
+            "transition": {
+              "spring": "{spring.snappy}"
+            }
+          },
+          "exit": {
+            "to": {
+              "opacity": 0,
+              "scale": 0.98
+            },
+            "transition": {
+              "duration": "{motion.duration.fast.exit}",
+              "easing": "{easing.exit}"
+            }
+          },
+          "reduced": "opacity"
+        }
+      },
+      "slide-up": {
+        "$value": {
+          "enter": {
+            "from": {
+              "opacity": 0,
+              "translateY": 8
+            },
+            "to": {
+              "opacity": 1,
+              "translateY": 0
+            },
+            "transition": {
+              "spring": "{spring.snappy}"
+            }
+          },
+          "exit": {
+            "to": {
+              "opacity": 0,
+              "translateY": 4
+            },
+            "transition": {
+              "duration": "{motion.duration.fast.exit}",
+              "easing": "{easing.exit}"
+            }
+          },
+          "reduced": "opacity"
+        }
+      },
+      "sheet": {
+        "$value": {
+          "enter": {
+            "from": {
+              "translateY": "100%"
+            },
+            "to": {
+              "translateY": 0
+            },
+            "transition": {
+              "spring": "{spring.smooth}"
+            }
+          },
+          "exit": {
+            "to": {
+              "translateY": "100%"
+            },
+            "transition": {
+              "duration": "{motion.duration.slow.exit}",
+              "easing": "{easing.exit}"
+            }
+          },
+          "reduced": "opacity"
+        }
+      },
+      "pop": {
+        "$value": {
+          "enter": {
+            "from": {
+              "scale": 0.9
+            },
+            "to": {
+              "scale": 1
+            },
+            "transition": {
+              "spring": "{spring.bouncy}"
+            }
+          },
+          "exit": {
+            "to": {
+              "opacity": 0
+            },
+            "transition": {
+              "duration": "{motion.duration.fast.exit}",
+              "easing": "{easing.exit}"
+            }
+          },
+          "reduced": "opacity"
+        }
+      },
+      "press": {
+        "$value": {
+          "enter": {
+            "from": {
+              "scale": 1
+            },
+            "to": {
+              "scale": 0.97
+            },
+            "transition": {
+              "duration": "{duration.80}",
+              "easing": "{easing.standard}"
+            }
+          },
+          "exit": {
+            "to": {
+              "scale": 1
+            },
+            "transition": {
+              "spring": "{spring.snappy}"
+            }
+          },
+          "reduced": "none"
+        }
+      }
+    }
+  }
+}

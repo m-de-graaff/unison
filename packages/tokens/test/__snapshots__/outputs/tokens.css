@@ -1,0 +1,1386 @@
+[data-unison-theme="default"][data-theme="light"]:where(:not(:root)), :where(:root, [data-theme="light"], [data-unison-theme="default"], :root[data-unison-theme="default"] [data-theme="light"]), :where(:not(:root)[data-theme="light"]) [data-unison-theme="default"], :where(:not(:root)[data-unison-theme="default"]) [data-theme="light"] {
+  --unison-animate-fade: unison-fade-in var(--unison-motion-duration-base-enter) var(--unison-easing-enter) both;
+  --unison-animate-fade-out: unison-fade-out var(--unison-motion-duration-base-exit) var(--unison-easing-exit) both;
+  --unison-animate-pop: unison-pop-in var(--unison-spring-bouncy-duration) var(--unison-spring-bouncy) both;
+  --unison-animate-pop-out: unison-pop-out var(--unison-motion-duration-fast-exit) var(--unison-easing-exit) both;
+  --unison-animate-press: unison-press-in var(--unison-duration-80) var(--unison-easing-standard) both;
+  --unison-animate-press-out: unison-press-out var(--unison-spring-snappy-duration) var(--unison-spring-snappy) both;
+  --unison-animate-scale-in: unison-scale-in-in var(--unison-spring-snappy-duration) var(--unison-spring-snappy) both;
+  --unison-animate-scale-in-out: unison-scale-in-out var(--unison-motion-duration-fast-exit) var(--unison-easing-exit) both;
+  --unison-animate-sheet: unison-sheet-in var(--unison-spring-smooth-duration) var(--unison-spring-smooth) both;
+  --unison-animate-sheet-out: unison-sheet-out var(--unison-motion-duration-slow-exit) var(--unison-easing-exit) both;
+  --unison-animate-slide-up: unison-slide-up-in var(--unison-spring-snappy-duration) var(--unison-spring-snappy) both;
+  --unison-animate-slide-up-out: unison-slide-up-out var(--unison-motion-duration-fast-exit) var(--unison-easing-exit) both;
+  --unison-border-width-0: 0px;
+  --unison-border-width-1: 1px;
+  --unison-border-width-2: 2px;
+  --unison-border-width-default: var(--unison-border-width-1);
+  --unison-border-width-ring: var(--unison-border-width-2);
+  --unison-breakpoint-2xl: 1536px;
+  --unison-breakpoint-lg: 1024px;
+  --unison-breakpoint-md: 768px;
+  --unison-breakpoint-sm: 640px;
+  --unison-breakpoint-xl: 1280px;
+  --unison-color-accent: var(--unison-color-accent-600);
+  --unison-color-accent-50: #f5f9ff;
+  --unison-color-accent-100: #ecf3ff;
+  --unison-color-accent-200: #dce5ff;
+  --unison-color-accent-300: #c4d1ff;
+  --unison-color-accent-400: #9daeff;
+  --unison-color-accent-500: #7281ff;
+  --unison-color-accent-600: #535cda;
+  --unison-color-accent-700: #464dbb;
+  --unison-color-accent-800: #353b91;
+  --unison-color-accent-900: #272c6c;
+  --unison-color-accent-950: #171a4c;
+  --unison-color-accent-active: var(--unison-color-accent-800);
+  --unison-color-accent-fg: var(--unison-color-accent-700);
+  --unison-color-accent-hover: var(--unison-color-accent-700);
+  --unison-color-accent-subtle: var(--unison-color-accent-100);
+  --unison-color-black: #000000;
+  --unison-color-border: var(--unison-color-gray-200);
+  --unison-color-border-strong: var(--unison-color-gray-500);
+  --unison-color-canvas: var(--unison-color-gray-50);
+  --unison-color-danger: var(--unison-color-danger-600);
+  --unison-color-danger-50: #fff4f2;
+  --unison-color-danger-100: #ffebe7;
+  --unison-color-danger-200: #ffd9d4;
+  --unison-color-danger-300: #ffbeb7;
+  --unison-color-danger-400: #ff8a82;
+  --unison-color-danger-500: #f4514f;
+  --unison-color-danger-600: #c52b30;
+  --unison-color-danger-700: #a92227;
+  --unison-color-danger-800: #831a1d;
+  --unison-color-danger-900: #621516;
+  --unison-color-danger-950: #430709;
+  --unison-color-danger-border: var(--unison-color-danger-300);
+  --unison-color-danger-fg: var(--unison-color-danger-700);
+  --unison-color-danger-subtle: var(--unison-color-danger-100);
+  --unison-color-fg: var(--unison-color-gray-950);
+  --unison-color-fg-muted: var(--unison-color-gray-700);
+  --unison-color-fg-subtle: var(--unison-color-gray-500);
+  --unison-color-gray-50: #fafafb;
+  --unison-color-gray-100: #f3f4f6;
+  --unison-color-gray-200: #e6e7eb;
+  --unison-color-gray-300: #d3d4da;
+  --unison-color-gray-400: #b3b5bd;
+  --unison-color-gray-500: #90929a;
+  --unison-color-gray-600: #6c6e75;
+  --unison-color-gray-700: #5c5d64;
+  --unison-color-gray-800: #46474c;
+  --unison-color-gray-900: #343539;
+  --unison-color-gray-950: #212124;
+  --unison-color-info: var(--unison-color-info-600);
+  --unison-color-info-50: #f0fcff;
+  --unison-color-info-100: #def8ff;
+  --unison-color-info-200: #c2eeff;
+  --unison-color-info-300: #9bdeff;
+  --unison-color-info-400: #59c0ff;
+  --unison-color-info-500: #069ce4;
+  --unison-color-info-600: #0076b8;
+  --unison-color-info-700: #00649d;
+  --unison-color-info-800: #004d7a;
+  --unison-color-info-900: #00395b;
+  --unison-color-info-950: #00253e;
+  --unison-color-info-border: var(--unison-color-info-300);
+  --unison-color-info-fg: var(--unison-color-info-700);
+  --unison-color-info-subtle: var(--unison-color-info-100);
+  --unison-color-muted: var(--unison-color-gray-200);
+  --unison-color-on-accent: var(--unison-color-white);
+  --unison-color-on-danger: var(--unison-color-white);
+  --unison-color-on-info: var(--unison-color-white);
+  --unison-color-on-success: var(--unison-color-white);
+  --unison-color-on-warning: var(--unison-color-black);
+  --unison-color-overlay: #00000080;
+  --unison-color-ring: var(--unison-color-accent-600);
+  --unison-color-subtle: var(--unison-color-gray-100);
+  --unison-color-success: var(--unison-color-success-600);
+  --unison-color-success-50: #f1fef3;
+  --unison-color-success-100: #e1fde5;
+  --unison-color-success-200: #c4f6cd;
+  --unison-color-success-300: #9aebab;
+  --unison-color-success-400: #63d180;
+  --unison-color-success-500: #24ae56;
+  --unison-color-success-600: #008736;
+  --unison-color-success-700: #00732c;
+  --unison-color-success-800: #005821;
+  --unison-color-success-900: #004219;
+  --unison-color-success-950: #002b0b;
+  --unison-color-success-border: var(--unison-color-success-300);
+  --unison-color-success-fg: var(--unison-color-success-700);
+  --unison-color-success-subtle: var(--unison-color-success-100);
+  --unison-color-surface: var(--unison-color-white);
+  --unison-color-surface-raised: var(--unison-color-white);
+  --unison-color-warning: var(--unison-color-warning-400);
+  --unison-color-warning-50: #fff9eb;
+  --unison-color-warning-100: #fff1d5;
+  --unison-color-warning-200: #ffe1af;
+  --unison-color-warning-300: #ffca78;
+  --unison-color-warning-400: #eea628;
+  --unison-color-warning-500: #c98000;
+  --unison-color-warning-600: #9b6000;
+  --unison-color-warning-700: #845100;
+  --unison-color-warning-800: #673d00;
+  --unison-color-warning-900: #4f2c00;
+  --unison-color-warning-950: #351b00;
+  --unison-color-warning-border: var(--unison-color-warning-300);
+  --unison-color-warning-fg: var(--unison-color-warning-700);
+  --unison-color-warning-subtle: var(--unison-color-warning-100);
+  --unison-color-white: #ffffff;
+  --unison-duration-0: 0ms;
+  --unison-duration-50: 50ms;
+  --unison-duration-80: 80ms;
+  --unison-duration-120: 120ms;
+  --unison-duration-140: 140ms;
+  --unison-duration-160: 160ms;
+  --unison-duration-200: 200ms;
+  --unison-duration-240: 240ms;
+  --unison-duration-320: 320ms;
+  --unison-duration-400: 400ms;
+  --unison-duration-500: 500ms;
+  --unison-easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --unison-easing-exit: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --unison-easing-linear: cubic-bezier(0, 0, 1, 1);
+  --unison-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --unison-elevation-overlay: var(--unison-shadow-xl);
+  --unison-elevation-popover: var(--unison-shadow-lg);
+  --unison-elevation-raised: var(--unison-shadow-sm);
+  --unison-font-family-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --unison-font-family-sans: "Inter Variable", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --unison-motion-duration-base-enter: var(--unison-duration-200);
+  --unison-motion-duration-base-exit: var(--unison-duration-140);
+  --unison-motion-duration-fast-enter: var(--unison-duration-120);
+  --unison-motion-duration-fast-exit: var(--unison-duration-80);
+  --unison-motion-duration-slow-enter: var(--unison-duration-320);
+  --unison-motion-duration-slow-exit: var(--unison-duration-240);
+  --unison-opacity-50: 0.5;
+  --unison-opacity-disabled: var(--unison-opacity-50);
+  --unison-radius-2xl: 16px;
+  --unison-radius-card: var(--unison-radius-lg);
+  --unison-radius-control: var(--unison-radius-md);
+  --unison-radius-full: 9999px;
+  --unison-radius-lg: 8px;
+  --unison-radius-md: 6px;
+  --unison-radius-none: 0px;
+  --unison-radius-overlay: var(--unison-radius-xl);
+  --unison-radius-pill: var(--unison-radius-full);
+  --unison-radius-sm: 4px;
+  --unison-radius-xl: 12px;
+  --unison-radius-xs: 2px;
+  --unison-ring-offset-2: 2px;
+  --unison-ring-offset-default: var(--unison-ring-offset-2);
+  --unison-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --unison-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --unison-shadow-sm: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --unison-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --unison-shadow-xs: 0 1px 2px rgb(0 0 0 / 0.05);
+  --unison-size-control-lg: 48px;
+  --unison-size-control-md: 40px;
+  --unison-size-control-sm: 32px;
+  --unison-size-demo-box: var(--unison-space-24);
+  --unison-size-icon-lg: 24px;
+  --unison-size-icon-md: 20px;
+  --unison-size-icon-sm: 16px;
+  --unison-size-touch-target: 44px;
+  --unison-space-0: 0px;
+  --unison-space-0-5: 2px;
+  --unison-space-1: 4px;
+  --unison-space-1-5: 6px;
+  --unison-space-2: 8px;
+  --unison-space-3: 12px;
+  --unison-space-4: 16px;
+  --unison-space-5: 20px;
+  --unison-space-6: 24px;
+  --unison-space-8: 32px;
+  --unison-space-10: 40px;
+  --unison-space-12: 48px;
+  --unison-space-16: 64px;
+  --unison-space-20: 80px;
+  --unison-space-24: 96px;
+  --unison-spring-bouncy: linear(0, 0.1383, 0.442, 0.7302, 0.9992, 1.1625, 1.2201, 1.2046, 1.1443, 1.071, 1.0083, 0.9682, 0.9529, 0.9534, 0.9656, 0.9817, 0.9946, 1.005, 1.0101, 1.0106, 1.0085, 1.0051, 1.0017, 0.9992, 0.9979, 0.9976, 0.998, 0.9987, 0.9995, 1.0001, 1.0004, 1);
+  --unison-spring-bouncy-duration: 1004ms;
+  --unison-spring-smooth: linear(0, 0.0704, 0.1882, 0.3452, 0.4912, 0.5958, 0.6987, 0.7787, 0.8303, 0.8777, 0.9125, 0.9341, 0.9533, 0.9671, 0.9755, 0.9828, 0.988, 0.9916, 0.9938, 0.9957, 0.997, 0.9978, 0.9985, 0.9989, 0.9992, 0.9995, 0.9996, 0.9997, 0.9998, 0.9999, 0.9999, 1);
+  --unison-spring-smooth-duration: 733ms;
+  --unison-spring-snappy: linear(0, 0.0469, 0.1263, 0.2619, 0.4081, 0.5143, 0.6429, 0.7518, 0.8195, 0.8915, 0.9446, 0.9736, 1.0006, 1.0169, 1.0239, 1.0279, 1.028, 1.0256, 1.0229, 1.0189, 1.0148, 1.0119, 1.0085, 1.0057, 1.004, 1.0023, 1.001, 1.0003, 0.9997, 0.9994, 0.9992, 1);
+  --unison-spring-snappy-duration: 475ms;
+  --unison-text-body-lg-line-height: 28px;
+  --unison-text-body-lg-size: 18px;
+  --unison-text-body-lg-tracking: -0.011em;
+  --unison-text-body-lg-weight: 400;
+  --unison-text-body-line-height: 24px;
+  --unison-text-body-size: 16px;
+  --unison-text-body-sm-line-height: 20px;
+  --unison-text-body-sm-size: 14px;
+  --unison-text-body-sm-tracking: 0em;
+  --unison-text-body-sm-weight: 400;
+  --unison-text-body-tracking: -0.011em;
+  --unison-text-body-weight: 400;
+  --unison-text-caption-line-height: 16px;
+  --unison-text-caption-size: 12px;
+  --unison-text-caption-tracking: 0em;
+  --unison-text-caption-weight: 400;
+  --unison-text-code-line-height: 20px;
+  --unison-text-code-size: 13px;
+  --unison-text-code-tracking: 0em;
+  --unison-text-code-weight: 400;
+  --unison-text-display-line-height: 40px;
+  --unison-text-display-size: 36px;
+  --unison-text-display-tracking: -0.02em;
+  --unison-text-display-weight: 700;
+  --unison-text-label-line-height: 18px;
+  --unison-text-label-size: 13px;
+  --unison-text-label-tracking: 0em;
+  --unison-text-label-weight: 500;
+  --unison-text-max-scale: 1.5;
+  --unison-text-title-lg-line-height: 32px;
+  --unison-text-title-lg-size: 24px;
+  --unison-text-title-lg-tracking: -0.02em;
+  --unison-text-title-lg-weight: 600;
+  --unison-text-title-line-height: 28px;
+  --unison-text-title-size: 20px;
+  --unison-text-title-sm-line-height: 24px;
+  --unison-text-title-sm-size: 16px;
+  --unison-text-title-sm-tracking: -0.011em;
+  --unison-text-title-sm-weight: 600;
+  --unison-text-title-tracking: -0.011em;
+  --unison-text-title-weight: 600;
+  --unison-z-index-base: 0;
+  --unison-z-index-dropdown: 1000;
+  --unison-z-index-modal: 1400;
+  --unison-z-index-overlay: 1300;
+  --unison-z-index-popover: 1500;
+  --unison-z-index-raised: 10;
+  --unison-z-index-sticky: 1100;
+  --unison-z-index-toast: 1700;
+  --unison-z-index-tooltip: 1800;
+}
+
+@supports (color: oklch(0 0 0)) {
+  [data-unison-theme="default"][data-theme="light"]:where(:not(:root)), :where(:root, [data-theme="light"], [data-unison-theme="default"], :root[data-unison-theme="default"] [data-theme="light"]), :where(:not(:root)[data-theme="light"]) [data-unison-theme="default"], :where(:not(:root)[data-unison-theme="default"]) [data-theme="light"] {
+    --unison-color-accent-50: oklch(0.985 0.024 275);
+    --unison-color-accent-100: oklch(0.967 0.05 275);
+    --unison-color-accent-200: oklch(0.928 0.09 275);
+    --unison-color-accent-300: oklch(0.872 0.14 275);
+    --unison-color-accent-400: oklch(0.775 0.18 275);
+    --unison-color-accent-500: oklch(0.66 0.2 275);
+    --unison-color-accent-600: oklch(0.54 0.19 275);
+    --unison-color-accent-700: oklch(0.48 0.17 275);
+    --unison-color-accent-800: oklch(0.4 0.14 275);
+    --unison-color-accent-900: oklch(0.33 0.11 275);
+    --unison-color-accent-950: oklch(0.25 0.09 275);
+    --unison-color-black: oklch(0 0 0);
+    --unison-color-danger-50: oklch(0.985 0.024 25);
+    --unison-color-danger-100: oklch(0.967 0.05 25);
+    --unison-color-danger-200: oklch(0.928 0.09 25);
+    --unison-color-danger-300: oklch(0.872 0.14 25);
+    --unison-color-danger-400: oklch(0.775 0.18 25);
+    --unison-color-danger-500: oklch(0.66 0.2 25);
+    --unison-color-danger-600: oklch(0.54 0.19 25);
+    --unison-color-danger-700: oklch(0.48 0.17 25);
+    --unison-color-danger-800: oklch(0.4 0.14 25);
+    --unison-color-danger-900: oklch(0.33 0.11 25);
+    --unison-color-danger-950: oklch(0.25 0.09 25);
+    --unison-color-gray-50: oklch(0.985 0.0014 275);
+    --unison-color-gray-100: oklch(0.967 0.003 275);
+    --unison-color-gray-200: oklch(0.928 0.0054 275);
+    --unison-color-gray-300: oklch(0.872 0.0084 275);
+    --unison-color-gray-400: oklch(0.775 0.0108 275);
+    --unison-color-gray-500: oklch(0.66 0.012 275);
+    --unison-color-gray-600: oklch(0.54 0.0114 275);
+    --unison-color-gray-700: oklch(0.48 0.0102 275);
+    --unison-color-gray-800: oklch(0.4 0.0084 275);
+    --unison-color-gray-900: oklch(0.33 0.0066 275);
+    --unison-color-gray-950: oklch(0.25 0.0054 275);
+    --unison-color-info-50: oklch(0.985 0.018 240);
+    --unison-color-info-100: oklch(0.967 0.0375 240);
+    --unison-color-info-200: oklch(0.928 0.0675 240);
+    --unison-color-info-300: oklch(0.872 0.105 240);
+    --unison-color-info-400: oklch(0.775 0.135 240);
+    --unison-color-info-500: oklch(0.66 0.15 240);
+    --unison-color-info-600: oklch(0.54 0.1425 240);
+    --unison-color-info-700: oklch(0.48 0.1275 240);
+    --unison-color-info-800: oklch(0.4 0.105 240);
+    --unison-color-info-900: oklch(0.33 0.0825 240);
+    --unison-color-info-950: oklch(0.25 0.0675 240);
+    --unison-color-success-50: oklch(0.985 0.0204 150);
+    --unison-color-success-100: oklch(0.967 0.0425 150);
+    --unison-color-success-200: oklch(0.928 0.0765 150);
+    --unison-color-success-300: oklch(0.872 0.119 150);
+    --unison-color-success-400: oklch(0.775 0.153 150);
+    --unison-color-success-500: oklch(0.66 0.17 150);
+    --unison-color-success-600: oklch(0.54 0.1615 150);
+    --unison-color-success-700: oklch(0.48 0.1445 150);
+    --unison-color-success-800: oklch(0.4 0.119 150);
+    --unison-color-success-900: oklch(0.33 0.0935 150);
+    --unison-color-success-950: oklch(0.25 0.0765 150);
+    --unison-color-warning-50: oklch(0.985 0.0204 75);
+    --unison-color-warning-100: oklch(0.967 0.0425 75);
+    --unison-color-warning-200: oklch(0.928 0.0765 75);
+    --unison-color-warning-300: oklch(0.872 0.119 75);
+    --unison-color-warning-400: oklch(0.775 0.153 75);
+    --unison-color-warning-500: oklch(0.66 0.17 75);
+    --unison-color-warning-600: oklch(0.54 0.1615 75);
+    --unison-color-warning-700: oklch(0.48 0.1445 75);
+    --unison-color-warning-800: oklch(0.4 0.119 75);
+    --unison-color-warning-900: oklch(0.33 0.0935 75);
+    --unison-color-warning-950: oklch(0.25 0.0765 75);
+    --unison-color-white: oklch(1 0 0);
+  }
+}
+
+[data-unison-theme="default"][data-theme="dark"]:where(:not(:root)), :where([data-theme="dark"], :root[data-theme="dark"] [data-unison-theme="default"], :root[data-unison-theme="default"] [data-theme="dark"]), :where(:not(:root)[data-theme="dark"]) [data-unison-theme="default"], :where(:not(:root)[data-unison-theme="default"]) [data-theme="dark"] {
+  --unison-color-accent: var(--unison-color-accent-500);
+  --unison-color-accent-50: #0d0f19;
+  --unison-color-accent-100: #12162d;
+  --unison-color-accent-200: #1a1e4a;
+  --unison-color-accent-300: #242671;
+  --unison-color-accent-400: #33369c;
+  --unison-color-accent-500: #545ed5;
+  --unison-color-accent-600: #6572e4;
+  --unison-color-accent-700: #8494fc;
+  --unison-color-accent-800: #a7b7ff;
+  --unison-color-accent-900: #d0dbff;
+  --unison-color-accent-950: #eaf0ff;
+  --unison-color-accent-active: var(--unison-color-accent-300);
+  --unison-color-accent-fg: var(--unison-color-accent-900);
+  --unison-color-accent-hover: var(--unison-color-accent-400);
+  --unison-color-accent-subtle: var(--unison-color-accent-200);
+  --unison-color-border: var(--unison-color-gray-300);
+  --unison-color-border-strong: var(--unison-color-gray-500);
+  --unison-color-canvas: var(--unison-color-gray-50);
+  --unison-color-danger: var(--unison-color-danger-500);
+  --unison-color-danger-50: #180c0b;
+  --unison-color-danger-100: #2a0f0d;
+  --unison-color-danger-200: #430f0e;
+  --unison-color-danger-300: #64040c;
+  --unison-color-danger-400: #8a0013;
+  --unison-color-danger-500: #c13234;
+  --unison-color-danger-600: #d34c49;
+  --unison-color-danger-700: #ee746d;
+  --unison-color-danger-800: #ff9c94;
+  --unison-color-danger-900: #ffccc5;
+  --unison-color-danger-950: #ffe8e4;
+  --unison-color-danger-border: var(--unison-color-danger-400);
+  --unison-color-danger-fg: var(--unison-color-danger-900);
+  --unison-color-danger-subtle: var(--unison-color-danger-200);
+  --unison-color-fg: var(--unison-color-gray-950);
+  --unison-color-fg-muted: var(--unison-color-gray-700);
+  --unison-color-fg-subtle: var(--unison-color-gray-600);
+  --unison-color-gray-50: #0f0f10;
+  --unison-color-gray-100: #18181a;
+  --unison-color-gray-200: #232426;
+  --unison-color-gray-300: #323337;
+  --unison-color-gray-400: #46474d;
+  --unison-color-gray-500: #6d6e75;
+  --unison-color-gray-600: #7e8086;
+  --unison-color-gray-700: #9c9ea4;
+  --unison-color-gray-800: #bcbdc3;
+  --unison-color-gray-900: #dddee2;
+  --unison-color-gray-950: #f1f2f5;
+  --unison-color-info: var(--unison-color-info-500);
+  --unison-color-info-50: #091016;
+  --unison-color-info-100: #081a26;
+  --unison-color-info-200: #00273e;
+  --unison-color-info-300: #00375d;
+  --unison-color-info-400: #004d80;
+  --unison-color-info-500: #0076b4;
+  --unison-color-info-600: #1d89c4;
+  --unison-color-info-700: #54a7de;
+  --unison-color-info-800: #84c6f5;
+  --unison-color-info-900: #b2e5ff;
+  --unison-color-info-950: #d8f7ff;
+  --unison-color-info-border: var(--unison-color-info-400);
+  --unison-color-info-fg: var(--unison-color-info-900);
+  --unison-color-info-subtle: var(--unison-color-info-200);
+  --unison-color-muted: var(--unison-color-gray-300);
+  --unison-color-overlay: #00000099;
+  --unison-color-ring: var(--unison-color-accent-600);
+  --unison-color-subtle: var(--unison-color-gray-200);
+  --unison-color-success: var(--unison-color-success-500);
+  --unison-color-success-50: #0a120b;
+  --unison-color-success-100: #0a1d0f;
+  --unison-color-success-200: #022d10;
+  --unison-color-success-300: #004110;
+  --unison-color-success-400: #005a18;
+  --unison-color-success-500: #00863a;
+  --unison-color-success-600: #2b974e;
+  --unison-color-success-700: #5cb572;
+  --unison-color-success-800: #8ad199;
+  --unison-color-success-900: #b7eec1;
+  --unison-color-success-950: #d2ffda;
+  --unison-color-success-border: var(--unison-color-success-400);
+  --unison-color-success-fg: var(--unison-color-success-900);
+  --unison-color-success-subtle: var(--unison-color-success-200);
+  --unison-color-surface: var(--unison-color-gray-100);
+  --unison-color-surface-raised: var(--unison-color-gray-200);
+  --unison-color-warning: var(--unison-color-warning-700);
+  --unison-color-warning-50: #140e07;
+  --unison-color-warning-100: #221503;
+  --unison-color-warning-200: #371e00;
+  --unison-color-warning-300: #4c2a00;
+  --unison-color-warning-400: #673d00;
+  --unison-color-warning-500: #9b6000;
+  --unison-color-warning-600: #b17000;
+  --unison-color-warning-700: #cd9130;
+  --unison-color-warning-800: #e6b46c;
+  --unison-color-warning-900: #ffd79f;
+  --unison-color-warning-950: #ffecc0;
+  --unison-color-warning-border: var(--unison-color-warning-400);
+  --unison-color-warning-fg: var(--unison-color-warning-900);
+  --unison-color-warning-subtle: var(--unison-color-warning-200);
+  --unison-elevation-overlay: var(--unison-shadow-xl);
+  --unison-elevation-popover: var(--unison-shadow-lg);
+  --unison-elevation-raised: var(--unison-shadow-sm);
+  --unison-radius-card: var(--unison-radius-lg);
+  --unison-radius-control: var(--unison-radius-md);
+  --unison-radius-overlay: var(--unison-radius-xl);
+  --unison-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -4px rgb(0 0 0 / 0.25);
+  --unison-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.25), 0 2px 4px -2px rgb(0 0 0 / 0.25);
+  --unison-shadow-sm: 0 1px 3px rgb(0 0 0 / 0.25), 0 1px 2px -1px rgb(0 0 0 / 0.25);
+  --unison-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.25), 0 8px 10px -6px rgb(0 0 0 / 0.25);
+  --unison-shadow-xs: 0 1px 2px rgb(0 0 0 / 0.13);
+}
+
+@supports (color: oklch(0 0 0)) {
+  [data-unison-theme="default"][data-theme="dark"]:where(:not(:root)), :where([data-theme="dark"], :root[data-theme="dark"] [data-unison-theme="default"], :root[data-unison-theme="default"] [data-theme="dark"]), :where(:not(:root)[data-theme="dark"]) [data-unison-theme="default"], :where(:not(:root)[data-unison-theme="default"]) [data-theme="dark"] {
+    --unison-color-accent-50: oklch(0.17 0.0216 275);
+    --unison-color-accent-100: oklch(0.21 0.045 275);
+    --unison-color-accent-200: oklch(0.26 0.081 275);
+    --unison-color-accent-300: oklch(0.32 0.126 275);
+    --unison-color-accent-400: oklch(0.4 0.162 275);
+    --unison-color-accent-500: oklch(0.54 0.18 275);
+    --unison-color-accent-600: oklch(0.6 0.171 275);
+    --unison-color-accent-700: oklch(0.7 0.153 275);
+    --unison-color-accent-800: oklch(0.8 0.126 275);
+    --unison-color-accent-900: oklch(0.9 0.099 275);
+    --unison-color-accent-950: oklch(0.96 0.081 275);
+    --unison-color-danger-50: oklch(0.17 0.0216 25);
+    --unison-color-danger-100: oklch(0.21 0.045 25);
+    --unison-color-danger-200: oklch(0.26 0.081 25);
+    --unison-color-danger-300: oklch(0.32 0.126 25);
+    --unison-color-danger-400: oklch(0.4 0.162 25);
+    --unison-color-danger-500: oklch(0.54 0.18 25);
+    --unison-color-danger-600: oklch(0.6 0.171 25);
+    --unison-color-danger-700: oklch(0.7 0.153 25);
+    --unison-color-danger-800: oklch(0.8 0.126 25);
+    --unison-color-danger-900: oklch(0.9 0.099 25);
+    --unison-color-danger-950: oklch(0.96 0.081 25);
+    --unison-color-gray-50: oklch(0.17 0.0013 275);
+    --unison-color-gray-100: oklch(0.21 0.0027 275);
+    --unison-color-gray-200: oklch(0.26 0.0049 275);
+    --unison-color-gray-300: oklch(0.32 0.0076 275);
+    --unison-color-gray-400: oklch(0.4 0.0097 275);
+    --unison-color-gray-500: oklch(0.54 0.0108 275);
+    --unison-color-gray-600: oklch(0.6 0.0103 275);
+    --unison-color-gray-700: oklch(0.7 0.0092 275);
+    --unison-color-gray-800: oklch(0.8 0.0076 275);
+    --unison-color-gray-900: oklch(0.9 0.0059 275);
+    --unison-color-gray-950: oklch(0.96 0.0049 275);
+    --unison-color-info-50: oklch(0.17 0.0162 240);
+    --unison-color-info-100: oklch(0.21 0.0338 240);
+    --unison-color-info-200: oklch(0.26 0.0608 240);
+    --unison-color-info-300: oklch(0.32 0.0945 240);
+    --unison-color-info-400: oklch(0.4 0.1215 240);
+    --unison-color-info-500: oklch(0.54 0.135 240);
+    --unison-color-info-600: oklch(0.6 0.1283 240);
+    --unison-color-info-700: oklch(0.7 0.1148 240);
+    --unison-color-info-800: oklch(0.8 0.0945 240);
+    --unison-color-info-900: oklch(0.9 0.0743 240);
+    --unison-color-info-950: oklch(0.96 0.0608 240);
+    --unison-color-success-50: oklch(0.17 0.0184 150);
+    --unison-color-success-100: oklch(0.21 0.0383 150);
+    --unison-color-success-200: oklch(0.26 0.0689 150);
+    --unison-color-success-300: oklch(0.32 0.1071 150);
+    --unison-color-success-400: oklch(0.4 0.1377 150);
+    --unison-color-success-500: oklch(0.54 0.153 150);
+    --unison-color-success-600: oklch(0.6 0.1454 150);
+    --unison-color-success-700: oklch(0.7 0.1301 150);
+    --unison-color-success-800: oklch(0.8 0.1071 150);
+    --unison-color-success-900: oklch(0.9 0.0842 150);
+    --unison-color-success-950: oklch(0.96 0.0689 150);
+    --unison-color-warning-50: oklch(0.17 0.0184 75);
+    --unison-color-warning-100: oklch(0.21 0.0383 75);
+    --unison-color-warning-200: oklch(0.26 0.0689 75);
+    --unison-color-warning-300: oklch(0.32 0.1071 75);
+    --unison-color-warning-400: oklch(0.4 0.1377 75);
+    --unison-color-warning-500: oklch(0.54 0.153 75);
+    --unison-color-warning-600: oklch(0.6 0.1454 75);
+    --unison-color-warning-700: oklch(0.7 0.1301 75);
+    --unison-color-warning-800: oklch(0.8 0.1071 75);
+    --unison-color-warning-900: oklch(0.9 0.0842 75);
+    --unison-color-warning-950: oklch(0.96 0.0689 75);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :where(:root:not([data-theme="light"]), [data-unison-theme="default"]:not([data-theme]):not([data-theme] *)) {
+    --unison-color-accent: var(--unison-color-accent-500);
+    --unison-color-accent-50: #0d0f19;
+    --unison-color-accent-100: #12162d;
+    --unison-color-accent-200: #1a1e4a;
+    --unison-color-accent-300: #242671;
+    --unison-color-accent-400: #33369c;
+    --unison-color-accent-500: #545ed5;
+    --unison-color-accent-600: #6572e4;
+    --unison-color-accent-700: #8494fc;
+    --unison-color-accent-800: #a7b7ff;
+    --unison-color-accent-900: #d0dbff;
+    --unison-color-accent-950: #eaf0ff;
+    --unison-color-accent-active: var(--unison-color-accent-300);
+    --unison-color-accent-fg: var(--unison-color-accent-900);
+    --unison-color-accent-hover: var(--unison-color-accent-400);
+    --unison-color-accent-subtle: var(--unison-color-accent-200);
+    --unison-color-border: var(--unison-color-gray-300);
+    --unison-color-border-strong: var(--unison-color-gray-500);
+    --unison-color-canvas: var(--unison-color-gray-50);
+    --unison-color-danger: var(--unison-color-danger-500);
+    --unison-color-danger-50: #180c0b;
+    --unison-color-danger-100: #2a0f0d;
+    --unison-color-danger-200: #430f0e;
+    --unison-color-danger-300: #64040c;
+    --unison-color-danger-400: #8a0013;
+    --unison-color-danger-500: #c13234;
+    --unison-color-danger-600: #d34c49;
+    --unison-color-danger-700: #ee746d;
+    --unison-color-danger-800: #ff9c94;
+    --unison-color-danger-900: #ffccc5;
+    --unison-color-danger-950: #ffe8e4;
+    --unison-color-danger-border: var(--unison-color-danger-400);
+    --unison-color-danger-fg: var(--unison-color-danger-900);
+    --unison-color-danger-subtle: var(--unison-color-danger-200);
+    --unison-color-fg: var(--unison-color-gray-950);
+    --unison-color-fg-muted: var(--unison-color-gray-700);
+    --unison-color-fg-subtle: var(--unison-color-gray-600);
+    --unison-color-gray-50: #0f0f10;
+    --unison-color-gray-100: #18181a;
+    --unison-color-gray-200: #232426;
+    --unison-color-gray-300: #323337;
+    --unison-color-gray-400: #46474d;
+    --unison-color-gray-500: #6d6e75;
+    --unison-color-gray-600: #7e8086;
+    --unison-color-gray-700: #9c9ea4;
+    --unison-color-gray-800: #bcbdc3;
+    --unison-color-gray-900: #dddee2;
+    --unison-color-gray-950: #f1f2f5;
+    --unison-color-info: var(--unison-color-info-500);
+    --unison-color-info-50: #091016;
+    --unison-color-info-100: #081a26;
+    --unison-color-info-200: #00273e;
+    --unison-color-info-300: #00375d;
+    --unison-color-info-400: #004d80;
+    --unison-color-info-500: #0076b4;
+    --unison-color-info-600: #1d89c4;
+    --unison-color-info-700: #54a7de;
+    --unison-color-info-800: #84c6f5;
+    --unison-color-info-900: #b2e5ff;
+    --unison-color-info-950: #d8f7ff;
+    --unison-color-info-border: var(--unison-color-info-400);
+    --unison-color-info-fg: var(--unison-color-info-900);
+    --unison-color-info-subtle: var(--unison-color-info-200);
+    --unison-color-muted: var(--unison-color-gray-300);
+    --unison-color-overlay: #00000099;
+    --unison-color-ring: var(--unison-color-accent-600);
+    --unison-color-subtle: var(--unison-color-gray-200);
+    --unison-color-success: var(--unison-color-success-500);
+    --unison-color-success-50: #0a120b;
+    --unison-color-success-100: #0a1d0f;
+    --unison-color-success-200: #022d10;
+    --unison-color-success-300: #004110;
+    --unison-color-success-400: #005a18;
+    --unison-color-success-500: #00863a;
+    --unison-color-success-600: #2b974e;
+    --unison-color-success-700: #5cb572;
+    --unison-color-success-800: #8ad199;
+    --unison-color-success-900: #b7eec1;
+    --unison-color-success-950: #d2ffda;
+    --unison-color-success-border: var(--unison-color-success-400);
+    --unison-color-success-fg: var(--unison-color-success-900);
+    --unison-color-success-subtle: var(--unison-color-success-200);
+    --unison-color-surface: var(--unison-color-gray-100);
+    --unison-color-surface-raised: var(--unison-color-gray-200);
+    --unison-color-warning: var(--unison-color-warning-700);
+    --unison-color-warning-50: #140e07;
+    --unison-color-warning-100: #221503;
+    --unison-color-warning-200: #371e00;
+    --unison-color-warning-300: #4c2a00;
+    --unison-color-warning-400: #673d00;
+    --unison-color-warning-500: #9b6000;
+    --unison-color-warning-600: #b17000;
+    --unison-color-warning-700: #cd9130;
+    --unison-color-warning-800: #e6b46c;
+    --unison-color-warning-900: #ffd79f;
+    --unison-color-warning-950: #ffecc0;
+    --unison-color-warning-border: var(--unison-color-warning-400);
+    --unison-color-warning-fg: var(--unison-color-warning-900);
+    --unison-color-warning-subtle: var(--unison-color-warning-200);
+    --unison-elevation-overlay: var(--unison-shadow-xl);
+    --unison-elevation-popover: var(--unison-shadow-lg);
+    --unison-elevation-raised: var(--unison-shadow-sm);
+    --unison-radius-card: var(--unison-radius-lg);
+    --unison-radius-control: var(--unison-radius-md);
+    --unison-radius-overlay: var(--unison-radius-xl);
+    --unison-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -4px rgb(0 0 0 / 0.25);
+    --unison-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.25), 0 2px 4px -2px rgb(0 0 0 / 0.25);
+    --unison-shadow-sm: 0 1px 3px rgb(0 0 0 / 0.25), 0 1px 2px -1px rgb(0 0 0 / 0.25);
+    --unison-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.25), 0 8px 10px -6px rgb(0 0 0 / 0.25);
+    --unison-shadow-xs: 0 1px 2px rgb(0 0 0 / 0.13);
+  }
+
+  @supports (color: oklch(0 0 0)) {
+    :where(:root:not([data-theme="light"]), [data-unison-theme="default"]:not([data-theme]):not([data-theme] *)) {
+      --unison-color-accent-50: oklch(0.17 0.0216 275);
+      --unison-color-accent-100: oklch(0.21 0.045 275);
+      --unison-color-accent-200: oklch(0.26 0.081 275);
+      --unison-color-accent-300: oklch(0.32 0.126 275);
+      --unison-color-accent-400: oklch(0.4 0.162 275);
+      --unison-color-accent-500: oklch(0.54 0.18 275);
+      --unison-color-accent-600: oklch(0.6 0.171 275);
+      --unison-color-accent-700: oklch(0.7 0.153 275);
+      --unison-color-accent-800: oklch(0.8 0.126 275);
+      --unison-color-accent-900: oklch(0.9 0.099 275);
+      --unison-color-accent-950: oklch(0.96 0.081 275);
+      --unison-color-danger-50: oklch(0.17 0.0216 25);
+      --unison-color-danger-100: oklch(0.21 0.045 25);
+      --unison-color-danger-200: oklch(0.26 0.081 25);
+      --unison-color-danger-300: oklch(0.32 0.126 25);
+      --unison-color-danger-400: oklch(0.4 0.162 25);
+      --unison-color-danger-500: oklch(0.54 0.18 25);
+      --unison-color-danger-600: oklch(0.6 0.171 25);
+      --unison-color-danger-700: oklch(0.7 0.153 25);
+      --unison-color-danger-800: oklch(0.8 0.126 25);
+      --unison-color-danger-900: oklch(0.9 0.099 25);
+      --unison-color-danger-950: oklch(0.96 0.081 25);
+      --unison-color-gray-50: oklch(0.17 0.0013 275);
+      --unison-color-gray-100: oklch(0.21 0.0027 275);
+      --unison-color-gray-200: oklch(0.26 0.0049 275);
+      --unison-color-gray-300: oklch(0.32 0.0076 275);
+      --unison-color-gray-400: oklch(0.4 0.0097 275);
+      --unison-color-gray-500: oklch(0.54 0.0108 275);
+      --unison-color-gray-600: oklch(0.6 0.0103 275);
+      --unison-color-gray-700: oklch(0.7 0.0092 275);
+      --unison-color-gray-800: oklch(0.8 0.0076 275);
+      --unison-color-gray-900: oklch(0.9 0.0059 275);
+      --unison-color-gray-950: oklch(0.96 0.0049 275);
+      --unison-color-info-50: oklch(0.17 0.0162 240);
+      --unison-color-info-100: oklch(0.21 0.0338 240);
+      --unison-color-info-200: oklch(0.26 0.0608 240);
+      --unison-color-info-300: oklch(0.32 0.0945 240);
+      --unison-color-info-400: oklch(0.4 0.1215 240);
+      --unison-color-info-500: oklch(0.54 0.135 240);
+      --unison-color-info-600: oklch(0.6 0.1283 240);
+      --unison-color-info-700: oklch(0.7 0.1148 240);
+      --unison-color-info-800: oklch(0.8 0.0945 240);
+      --unison-color-info-900: oklch(0.9 0.0743 240);
+      --unison-color-info-950: oklch(0.96 0.0608 240);
+      --unison-color-success-50: oklch(0.17 0.0184 150);
+      --unison-color-success-100: oklch(0.21 0.0383 150);
+      --unison-color-success-200: oklch(0.26 0.0689 150);
+      --unison-color-success-300: oklch(0.32 0.1071 150);
+      --unison-color-success-400: oklch(0.4 0.1377 150);
+      --unison-color-success-500: oklch(0.54 0.153 150);
+      --unison-color-success-600: oklch(0.6 0.1454 150);
+      --unison-color-success-700: oklch(0.7 0.1301 150);
+      --unison-color-success-800: oklch(0.8 0.1071 150);
+      --unison-color-success-900: oklch(0.9 0.0842 150);
+      --unison-color-success-950: oklch(0.96 0.0689 150);
+      --unison-color-warning-50: oklch(0.17 0.0184 75);
+      --unison-color-warning-100: oklch(0.21 0.0383 75);
+      --unison-color-warning-200: oklch(0.26 0.0689 75);
+      --unison-color-warning-300: oklch(0.32 0.1071 75);
+      --unison-color-warning-400: oklch(0.4 0.1377 75);
+      --unison-color-warning-500: oklch(0.54 0.153 75);
+      --unison-color-warning-600: oklch(0.6 0.1454 75);
+      --unison-color-warning-700: oklch(0.7 0.1301 75);
+      --unison-color-warning-800: oklch(0.8 0.1071 75);
+      --unison-color-warning-900: oklch(0.9 0.0842 75);
+      --unison-color-warning-950: oklch(0.96 0.0689 75);
+    }
+  }
+}
+
+[data-unison-theme="brand"][data-theme="light"], :where([data-unison-theme="brand"], :root[data-unison-theme="brand"] [data-theme="light"]), :where(:not(:root)[data-theme="light"]) [data-unison-theme="brand"], :where(:not(:root)[data-unison-theme="brand"]) [data-theme="light"] {
+  --unison-color-accent: var(--unison-color-accent-600);
+  --unison-color-accent-50: #fff3f3;
+  --unison-color-accent-100: #ffeaeb;
+  --unison-color-accent-200: #ffd8d9;
+  --unison-color-accent-300: #ffbdbf;
+  --unison-color-accent-400: #ff8890;
+  --unison-color-accent-500: #fc405d;
+  --unison-color-accent-600: #e11d48;
+  --unison-color-accent-700: #af0833;
+  --unison-color-accent-800: #880726;
+  --unison-color-accent-900: #660a1d;
+  --unison-color-accent-950: #46000f;
+  --unison-color-accent-active: var(--unison-color-accent-800);
+  --unison-color-accent-fg: var(--unison-color-accent-700);
+  --unison-color-accent-hover: var(--unison-color-accent-700);
+  --unison-color-accent-subtle: var(--unison-color-accent-100);
+  --unison-color-border: var(--unison-color-gray-200);
+  --unison-color-border-strong: var(--unison-color-gray-500);
+  --unison-color-canvas: var(--unison-color-gray-50);
+  --unison-color-danger: var(--unison-color-danger-600);
+  --unison-color-danger-50: #fff4f2;
+  --unison-color-danger-100: #ffebe7;
+  --unison-color-danger-200: #ffd9d4;
+  --unison-color-danger-300: #ffbeb7;
+  --unison-color-danger-400: #ff8a82;
+  --unison-color-danger-500: #f4514f;
+  --unison-color-danger-600: #c52b30;
+  --unison-color-danger-700: #a92227;
+  --unison-color-danger-800: #831a1d;
+  --unison-color-danger-900: #621516;
+  --unison-color-danger-950: #430709;
+  --unison-color-danger-border: var(--unison-color-danger-300);
+  --unison-color-danger-fg: var(--unison-color-danger-700);
+  --unison-color-danger-subtle: var(--unison-color-danger-100);
+  --unison-color-fg: var(--unison-color-gray-950);
+  --unison-color-fg-muted: var(--unison-color-gray-700);
+  --unison-color-fg-subtle: var(--unison-color-gray-500);
+  --unison-color-gray-50: #fbfafa;
+  --unison-color-gray-100: #f6f3f3;
+  --unison-color-gray-200: #ebe6e6;
+  --unison-color-gray-300: #dad3d3;
+  --unison-color-gray-400: #bdb3b3;
+  --unison-color-gray-500: #998f8f;
+  --unison-color-gray-600: #756c6c;
+  --unison-color-gray-700: #635b5b;
+  --unison-color-gray-800: #4c4646;
+  --unison-color-gray-900: #393434;
+  --unison-color-gray-950: #242121;
+  --unison-color-info: var(--unison-color-info-600);
+  --unison-color-info-50: #f0fcff;
+  --unison-color-info-100: #def8ff;
+  --unison-color-info-200: #c2eeff;
+  --unison-color-info-300: #9bdeff;
+  --unison-color-info-400: #59c0ff;
+  --unison-color-info-500: #069ce4;
+  --unison-color-info-600: #0076b8;
+  --unison-color-info-700: #00649d;
+  --unison-color-info-800: #004d7a;
+  --unison-color-info-900: #00395b;
+  --unison-color-info-950: #00253e;
+  --unison-color-info-border: var(--unison-color-info-300);
+  --unison-color-info-fg: var(--unison-color-info-700);
+  --unison-color-info-subtle: var(--unison-color-info-100);
+  --unison-color-muted: var(--unison-color-gray-200);
+  --unison-color-overlay: #00000080;
+  --unison-color-ring: var(--unison-color-accent-600);
+  --unison-color-subtle: var(--unison-color-gray-100);
+  --unison-color-success: var(--unison-color-success-600);
+  --unison-color-success-50: #f1fef3;
+  --unison-color-success-100: #e1fde5;
+  --unison-color-success-200: #c4f6cd;
+  --unison-color-success-300: #9aebab;
+  --unison-color-success-400: #63d180;
+  --unison-color-success-500: #24ae56;
+  --unison-color-success-600: #008736;
+  --unison-color-success-700: #00732c;
+  --unison-color-success-800: #005821;
+  --unison-color-success-900: #004219;
+  --unison-color-success-950: #002b0b;
+  --unison-color-success-border: var(--unison-color-success-300);
+  --unison-color-success-fg: var(--unison-color-success-700);
+  --unison-color-success-subtle: var(--unison-color-success-100);
+  --unison-color-surface: var(--unison-color-white);
+  --unison-color-surface-raised: var(--unison-color-white);
+  --unison-color-warning: var(--unison-color-warning-400);
+  --unison-color-warning-50: #fff9eb;
+  --unison-color-warning-100: #fff1d5;
+  --unison-color-warning-200: #ffe1af;
+  --unison-color-warning-300: #ffca78;
+  --unison-color-warning-400: #eea628;
+  --unison-color-warning-500: #c98000;
+  --unison-color-warning-600: #9b6000;
+  --unison-color-warning-700: #845100;
+  --unison-color-warning-800: #673d00;
+  --unison-color-warning-900: #4f2c00;
+  --unison-color-warning-950: #351b00;
+  --unison-color-warning-border: var(--unison-color-warning-300);
+  --unison-color-warning-fg: var(--unison-color-warning-700);
+  --unison-color-warning-subtle: var(--unison-color-warning-100);
+  --unison-elevation-overlay: var(--unison-shadow-xl);
+  --unison-elevation-popover: var(--unison-shadow-lg);
+  --unison-elevation-raised: var(--unison-shadow-sm);
+  --unison-radius-card: var(--unison-radius-xl);
+  --unison-radius-control: var(--unison-radius-lg);
+  --unison-radius-overlay: var(--unison-radius-2xl);
+  --unison-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --unison-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --unison-shadow-sm: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --unison-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --unison-shadow-xs: 0 1px 2px rgb(0 0 0 / 0.05);
+}
+
+@supports (color: oklch(0 0 0)) {
+  [data-unison-theme="brand"][data-theme="light"], :where([data-unison-theme="brand"], :root[data-unison-theme="brand"] [data-theme="light"]), :where(:not(:root)[data-theme="light"]) [data-unison-theme="brand"], :where(:not(:root)[data-unison-theme="brand"]) [data-theme="light"] {
+    --unison-color-accent-50: oklch(0.985 0.0266 17.58);
+    --unison-color-accent-100: oklch(0.967 0.0555 17.58);
+    --unison-color-accent-200: oklch(0.928 0.0999 17.58);
+    --unison-color-accent-300: oklch(0.872 0.1554 17.58);
+    --unison-color-accent-400: oklch(0.775 0.1998 17.58);
+    --unison-color-accent-500: oklch(0.66 0.222 17.58);
+    --unison-color-accent-600: oklch(0.586 0.222 17.58);
+    --unison-color-accent-700: oklch(0.48 0.1887 17.58);
+    --unison-color-accent-800: oklch(0.4 0.1554 17.58);
+    --unison-color-accent-900: oklch(0.33 0.1221 17.58);
+    --unison-color-accent-950: oklch(0.25 0.0999 17.58);
+    --unison-color-danger-50: oklch(0.985 0.024 25);
+    --unison-color-danger-100: oklch(0.967 0.05 25);
+    --unison-color-danger-200: oklch(0.928 0.09 25);
+    --unison-color-danger-300: oklch(0.872 0.14 25);
+    --unison-color-danger-400: oklch(0.775 0.18 25);
+    --unison-color-danger-500: oklch(0.66 0.2 25);
+    --unison-color-danger-600: oklch(0.54 0.19 25);
+    --unison-color-danger-700: oklch(0.48 0.17 25);
+    --unison-color-danger-800: oklch(0.4 0.14 25);
+    --unison-color-danger-900: oklch(0.33 0.11 25);
+    --unison-color-danger-950: oklch(0.25 0.09 25);
+    --unison-color-gray-50: oklch(0.985 0.0014 17.58);
+    --unison-color-gray-100: oklch(0.967 0.003 17.58);
+    --unison-color-gray-200: oklch(0.928 0.0054 17.58);
+    --unison-color-gray-300: oklch(0.872 0.0084 17.58);
+    --unison-color-gray-400: oklch(0.775 0.0108 17.58);
+    --unison-color-gray-500: oklch(0.66 0.012 17.58);
+    --unison-color-gray-600: oklch(0.54 0.0114 17.58);
+    --unison-color-gray-700: oklch(0.48 0.0102 17.58);
+    --unison-color-gray-800: oklch(0.4 0.0084 17.58);
+    --unison-color-gray-900: oklch(0.33 0.0066 17.58);
+    --unison-color-gray-950: oklch(0.25 0.0054 17.58);
+    --unison-color-info-50: oklch(0.985 0.018 240);
+    --unison-color-info-100: oklch(0.967 0.0375 240);
+    --unison-color-info-200: oklch(0.928 0.0675 240);
+    --unison-color-info-300: oklch(0.872 0.105 240);
+    --unison-color-info-400: oklch(0.775 0.135 240);
+    --unison-color-info-500: oklch(0.66 0.15 240);
+    --unison-color-info-600: oklch(0.54 0.1425 240);
+    --unison-color-info-700: oklch(0.48 0.1275 240);
+    --unison-color-info-800: oklch(0.4 0.105 240);
+    --unison-color-info-900: oklch(0.33 0.0825 240);
+    --unison-color-info-950: oklch(0.25 0.0675 240);
+    --unison-color-success-50: oklch(0.985 0.0204 150);
+    --unison-color-success-100: oklch(0.967 0.0425 150);
+    --unison-color-success-200: oklch(0.928 0.0765 150);
+    --unison-color-success-300: oklch(0.872 0.119 150);
+    --unison-color-success-400: oklch(0.775 0.153 150);
+    --unison-color-success-500: oklch(0.66 0.17 150);
+    --unison-color-success-600: oklch(0.54 0.1615 150);
+    --unison-color-success-700: oklch(0.48 0.1445 150);
+    --unison-color-success-800: oklch(0.4 0.119 150);
+    --unison-color-success-900: oklch(0.33 0.0935 150);
+    --unison-color-success-950: oklch(0.25 0.0765 150);
+    --unison-color-warning-50: oklch(0.985 0.0204 75);
+    --unison-color-warning-100: oklch(0.967 0.0425 75);
+    --unison-color-warning-200: oklch(0.928 0.0765 75);
+    --unison-color-warning-300: oklch(0.872 0.119 75);
+    --unison-color-warning-400: oklch(0.775 0.153 75);
+    --unison-color-warning-500: oklch(0.66 0.17 75);
+    --unison-color-warning-600: oklch(0.54 0.1615 75);
+    --unison-color-warning-700: oklch(0.48 0.1445 75);
+    --unison-color-warning-800: oklch(0.4 0.119 75);
+    --unison-color-warning-900: oklch(0.33 0.0935 75);
+    --unison-color-warning-950: oklch(0.25 0.0765 75);
+  }
+}
+
+[data-unison-theme="brand"][data-theme="dark"], :where(:root[data-theme="dark"] [data-unison-theme="brand"], :root[data-unison-theme="brand"] [data-theme="dark"]), :where(:not(:root)[data-theme="dark"]) [data-unison-theme="brand"], :where(:not(:root)[data-unison-theme="brand"]) [data-theme="dark"] {
+  --unison-color-accent: var(--unison-color-accent-500);
+  --unison-color-accent-50: #190b0b;
+  --unison-color-accent-100: #2b0d10;
+  --unison-color-accent-200: #460913;
+  --unison-color-accent-300: #680016;
+  --unison-color-accent-400: #8f0020;
+  --unison-color-accent-500: #c81f41;
+  --unison-color-accent-600: #e11d48;
+  --unison-color-accent-700: #f56b76;
+  --unison-color-accent-800: #ff979c;
+  --unison-color-accent-900: #ffcbcc;
+  --unison-color-accent-950: #ffe7e7;
+  --unison-color-accent-active: var(--unison-color-accent-300);
+  --unison-color-accent-fg: var(--unison-color-accent-900);
+  --unison-color-accent-hover: var(--unison-color-accent-400);
+  --unison-color-accent-subtle: var(--unison-color-accent-200);
+  --unison-color-border: var(--unison-color-gray-300);
+  --unison-color-border-strong: var(--unison-color-gray-500);
+  --unison-color-canvas: var(--unison-color-gray-50);
+  --unison-color-danger: var(--unison-color-danger-500);
+  --unison-color-danger-50: #180c0b;
+  --unison-color-danger-100: #2a0f0d;
+  --unison-color-danger-200: #430f0e;
+  --unison-color-danger-300: #64040c;
+  --unison-color-danger-400: #8a0013;
+  --unison-color-danger-500: #c13234;
+  --unison-color-danger-600: #d34c49;
+  --unison-color-danger-700: #ee746d;
+  --unison-color-danger-800: #ff9c94;
+  --unison-color-danger-900: #ffccc5;
+  --unison-color-danger-950: #ffe8e4;
+  --unison-color-danger-border: var(--unison-color-danger-400);
+  --unison-color-danger-fg: var(--unison-color-danger-900);
+  --unison-color-danger-subtle: var(--unison-color-danger-200);
+  --unison-color-fg: var(--unison-color-gray-950);
+  --unison-color-fg-muted: var(--unison-color-gray-700);
+  --unison-color-fg-subtle: var(--unison-color-gray-600);
+  --unison-color-gray-50: #100f0f;
+  --unison-color-gray-100: #191818;
+  --unison-color-gray-200: #262323;
+  --unison-color-gray-300: #373131;
+  --unison-color-gray-400: #4d4646;
+  --unison-color-gray-500: #756c6c;
+  --unison-color-gray-600: #867e7e;
+  --unison-color-gray-700: #a49c9c;
+  --unison-color-gray-800: #c2bcbc;
+  --unison-color-gray-900: #e2dcdc;
+  --unison-color-gray-950: #f5f0f0;
+  --unison-color-info: var(--unison-color-info-500);
+  --unison-color-info-50: #091016;
+  --unison-color-info-100: #081a26;
+  --unison-color-info-200: #00273e;
+  --unison-color-info-300: #00375d;
+  --unison-color-info-400: #004d80;
+  --unison-color-info-500: #0076b4;
+  --unison-color-info-600: #1d89c4;
+  --unison-color-info-700: #54a7de;
+  --unison-color-info-800: #84c6f5;
+  --unison-color-info-900: #b2e5ff;
+  --unison-color-info-950: #d8f7ff;
+  --unison-color-info-border: var(--unison-color-info-400);
+  --unison-color-info-fg: var(--unison-color-info-900);
+  --unison-color-info-subtle: var(--unison-color-info-200);
+  --unison-color-muted: var(--unison-color-gray-300);
+  --unison-color-overlay: #00000099;
+  --unison-color-ring: var(--unison-color-accent-600);
+  --unison-color-subtle: var(--unison-color-gray-200);
+  --unison-color-success: var(--unison-color-success-500);
+  --unison-color-success-50: #0a120b;
+  --unison-color-success-100: #0a1d0f;
+  --unison-color-success-200: #022d10;
+  --unison-color-success-300: #004110;
+  --unison-color-success-400: #005a18;
+  --unison-color-success-500: #00863a;
+  --unison-color-success-600: #2b974e;
+  --unison-color-success-700: #5cb572;
+  --unison-color-success-800: #8ad199;
+  --unison-color-success-900: #b7eec1;
+  --unison-color-success-950: #d2ffda;
+  --unison-color-success-border: var(--unison-color-success-400);
+  --unison-color-success-fg: var(--unison-color-success-900);
+  --unison-color-success-subtle: var(--unison-color-success-200);
+  --unison-color-surface: var(--unison-color-gray-100);
+  --unison-color-surface-raised: var(--unison-color-gray-200);
+  --unison-color-warning: var(--unison-color-warning-700);
+  --unison-color-warning-50: #140e07;
+  --unison-color-warning-100: #221503;
+  --unison-color-warning-200: #371e00;
+  --unison-color-warning-300: #4c2a00;
+  --unison-color-warning-400: #673d00;
+  --unison-color-warning-500: #9b6000;
+  --unison-color-warning-600: #b17000;
+  --unison-color-warning-700: #cd9130;
+  --unison-color-warning-800: #e6b46c;
+  --unison-color-warning-900: #ffd79f;
+  --unison-color-warning-950: #ffecc0;
+  --unison-color-warning-border: var(--unison-color-warning-400);
+  --unison-color-warning-fg: var(--unison-color-warning-900);
+  --unison-color-warning-subtle: var(--unison-color-warning-200);
+  --unison-elevation-overlay: var(--unison-shadow-xl);
+  --unison-elevation-popover: var(--unison-shadow-lg);
+  --unison-elevation-raised: var(--unison-shadow-sm);
+  --unison-radius-card: var(--unison-radius-xl);
+  --unison-radius-control: var(--unison-radius-lg);
+  --unison-radius-overlay: var(--unison-radius-2xl);
+  --unison-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -4px rgb(0 0 0 / 0.25);
+  --unison-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.25), 0 2px 4px -2px rgb(0 0 0 / 0.25);
+  --unison-shadow-sm: 0 1px 3px rgb(0 0 0 / 0.25), 0 1px 2px -1px rgb(0 0 0 / 0.25);
+  --unison-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.25), 0 8px 10px -6px rgb(0 0 0 / 0.25);
+  --unison-shadow-xs: 0 1px 2px rgb(0 0 0 / 0.13);
+}
+
+@supports (color: oklch(0 0 0)) {
+  [data-unison-theme="brand"][data-theme="dark"], :where(:root[data-theme="dark"] [data-unison-theme="brand"], :root[data-unison-theme="brand"] [data-theme="dark"]), :where(:not(:root)[data-theme="dark"]) [data-unison-theme="brand"], :where(:not(:root)[data-unison-theme="brand"]) [data-theme="dark"] {
+    --unison-color-accent-50: oklch(0.17 0.024 17.58);
+    --unison-color-accent-100: oklch(0.21 0.05 17.58);
+    --unison-color-accent-200: oklch(0.26 0.0899 17.58);
+    --unison-color-accent-300: oklch(0.32 0.1399 17.58);
+    --unison-color-accent-400: oklch(0.4 0.1799 17.58);
+    --unison-color-accent-500: oklch(0.54 0.1998 17.58);
+    --unison-color-accent-600: oklch(0.586 0.222 17.58);
+    --unison-color-accent-700: oklch(0.7 0.1699 17.58);
+    --unison-color-accent-800: oklch(0.8 0.1399 17.58);
+    --unison-color-accent-900: oklch(0.9 0.1099 17.58);
+    --unison-color-accent-950: oklch(0.96 0.0899 17.58);
+    --unison-color-danger-50: oklch(0.17 0.0216 25);
+    --unison-color-danger-100: oklch(0.21 0.045 25);
+    --unison-color-danger-200: oklch(0.26 0.081 25);
+    --unison-color-danger-300: oklch(0.32 0.126 25);
+    --unison-color-danger-400: oklch(0.4 0.162 25);
+    --unison-color-danger-500: oklch(0.54 0.18 25);
+    --unison-color-danger-600: oklch(0.6 0.171 25);
+    --unison-color-danger-700: oklch(0.7 0.153 25);
+    --unison-color-danger-800: oklch(0.8 0.126 25);
+    --unison-color-danger-900: oklch(0.9 0.099 25);
+    --unison-color-danger-950: oklch(0.96 0.081 25);
+    --unison-color-gray-50: oklch(0.17 0.0013 17.58);
+    --unison-color-gray-100: oklch(0.21 0.0027 17.58);
+    --unison-color-gray-200: oklch(0.26 0.0049 17.58);
+    --unison-color-gray-300: oklch(0.32 0.0076 17.58);
+    --unison-color-gray-400: oklch(0.4 0.0097 17.58);
+    --unison-color-gray-500: oklch(0.54 0.0108 17.58);
+    --unison-color-gray-600: oklch(0.6 0.0103 17.58);
+    --unison-color-gray-700: oklch(0.7 0.0092 17.58);
+    --unison-color-gray-800: oklch(0.8 0.0076 17.58);
+    --unison-color-gray-900: oklch(0.9 0.0059 17.58);
+    --unison-color-gray-950: oklch(0.96 0.0049 17.58);
+    --unison-color-info-50: oklch(0.17 0.0162 240);
+    --unison-color-info-100: oklch(0.21 0.0338 240);
+    --unison-color-info-200: oklch(0.26 0.0608 240);
+    --unison-color-info-300: oklch(0.32 0.0945 240);
+    --unison-color-info-400: oklch(0.4 0.1215 240);
+    --unison-color-info-500: oklch(0.54 0.135 240);
+    --unison-color-info-600: oklch(0.6 0.1283 240);
+    --unison-color-info-700: oklch(0.7 0.1148 240);
+    --unison-color-info-800: oklch(0.8 0.0945 240);
+    --unison-color-info-900: oklch(0.9 0.0743 240);
+    --unison-color-info-950: oklch(0.96 0.0608 240);
+    --unison-color-success-50: oklch(0.17 0.0184 150);
+    --unison-color-success-100: oklch(0.21 0.0383 150);
+    --unison-color-success-200: oklch(0.26 0.0689 150);
+    --unison-color-success-300: oklch(0.32 0.1071 150);
+    --unison-color-success-400: oklch(0.4 0.1377 150);
+    --unison-color-success-500: oklch(0.54 0.153 150);
+    --unison-color-success-600: oklch(0.6 0.1454 150);
+    --unison-color-success-700: oklch(0.7 0.1301 150);
+    --unison-color-success-800: oklch(0.8 0.1071 150);
+    --unison-color-success-900: oklch(0.9 0.0842 150);
+    --unison-color-success-950: oklch(0.96 0.0689 150);
+    --unison-color-warning-50: oklch(0.17 0.0184 75);
+    --unison-color-warning-100: oklch(0.21 0.0383 75);
+    --unison-color-warning-200: oklch(0.26 0.0689 75);
+    --unison-color-warning-300: oklch(0.32 0.1071 75);
+    --unison-color-warning-400: oklch(0.4 0.1377 75);
+    --unison-color-warning-500: oklch(0.54 0.153 75);
+    --unison-color-warning-600: oklch(0.6 0.1454 75);
+    --unison-color-warning-700: oklch(0.7 0.1301 75);
+    --unison-color-warning-800: oklch(0.8 0.1071 75);
+    --unison-color-warning-900: oklch(0.9 0.0842 75);
+    --unison-color-warning-950: oklch(0.96 0.0689 75);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :where([data-unison-theme="brand"]:not([data-theme]):not([data-theme] *)) {
+    --unison-color-accent: var(--unison-color-accent-500);
+    --unison-color-accent-50: #190b0b;
+    --unison-color-accent-100: #2b0d10;
+    --unison-color-accent-200: #460913;
+    --unison-color-accent-300: #680016;
+    --unison-color-accent-400: #8f0020;
+    --unison-color-accent-500: #c81f41;
+    --unison-color-accent-600: #e11d48;
+    --unison-color-accent-700: #f56b76;
+    --unison-color-accent-800: #ff979c;
+    --unison-color-accent-900: #ffcbcc;
+    --unison-color-accent-950: #ffe7e7;
+    --unison-color-accent-active: var(--unison-color-accent-300);
+    --unison-color-accent-fg: var(--unison-color-accent-900);
+    --unison-color-accent-hover: var(--unison-color-accent-400);
+    --unison-color-accent-subtle: var(--unison-color-accent-200);
+    --unison-color-border: var(--unison-color-gray-300);
+    --unison-color-border-strong: var(--unison-color-gray-500);
+    --unison-color-canvas: var(--unison-color-gray-50);
+    --unison-color-danger: var(--unison-color-danger-500);
+    --unison-color-danger-50: #180c0b;
+    --unison-color-danger-100: #2a0f0d;
+    --unison-color-danger-200: #430f0e;
+    --unison-color-danger-300: #64040c;
+    --unison-color-danger-400: #8a0013;
+    --unison-color-danger-500: #c13234;
+    --unison-color-danger-600: #d34c49;
+    --unison-color-danger-700: #ee746d;
+    --unison-color-danger-800: #ff9c94;
+    --unison-color-danger-900: #ffccc5;
+    --unison-color-danger-950: #ffe8e4;
+    --unison-color-danger-border: var(--unison-color-danger-400);
+    --unison-color-danger-fg: var(--unison-color-danger-900);
+    --unison-color-danger-subtle: var(--unison-color-danger-200);
+    --unison-color-fg: var(--unison-color-gray-950);
+    --unison-color-fg-muted: var(--unison-color-gray-700);
+    --unison-color-fg-subtle: var(--unison-color-gray-600);
+    --unison-color-gray-50: #100f0f;
+    --unison-color-gray-100: #191818;
+    --unison-color-gray-200: #262323;
+    --unison-color-gray-300: #373131;
+    --unison-color-gray-400: #4d4646;
+    --unison-color-gray-500: #756c6c;
+    --unison-color-gray-600: #867e7e;
+    --unison-color-gray-700: #a49c9c;
+    --unison-color-gray-800: #c2bcbc;
+    --unison-color-gray-900: #e2dcdc;
+    --unison-color-gray-950: #f5f0f0;
+    --unison-color-info: var(--unison-color-info-500);
+    --unison-color-info-50: #091016;
+    --unison-color-info-100: #081a26;
+    --unison-color-info-200: #00273e;
+    --unison-color-info-300: #00375d;
+    --unison-color-info-400: #004d80;
+    --unison-color-info-500: #0076b4;
+    --unison-color-info-600: #1d89c4;
+    --unison-color-info-700: #54a7de;
+    --unison-color-info-800: #84c6f5;
+    --unison-color-info-900: #b2e5ff;
+    --unison-color-info-950: #d8f7ff;
+    --unison-color-info-border: var(--unison-color-info-400);
+    --unison-color-info-fg: var(--unison-color-info-900);
+    --unison-color-info-subtle: var(--unison-color-info-200);
+    --unison-color-muted: var(--unison-color-gray-300);
+    --unison-color-overlay: #00000099;
+    --unison-color-ring: var(--unison-color-accent-600);
+    --unison-color-subtle: var(--unison-color-gray-200);
+    --unison-color-success: var(--unison-color-success-500);
+    --unison-color-success-50: #0a120b;
+    --unison-color-success-100: #0a1d0f;
+    --unison-color-success-200: #022d10;
+    --unison-color-success-300: #004110;
+    --unison-color-success-400: #005a18;
+    --unison-color-success-500: #00863a;
+    --unison-color-success-600: #2b974e;
+    --unison-color-success-700: #5cb572;
+    --unison-color-success-800: #8ad199;
+    --unison-color-success-900: #b7eec1;
+    --unison-color-success-950: #d2ffda;
+    --unison-color-success-border: var(--unison-color-success-400);
+    --unison-color-success-fg: var(--unison-color-success-900);
+    --unison-color-success-subtle: var(--unison-color-success-200);
+    --unison-color-surface: var(--unison-color-gray-100);
+    --unison-color-surface-raised: var(--unison-color-gray-200);
+    --unison-color-warning: var(--unison-color-warning-700);
+    --unison-color-warning-50: #140e07;
+    --unison-color-warning-100: #221503;
+    --unison-color-warning-200: #371e00;
+    --unison-color-warning-300: #4c2a00;
+    --unison-color-warning-400: #673d00;
+    --unison-color-warning-500: #9b6000;
+    --unison-color-warning-600: #b17000;
+    --unison-color-warning-700: #cd9130;
+    --unison-color-warning-800: #e6b46c;
+    --unison-color-warning-900: #ffd79f;
+    --unison-color-warning-950: #ffecc0;
+    --unison-color-warning-border: var(--unison-color-warning-400);
+    --unison-color-warning-fg: var(--unison-color-warning-900);
+    --unison-color-warning-subtle: var(--unison-color-warning-200);
+    --unison-elevation-overlay: var(--unison-shadow-xl);
+    --unison-elevation-popover: var(--unison-shadow-lg);
+    --unison-elevation-raised: var(--unison-shadow-sm);
+    --unison-radius-card: var(--unison-radius-xl);
+    --unison-radius-control: var(--unison-radius-lg);
+    --unison-radius-overlay: var(--unison-radius-2xl);
+    --unison-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -4px rgb(0 0 0 / 0.25);
+    --unison-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.25), 0 2px 4px -2px rgb(0 0 0 / 0.25);
+    --unison-shadow-sm: 0 1px 3px rgb(0 0 0 / 0.25), 0 1px 2px -1px rgb(0 0 0 / 0.25);
+    --unison-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.25), 0 8px 10px -6px rgb(0 0 0 / 0.25);
+    --unison-shadow-xs: 0 1px 2px rgb(0 0 0 / 0.13);
+  }
+
+  @supports (color: oklch(0 0 0)) {
+    :where([data-unison-theme="brand"]:not([data-theme]):not([data-theme] *)) {
+      --unison-color-accent-50: oklch(0.17 0.024 17.58);
+      --unison-color-accent-100: oklch(0.21 0.05 17.58);
+      --unison-color-accent-200: oklch(0.26 0.0899 17.58);
+      --unison-color-accent-300: oklch(0.32 0.1399 17.58);
+      --unison-color-accent-400: oklch(0.4 0.1799 17.58);
+      --unison-color-accent-500: oklch(0.54 0.1998 17.58);
+      --unison-color-accent-600: oklch(0.586 0.222 17.58);
+      --unison-color-accent-700: oklch(0.7 0.1699 17.58);
+      --unison-color-accent-800: oklch(0.8 0.1399 17.58);
+      --unison-color-accent-900: oklch(0.9 0.1099 17.58);
+      --unison-color-accent-950: oklch(0.96 0.0899 17.58);
+      --unison-color-danger-50: oklch(0.17 0.0216 25);
+      --unison-color-danger-100: oklch(0.21 0.045 25);
+      --unison-color-danger-200: oklch(0.26 0.081 25);
+      --unison-color-danger-300: oklch(0.32 0.126 25);
+      --unison-color-danger-400: oklch(0.4 0.162 25);
+      --unison-color-danger-500: oklch(0.54 0.18 25);
+      --unison-color-danger-600: oklch(0.6 0.171 25);
+      --unison-color-danger-700: oklch(0.7 0.153 25);
+      --unison-color-danger-800: oklch(0.8 0.126 25);
+      --unison-color-danger-900: oklch(0.9 0.099 25);
+      --unison-color-danger-950: oklch(0.96 0.081 25);
+      --unison-color-gray-50: oklch(0.17 0.0013 17.58);
+      --unison-color-gray-100: oklch(0.21 0.0027 17.58);
+      --unison-color-gray-200: oklch(0.26 0.0049 17.58);
+      --unison-color-gray-300: oklch(0.32 0.0076 17.58);
+      --unison-color-gray-400: oklch(0.4 0.0097 17.58);
+      --unison-color-gray-500: oklch(0.54 0.0108 17.58);
+      --unison-color-gray-600: oklch(0.6 0.0103 17.58);
+      --unison-color-gray-700: oklch(0.7 0.0092 17.58);
+      --unison-color-gray-800: oklch(0.8 0.0076 17.58);
+      --unison-color-gray-900: oklch(0.9 0.0059 17.58);
+      --unison-color-gray-950: oklch(0.96 0.0049 17.58);
+      --unison-color-info-50: oklch(0.17 0.0162 240);
+      --unison-color-info-100: oklch(0.21 0.0338 240);
+      --unison-color-info-200: oklch(0.26 0.0608 240);
+      --unison-color-info-300: oklch(0.32 0.0945 240);
+      --unison-color-info-400: oklch(0.4 0.1215 240);
+      --unison-color-info-500: oklch(0.54 0.135 240);
+      --unison-color-info-600: oklch(0.6 0.1283 240);
+      --unison-color-info-700: oklch(0.7 0.1148 240);
+      --unison-color-info-800: oklch(0.8 0.0945 240);
+      --unison-color-info-900: oklch(0.9 0.0743 240);
+      --unison-color-info-950: oklch(0.96 0.0608 240);
+      --unison-color-success-50: oklch(0.17 0.0184 150);
+      --unison-color-success-100: oklch(0.21 0.0383 150);
+      --unison-color-success-200: oklch(0.26 0.0689 150);
+      --unison-color-success-300: oklch(0.32 0.1071 150);
+      --unison-color-success-400: oklch(0.4 0.1377 150);
+      --unison-color-success-500: oklch(0.54 0.153 150);
+      --unison-color-success-600: oklch(0.6 0.1454 150);
+      --unison-color-success-700: oklch(0.7 0.1301 150);
+      --unison-color-success-800: oklch(0.8 0.1071 150);
+      --unison-color-success-900: oklch(0.9 0.0842 150);
+      --unison-color-success-950: oklch(0.96 0.0689 150);
+      --unison-color-warning-50: oklch(0.17 0.0184 75);
+      --unison-color-warning-100: oklch(0.21 0.0383 75);
+      --unison-color-warning-200: oklch(0.26 0.0689 75);
+      --unison-color-warning-300: oklch(0.32 0.1071 75);
+      --unison-color-warning-400: oklch(0.4 0.1377 75);
+      --unison-color-warning-500: oklch(0.54 0.153 75);
+      --unison-color-warning-600: oklch(0.6 0.1454 75);
+      --unison-color-warning-700: oklch(0.7 0.1301 75);
+      --unison-color-warning-800: oklch(0.8 0.1071 75);
+      --unison-color-warning-900: oklch(0.9 0.0842 75);
+      --unison-color-warning-950: oklch(0.96 0.0689 75);
+    }
+  }
+}
+
+@supports not (transition-timing-function: linear(0, 1)) {
+  [data-unison-theme="default"][data-theme="light"]:where(:not(:root)), :where(:root, [data-theme="light"], [data-unison-theme="default"], :root[data-unison-theme="default"] [data-theme="light"]), :where(:not(:root)[data-theme="light"]) [data-unison-theme="default"], :where(:not(:root)[data-unison-theme="default"]) [data-theme="light"] {
+    --unison-spring-bouncy: cubic-bezier(0.2, 0, 0, 1);
+    --unison-spring-smooth: cubic-bezier(0.2, 0, 0, 1);
+    --unison-spring-snappy: cubic-bezier(0.2, 0, 0, 1);
+  }
+}
+
+@keyframes unison-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes unison-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes unison-fade-reduced-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes unison-fade-reduced-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes unison-scale-in-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes unison-scale-in-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.98); }
+}
+
+@keyframes unison-scale-in-reduced-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes unison-scale-in-reduced-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes unison-slide-up-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0px); }
+}
+
+@keyframes unison-slide-up-out {
+  from { opacity: 1; transform: translateY(0px); }
+  to { opacity: 0; transform: translateY(4px); }
+}
+
+@keyframes unison-slide-up-reduced-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes unison-slide-up-reduced-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes unison-sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0px); }
+}
+
+@keyframes unison-sheet-out {
+  from { transform: translateY(0px); }
+  to { transform: translateY(100%); }
+}
+
+@keyframes unison-sheet-reduced-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes unison-sheet-reduced-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes unison-pop-in {
+  from { transform: scale(0.9); }
+  to { transform: scale(1); }
+}
+
+@keyframes unison-pop-out {
+  from { transform: scale(1); }
+  to { opacity: 0; }
+}
+
+@keyframes unison-pop-reduced-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes unison-pop-reduced-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes unison-press-in {
+  from { transform: scale(1); }
+  to { transform: scale(0.97); }
+}
+
+@keyframes unison-press-out {
+  from { transform: scale(0.97); }
+  to { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-unison-theme="default"][data-theme="light"]:where(:not(:root)), :where(:root, [data-theme="light"], [data-unison-theme="default"], :root[data-unison-theme="default"] [data-theme="light"]), :where(:not(:root)[data-theme="light"]) [data-unison-theme="default"], :where(:not(:root)[data-unison-theme="default"]) [data-theme="light"], [data-unison-theme="default"][data-theme="dark"]:where(:not(:root)), :where([data-theme="dark"], :root[data-theme="dark"] [data-unison-theme="default"], :root[data-unison-theme="default"] [data-theme="dark"]), :where(:not(:root)[data-theme="dark"]) [data-unison-theme="default"], :where(:not(:root)[data-unison-theme="default"]) [data-theme="dark"] {
+    --unison-animate-fade: unison-fade-reduced-in var(--unison-motion-duration-fast-enter) var(--unison-easing-linear) both;
+    --unison-animate-fade-out: unison-fade-reduced-out var(--unison-motion-duration-fast-exit) var(--unison-easing-linear) both;
+    --unison-animate-pop: unison-pop-reduced-in var(--unison-motion-duration-fast-enter) var(--unison-easing-linear) both;
+    --unison-animate-pop-out: unison-pop-reduced-out var(--unison-motion-duration-fast-exit) var(--unison-easing-linear) both;
+    --unison-animate-scale-in: unison-scale-in-reduced-in var(--unison-motion-duration-fast-enter) var(--unison-easing-linear) both;
+    --unison-animate-scale-in-out: unison-scale-in-reduced-out var(--unison-motion-duration-fast-exit) var(--unison-easing-linear) both;
+    --unison-animate-sheet: unison-sheet-reduced-in var(--unison-motion-duration-fast-enter) var(--unison-easing-linear) both;
+    --unison-animate-sheet-out: unison-sheet-reduced-out var(--unison-motion-duration-fast-exit) var(--unison-easing-linear) both;
+    --unison-animate-slide-up: unison-slide-up-reduced-in var(--unison-motion-duration-fast-enter) var(--unison-easing-linear) both;
+    --unison-animate-slide-up-out: unison-slide-up-reduced-out var(--unison-motion-duration-fast-exit) var(--unison-easing-linear) both;
+  }
+}

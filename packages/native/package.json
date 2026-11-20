@@ -24,7 +24,7 @@
     "build": "tsdown",
     "dev": "tsdown --watch --no-clean",
     "typecheck": "tsc --noEmit",
-    "test": "jest"
+    "test": "jest && vitest run --typecheck.only"
   },
   "dependencies": {
     "@unison-ui/core": "workspace:^",
@@ -48,7 +48,8 @@
     "react-native": "0.88.1",
     "test-renderer": "^1.3.1",
     "tsdown": "^0.23.7",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "^5.1.1"
   },
   "publishConfig": {
     "access": "public",

@@ -15,7 +15,7 @@ it("uses the surface colour for tone=neutral", () => {
   expect(screen.getByTestId("n").style.background).toBe("var(--unison-color-surface)");
 });
 
-it("sizes with border-box, like React Native, so the border stays inside size.box", () => {
+it("sizes with border-box, like React Native, so the border stays inside size.demo-box", () => {
   render(<Box testID="sized" />);
   expect(screen.getByTestId("sized").style.boxSizing).toBe("border-box");
 });

@@ -1,12 +1,15 @@
 import { getParityCase } from "@unison-ui/parity/registry";
 import { useEffect } from "react";
 
-// Route: /parity/<component>/<case>?scheme=light|dark. Follows the stage contract in
+// Route: /parity/<component>/<case>?theme=<name>&scheme=light|dark. Follows the stage contract in
 // packages/parity: a 390-wide stage with 16 padding, the subject top-left, then a ready signal.
 export function ParityPage() {
   const [, , component = "", caseName = ""] = location.pathname.split("/");
-  const scheme = new URLSearchParams(location.search).get("scheme") === "dark" ? "dark" : "light";
+  const query = new URLSearchParams(location.search);
+  const scheme = query.get("scheme") === "dark" ? "dark" : "light";
+  // Set on <html> directly: the parity stage doesn't use the app's theme storage.
   document.documentElement.dataset.theme = scheme;
+  document.documentElement.dataset.unisonTheme = query.get("theme") ?? "default";
 
   const parityCase = getParityCase(component, caseName);
 

@@ -1,0 +1,27 @@
+{
+  "size": {
+    "$type": "dimension",
+    "control-sm": {
+      "$value": "32px"
+    },
+    "control-md": {
+      "$value": "40px"
+    },
+    "control-lg": {
+      "$value": "48px"
+    },
+    "icon-sm": {
+      "$value": "16px"
+    },
+    "icon-md": {
+      "$value": "20px"
+    },
+    "icon-lg": {
+      "$value": "24px"
+    },
+    "touch-target": {
+      "$value": "44px",
+      "$description": "Minimum hit area on native"
+    }
+  }
+}

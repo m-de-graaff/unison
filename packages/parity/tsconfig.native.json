@@ -1,0 +1,6 @@
+{
+  "extends": "@unison-ui/tsconfig/native.json",
+  "compilerOptions": { "customConditions": ["react-native"] },
+  "include": ["src/registry.native.tsx", "src/parts.ts", "src/fixtures"],
+  "exclude": ["src/fixtures/components/web.tsx"]
+}

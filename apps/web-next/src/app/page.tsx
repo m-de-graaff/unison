@@ -1,12 +1,21 @@
 import { DemoItems } from "demo-content";
-import { ThemeToggle } from "./theme-toggle";
+import Link from "next/link";
+import { ScopedPanel, SettingsBar } from "./settings-bar";
 
 export default function Page() {
   return (
     <main className="min-h-dvh bg-surface text-fg p-4 flex flex-wrap items-center gap-4">
       <DemoItems />
       <div data-testid="tw-box" className="size-24 rounded-md border border-border bg-accent" />
-      <ThemeToggle />
+      <SettingsBar />
+      <Link
+        href="/tokens"
+        data-testid="link-tokens"
+        className="text-label text-accent-fg underline"
+      >
+        Token showcase
+      </Link>
+      <ScopedPanel />
     </main>
   );
 }

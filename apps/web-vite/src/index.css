@@ -1,11 +1,12 @@
 @import "tailwindcss";
-@import "@unison-ui/tokens/tokens.css";
-@import "@unison-ui/tokens/theme.css";
+@import "../unison/web/tokens.css";
+@import "../unison/web/theme-strict.css";
 
 /* Paint the page in the theme colour before React mounts (no light flash on reload). */
 @layer base {
   html {
     background-color: var(--color-surface);
     color: var(--color-fg);
+    font-family: var(--unison-font-family-sans);
   }
 }

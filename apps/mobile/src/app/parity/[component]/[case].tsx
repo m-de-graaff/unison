@@ -1,18 +1,9 @@
-import { getParityCase } from "@unison-ui/parity/registry";
-import { themes } from "@unison-ui/tokens/native";
+import { getParityCase, PartsContext, type PartsRegistry } from "@unison-ui/parity/registry";
+import { ThemeScope, useTheme } from "@unison-ui/ui";
 import { useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Appearance,
-  type HostInstance,
-  LogBox,
-  PixelRatio,
-  Platform,
-  Text,
-  useColorScheme,
-  View,
-} from "react-native";
+import { type HostInstance, LogBox, PixelRatio, Platform, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // The iOS simulator shares the host's localhost; on Android, run.ts maps the emulator's
@@ -22,18 +13,56 @@ const POST_TIMEOUT_MS = 5000;
 // Measure only after the layout has stayed put this long (any change restarts the wait).
 const SETTLE_MS = 400;
 
-// Route: unison-demo://parity/<component>/<case>?scheme=light|dark. Follows the stage contract in
-// packages/parity: a 390-wide stage with 16 padding, the subject top-left, metrics POSTed to the
-// collector, then a "parity-ready" marker below the stage (outside the screenshot crop).
-export default function ParityCase() {
-  const params = useLocalSearchParams<{ component: string; case: string; scheme?: string }>();
-  const component = params.component ?? "";
-  const caseName = params.case ?? "";
-  const target = params.scheme === "dark" ? "dark" : "light";
+type Rect = { x: number; y: number; width: number; height: number };
 
-  useEffect(() => {
-    Appearance.setColorScheme(target);
-  }, [target]);
+// Route: unison-demo://parity/<component>/<case>?theme=<name>&scheme=light|dark. Follows the stage
+// contract in packages/parity: a 390-wide stage with 16 padding, the subject top-left, metrics
+// (every registered part, plus centre samples) POSTed to the collector, then a "parity-ready"
+// marker below the stage (outside the screenshot crop). Theme and scheme come from a ThemeScope:
+// deterministic, and independent of the app's own (persisted) choice.
+export default function ParityCase() {
+  const params = useLocalSearchParams<{
+    component: string;
+    case: string;
+    theme?: string;
+    scheme?: string;
+  }>();
+  const theme = params.theme ?? "default";
+  const target = params.scheme === "dark" ? "dark" : "light";
+  return (
+    <ThemeScope theme={theme} scheme={target}>
+      <ParityStage
+        component={params.component ?? ""}
+        caseName={params.case ?? ""}
+        theme={theme}
+        target={target}
+      />
+    </ThemeScope>
+  );
+}
+
+function ParityStage({
+  component,
+  caseName,
+  theme,
+  target,
+}: {
+  component: string;
+  caseName: string;
+  theme: string;
+  target: "light" | "dark";
+}) {
+  const { tokens, resolvedScheme } = useTheme();
+  const partViews = useRef(new Map<string, { view: HostInstance; sample: boolean }>());
+  const parts = useMemo<PartsRegistry>(
+    () => ({
+      register(name, view, sample) {
+        partViews.current.set(name, { view: view as HostInstance, sample });
+        return () => partViews.current.delete(name);
+      },
+    }),
+    [],
+  );
 
   // Keep dev overlays out of parity screenshots, only while a parity screen is mounted.
   useEffect(() => {
@@ -41,7 +70,7 @@ export default function ParityCase() {
     return () => LogBox.ignoreAllLogs(false);
   }, []);
 
-  const active = useColorScheme() === "dark" ? "dark" : "light";
+  const active = resolvedScheme;
   const insets = useSafeAreaInsets();
   const stage = useRef<HostInstance>(null);
   const subject = useRef<HostInstance>(null);
@@ -52,7 +81,7 @@ export default function ParityCase() {
   const [error, setError] = useState<string | undefined>();
 
   const parityCase = useMemo(() => getParityCase(component, caseName), [component, caseName]);
-  const run = `${component}/${caseName}/${target}`;
+  const run = `${component}/${caseName}/${theme}/${target}`;
   const ready = readyRun === run;
 
   // Measure once the requested scheme is active and a frame has rendered. An effect (rather than
@@ -75,9 +104,25 @@ export default function ParityCase() {
         return;
       }
       setStep("measuring");
-      subjectView.measureLayout(
-        stageView,
-        (x, y, width, height) => {
+      const measure = (view: HostInstance) =>
+        new Promise<Rect>((resolve, reject) =>
+          view.measureLayout(
+            stageView,
+            (x, y, width, height) => resolve({ x, y, width, height }),
+            () => reject(new Error("measureLayout failed")),
+          ),
+        );
+      void (async () => {
+        try {
+          const measured: Record<string, Rect> = { subject: await measure(subjectView) };
+          const samples: Record<string, { x: number; y: number }> = {};
+          for (const [name, { view, sample }] of [...partViews.current].sort(([a], [b]) =>
+            a.localeCompare(b),
+          )) {
+            const r = await measure(view);
+            measured[name] = r;
+            if (sample) samples[name] = { x: r.x + r.width / 2, y: r.y + r.height / 2 };
+          }
           stageView.measureInWindow(async (sx, sy, sw, sh) => {
             if (cancelled) return;
             setStep(`posting to ${COLLECTOR}`);
@@ -93,7 +138,8 @@ export default function ParityCase() {
                   run,
                   pixelRatio: PixelRatio.get(),
                   stage: { x: sx, y: sy, width: sw, height: sh },
-                  parts: { subject: { x, y, width, height } },
+                  parts: measured,
+                  ...(Object.keys(samples).length > 0 ? { samples } : {}),
                 }),
               });
               if (!response.ok) throw new Error(`collector answered ${response.status}`);
@@ -109,11 +155,10 @@ export default function ParityCase() {
               clearTimeout(timeout);
             }
           });
-        },
-        () => {
-          if (!cancelled) setError("measureLayout failed");
-        },
-      );
+        } catch (e) {
+          if (!cancelled) setError(e instanceof Error ? e.message : String(e));
+        }
+      })();
     }
     return () => {
       cancelled = true;
@@ -136,20 +181,22 @@ export default function ParityCase() {
         style={{
           width: 390,
           padding: 16,
-          backgroundColor: themes[active].color.surface,
+          backgroundColor: tokens.color.surface,
           alignItems: "flex-start",
         }}
       >
         {/* A native view to measure: Box does not forward refs. Same frame as the Box. */}
-        <View ref={subject} collapsable={false}>
-          <parityCase.Subject {...parityCase.props} testID="subject" />
-        </View>
+        <PartsContext.Provider value={parts}>
+          <View ref={subject} collapsable={false}>
+            <parityCase.Subject {...parityCase.props} testID="subject" />
+          </View>
+        </PartsContext.Provider>
       </View>
       {/* Below the stage, so outside the screenshot crop. Read by run.ts when a run fails. */}
       {ready && <Text testID="parity-ready">{`ready ${run}`}</Text>}
       {error && <Text testID="parity-error">{`parity error: ${error}`}</Text>}
       {!ready && !error && (
-        <Text testID="parity-status">{`${step} (scheme ${active}, wanted ${target})`}</Text>
+        <Text testID="parity-status">{`${step} (${theme}, scheme ${active}, wanted ${target})`}</Text>
       )}
     </View>
   );

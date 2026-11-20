@@ -11,12 +11,12 @@ export default defineConfig([
     deps: { neverBundle: [/^react/, /^@unison-ui\//] },
   },
   {
-    entry: { index: "src/native/index.ts" },
+    entry: { index: "src/native/index.ts", reanimated: "src/native/reanimated.ts" },
     outDir: "dist/native",
     format: "esm",
     dts: true,
     platform: "neutral",
     tsconfig: "tsconfig.native.json",
-    deps: { neverBundle: ["react", "react-native", /^@unison-ui\//] },
+    deps: { neverBundle: ["react", "react-native", "react-native-reanimated", /^@unison-ui\//] },
   },
 ]);

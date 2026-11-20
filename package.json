@@ -21,7 +21,8 @@
     "release": "tsx tooling/scripts/release.ts",
     "prepare": "lefthook install",
     "doctor": "tsx tooling/scripts/doctor.ts",
-    "new:component": "tsx tooling/scripts/new-component.ts"
+    "new:component": "tsx tooling/scripts/new-component.ts",
+    "docs:tokens": "tsx tooling/scripts/docs-tokens.ts"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",

@@ -1,0 +1,50 @@
+{
+  "z-index": {
+    "$type": "number",
+    "base": {
+      "$value": 0
+    },
+    "raised": {
+      "$value": 10
+    },
+    "dropdown": {
+      "$value": 1000
+    },
+    "sticky": {
+      "$value": 1100
+    },
+    "overlay": {
+      "$value": 1300
+    },
+    "modal": {
+      "$value": 1400
+    },
+    "popover": {
+      "$value": 1500
+    },
+    "toast": {
+      "$value": 1700
+    },
+    "tooltip": {
+      "$value": 1800
+    }
+  },
+  "breakpoint": {
+    "$type": "dimension",
+    "sm": {
+      "$value": "640px"
+    },
+    "md": {
+      "$value": "768px"
+    },
+    "lg": {
+      "$value": "1024px"
+    },
+    "xl": {
+      "$value": "1280px"
+    },
+    "2xl": {
+      "$value": "1536px"
+    }
+  }
+}

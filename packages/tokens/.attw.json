@@ -1,3 +1,9 @@
 {
-  "excludeEntrypoints": ["./tokens.css", "./theme.css", "./native-theme.css"]
+  "excludeEntrypoints": [
+    "./tokens.css",
+    "./theme.css",
+    "./theme-strict.css",
+    "./native-theme.css",
+    "./tokens.json"
+  ]
 }

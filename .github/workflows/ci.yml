@@ -53,6 +53,8 @@ jobs:
       # check:packages packs every package, so they all need dist/ (cached by turbo).
       - run: pnpm build
       - run: pnpm check:packages
+      - name: docs/tokens.md is up to date
+        run: pnpm docs:tokens && git diff --exit-code docs/tokens.md
 
   changes:
     runs-on: ubuntu-latest
@@ -145,6 +147,9 @@ jobs:
         with: { node-version-file: .nvmrc, cache: pnpm }
       - run: pnpm install --frozen-lockfile
       - run: pnpm test:parity --platform web --baseline-only
+      # The rendered theme cascade (ADR 0018) needs a browser, which only this job has.
+      - name: Theme cascade in Chromium
+        run: pnpm --filter @unison-ui/parity exec vitest run test/cascade.test.ts
       - uses: actions/upload-artifact@v7
         if: always()
         with:

@@ -132,6 +132,8 @@ async function runNative(platform: "ios" | "android"): Promise<void> {
         // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
         .replaceAll("${CASE}", r.caseName)
         // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
+        .replaceAll("${THEME}", r.theme)
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
         .replaceAll("${SCHEME}", r.scheme)
         // biome-ignore lint/suspicious/noTemplateCurlyInString: literal Maestro placeholders
         .replaceAll("${OUT}", r.shotName);

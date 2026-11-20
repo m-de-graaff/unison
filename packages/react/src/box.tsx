@@ -6,7 +6,7 @@ export function Box({ tone = "accent", testID, children }: BoxProps) {
     <div
       data-testid={testID}
       style={{
-        // border-box, as on React Native: the 1px border stays inside size.box.
+        // border-box, as on React Native: the 1px border stays inside size.demo-box.
         boxSizing: "border-box",
         width: cssVar(boxStyles.size),
         height: cssVar(boxStyles.size),

@@ -12,6 +12,7 @@
   "type": "module",
   "files": [
     "dist",
+    "schema",
     "tokens"
   ],
   "bin": {
@@ -26,27 +27,46 @@
       "types": "./dist/spring.d.ts",
       "default": "./dist/spring.js"
     },
+    "./paths": {
+      "types": "./dist/paths.d.ts",
+      "default": "./dist/paths.js"
+    },
+    "./motion": {
+      "types": "./dist/motion.d.ts",
+      "default": "./dist/motion.js"
+    },
     "./native": {
       "types": "./dist/native/theme.d.ts",
       "default": "./dist/native/theme.js"
     },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "default": "./dist/types.js"
+    },
     "./tokens.css": "./dist/web/tokens.css",
     "./theme.css": "./dist/web/theme.css",
-    "./native-theme.css": "./dist/native/theme.css"
+    "./theme-strict.css": "./dist/web/theme-strict.css",
+    "./native-theme.css": "./dist/native/theme.css",
+    "./tokens.json": "./dist/tokens.json"
   },
   "sideEffects": [
     "*.css"
   ],
   "scripts": {
-    "build": "tsdown && node dist/bin.js build",
+    "build": "tsdown && node dist/bin.js build --out dist",
     "dev": "tsx watch --include \"tokens/**\" src/bin.ts build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --coverage"
   },
   "devDependencies": {
+    "@tailwindcss/node": "^4.3.5",
+    "@types/culori": "^4.0.1",
     "@types/node": "^26.6.6",
     "@unison-ui/tsconfig": "workspace:*",
     "@vitest/coverage-v8": "^5.1.1",
+    "ajv": "^8.20.0",
+    "fast-check": "^4.10.3",
+    "tailwindcss": "^4.3.5",
     "tsdown": "^0.23.7",
     "typescript": "catalog:",
     "vitest": "^5.1.1"
@@ -54,5 +74,10 @@
   "publishConfig": {
     "access": "public",
     "provenance": true
+  },
+  "dependencies": {
+    "colorjs.io": "^0.7.1",
+    "culori": "^4.0.2",
+    "jiti": "^2.7.0"
   }
 }

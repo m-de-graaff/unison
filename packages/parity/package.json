@@ -9,17 +9,25 @@
   "sideEffects": false,
   "exports": {
     "./registry": {
-      "types": "./dist/registry.d.ts",
-      "default": "./dist/registry.js"
+      "react-native": {
+        "types": "./dist/registry.native.d.ts",
+        "default": "./dist/registry.native.js"
+      },
+      "default": {
+        "types": "./dist/registry.web.d.ts",
+        "default": "./dist/registry.web.js"
+      }
     }
   },
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch --no-clean",
-    "typecheck": "tsc --noEmit",
-    "test:parity": "tsx scripts/run.ts"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.native.json",
+    "test:parity": "tsx scripts/run.ts",
+    "test": "vitest run"
   },
   "dependencies": {
+    "@unison-ui/tokens": "workspace:^",
     "@unison-ui/ui": "workspace:^"
   },
   "peerDependencies": {
@@ -28,16 +36,20 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
     "@playwright/test": "^1.65.1",
+    "@types/culori": "^4.0.1",
     "@types/node": "^26.6.6",
     "@types/pngjs": "^6.0.5",
     "@types/react": "catalog:",
     "@unison-ui/tsconfig": "workspace:*",
+    "culori": "^4.0.2",
     "pixelmatch": "^8.0.0",
     "pngjs": "^7.0.0",
     "react": "catalog:",
+    "react-native": "0.88.1",
     "sharp": "^0.35.5",
     "tsdown": "^0.23.7",
     "tsx": "^4.23.15",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "^5.1.1"
   }
 }

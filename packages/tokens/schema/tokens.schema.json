@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://unison-ui.dev/schema/tokens.schema.json",
+  "title": "Unison tokens.json",
+  "description": "Every token of every theme and scheme, as written by `unison-tokens build`.",
+  "type": "object",
+  "required": ["version", "defaultTheme", "themes"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "const": 1 },
+    "defaultTheme": { "type": "string", "minLength": 1 },
+    "themes": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["light", "dark"],
+        "additionalProperties": false,
+        "properties": {
+          "light": { "$ref": "#/$defs/scheme" },
+          "dark": { "$ref": "#/$defs/scheme" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "scheme": {
+      "description": "Token path (e.g. `color.fg`) to its entry.",
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z0-9][a-z0-9.-]*$" },
+      "additionalProperties": { "$ref": "#/$defs/entry" }
+    },
+    "entry": {
+      "type": "object",
+      "required": ["type", "value", "tier"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "enum": [
+            "color",
+            "dimension",
+            "duration",
+            "number",
+            "fontFamily",
+            "fontWeight",
+            "cubicBezier",
+            "typography",
+            "shadow",
+            "transition",
+            "spring",
+            "motionPreset"
+          ]
+        },
+        "value": {
+          "description": "Colours are `#rrggbb[aa]`; dimensions and durations are strings such as `16px`; the rest is the resolved token value."
+        },
+        "oklch": { "type": "string", "pattern": "^oklch\\(" },
+        "aliasOf": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$" },
+        "tier": { "enum": ["primitive", "semantic"] },
+        "description": { "type": "string" },
+        "contrast": {
+          "description": "The contrast pairs in which this token is the foreground.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["on", "ratio", "apca", "min", "pass"],
+            "additionalProperties": false,
+            "properties": {
+              "on": { "type": "string" },
+              "ratio": { "type": "number" },
+              "apca": { "type": "number" },
+              "min": { "enum": [3, 4.5] },
+              "pass": { "type": "boolean" },
+              "adjusted": {
+                "type": "object",
+                "required": ["from", "to"],
+                "additionalProperties": false,
+                "properties": { "from": { "type": "string" }, "to": { "type": "string" } }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
