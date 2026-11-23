@@ -67,8 +67,9 @@ measure() {
   local dbg=$DIAG/maestro-$label
   rm -rf "$dbg"
   local t1=$(date +%s)
-  maestro test --debug-output "$dbg" "$FLOW" > "$dbg.log" 2>&1
-  echo "maestro exit $? after $(( $(date +%s) - t1 ))s (includes driver start)"
+  echo "  $(date -u +%H:%M:%S) maestro start"
+  maestro test --debug-output "$dbg" "$FLOW" 2>&1 | while IFS= read -r line; do echo "  $(date -u +%H:%M:%S) $line"; done | tee "$dbg.log" | grep -E "Open|Assert|Tap|Running on"
+  echo "maestro exit ${PIPESTATUS[0]} after $(( $(date +%s) - t1 ))s (includes driver start)"
   node -e '
     const fs = require("fs"), path = require("path");
     const dir = process.argv[1];
@@ -81,17 +82,15 @@ measure() {
       console.log(`  ${name.padEnd(28)} ${m.status} ${((m.duration ?? 0) / 1000).toFixed(1)}s at ${new Date(m.timestamp).toISOString()}`);
     }
   ' "$dbg"
-  tail -6 "$dbg.log" | sed 's/^/  maestro| /'
   tail -3 "$DIAG/collector.log"
 }
 
+echo "simulator kern.boottime: $(xcrun simctl spawn "$UDID" sysctl -n kern.boottime 2>/dev/null)"
+measure source-1st-launch "$SRC" yes
+measure source-2nd-launch "$SRC" no
 measure repacked-1st-launch "$OUT" yes
 measure repacked-2nd-launch "$OUT" no
-measure repacked-3rd-launch "$OUT" no
-measure source-1st-launch "$SRC" yes
 measure resigned-1st-launch "$RESIGNED" yes
-measure repacked-again-1st-launch "$OUT" yes
-measure repacked-again-2nd-launch "$OUT" no
 
 kill $COLLECTOR_PID
 # Leave the simulator as the harness expects: the repacked app freshly installed, never launched.
