@@ -34,13 +34,18 @@ Detailed development todo: [Phase 0 todo](todos/phase-0.md)
 
 ### Phase 1 — Tokens & motion compiler
 
-- [ ] Token source in DTCG JSON: colour (OKLCH scales), type, spacing, radius, elevation, motion
-- [ ] Outputs: CSS variables, Tailwind v4 `@theme` (also read by Uniwind on native), typed native theme object
-- [ ] Springs compiled to CSS `linear()` on web and `withSpring` configs on native
-- [ ] `defineTheme()` API with derived scales and a WCAG AA contrast check that fails the build
-- [ ] Light and dark modes, runtime theme switching
+- [x] Token source in DTCG JSON: colour (OKLCH scales), type, spacing, radius, elevation, motion
+- [x] Outputs: CSS variables, Tailwind v4 `@theme` (also read by Uniwind on native), typed native theme object
+- [x] Springs compiled to CSS `linear()` on web and `withSpring` configs on native
+- [x] `defineTheme()` API with derived scales and a WCAG AA contrast check that fails the build
+- [x] Light and dark modes, runtime theme switching
 
-**Gate:** one token change visibly updates the Next.js and Expo demos.
+- [x] **Gate:** one token change visibly updates the Next.js and Expo demos.
+
+  Verified: the web demos update live on an accent change, 0.1.0 is on npm with provenance, and
+  parity passes on web, iOS and Android in CI. Still unverified on a Mac or simulator: live reload,
+  `/tokens`, theme switching and reduced motion on iOS and Android, the clean-clone
+  `pnpm run doctor` on macOS, and the outside Expo app on a device.
 
 Detailed development todo: [Phase 1 todo](todos/phase-1.md)
 
