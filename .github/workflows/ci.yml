@@ -243,6 +243,16 @@ jobs:
           npx repack-app --platform ios --js-bundle-only --source-app "$SOURCE" \
             --working-directory "$RUNNER_TEMP/repack-work" --output "$OUT" apps/mobile
           xcrun simctl install "$PARITY_IOS_UDID" "$OUT"
+      - name: "DIAG: compare cold launches of the cached, repacked and re-signed apps"
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: |
+          SOURCE=$(ls -d "$RUNNER_TEMP"/native-app/ios/*.app | head -1)
+          .github/diag/ios-launch.sh "$SOURCE" "$RUNNER_TEMP/repacked/$(basename "$SOURCE")"
+      - uses: actions/upload-artifact@v7
+        if: always() && steps.app-cache.outputs.cache-hit == 'true'
+        with:
+          name: diag-ios-launch
+          path: ${{ runner.temp }}/diag
       - run: pnpm test:parity --platform ios $PARITY_FLAGS
       - uses: actions/upload-artifact@v7
         if: needs.changes.outputs.update == 'true'
